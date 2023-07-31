@@ -1,0 +1,53 @@
+/* Reset some default styles for consistency */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Main container for the digital signage */
+.digital-signage {
+    width: 100%;
+    /* Set height based on 16:9 aspect ratio */
+    height: calc(100vw * 9 / 16);
+    max-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    color: #fff;
+}
+
+/* Styling for the content inside the signage */
+.content {
+    max-width: 80%;
+    text-align: center;
+}
+
+/* Styling for text elements */
+h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+p {
+    font-size: 1.5rem;
+    line-height: 1.6;
+}
+
+/* Add more styling for other elements as needed */
+
+/* Cursor blinking animation */
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+  
+  .cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.1em;
+    background-color: #000;
+    animation: blink 0.7s infinite;
+  }
+  
