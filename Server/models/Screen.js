@@ -9,8 +9,7 @@ const screenSchema = new Schema({
 },
 
   department: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Department', 
+    type: String,
     required: true 
 },
 
