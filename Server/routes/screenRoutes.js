@@ -3,7 +3,7 @@ const router = express.Router({mergeParams:true});
 const Screen = require("../models/Screen");
 
 // This route will be used to display all the active screens
-router.get("/screens", async(req, res) => {
+router.get("/", async(req, res) => {
     try {
         // Retrieve all screens from the database
         const screens = await Screen.find({});
@@ -14,7 +14,7 @@ router.get("/screens", async(req, res) => {
 })
 
 // This route will be used to create a new screen
-router.post("/screens/new", async(req, res) => {
+router.post("/new", async(req, res) => {
     try {
         const {screenName, department} = req.body;
         const screen = new Screen({screenName, department});
@@ -27,7 +27,7 @@ router.post("/screens/new", async(req, res) => {
 })
 
 // This route will be used to view detailed information about a screen
-router.get("/screens/:id", async(req, res) => {
+router.get("/:id", async(req, res) => {
     try {
         const screen = await Screen.findById(req.params.id);
         if (!screen) {
@@ -41,7 +41,7 @@ router.get("/screens/:id", async(req, res) => {
 })
 
 // This route will be used to delete a screen
-router.delete("/screens/:id", async(req, res) => {
+router.delete("/:id", async(req, res) => {
     try {
         const screen = await Screen.findByIdAndDelete(req.params.id);
         if (!screen) {
@@ -55,7 +55,7 @@ router.delete("/screens/:id", async(req, res) => {
 })
 
 // This route will be used to update/edit a screen
-router.put("/screens/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
     try {
         const screen = await Screen.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!screen) {

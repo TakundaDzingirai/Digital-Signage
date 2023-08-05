@@ -3,6 +3,7 @@ const app = express();
 
 const cors = require("cors");
 const mongoose = require("mongoose");
+const screenRoutes = require("./routes/screenRoutes");
 
 app.use(express.json());
 app.use(cors());
@@ -20,6 +21,8 @@ mongoose.connect(dbURL, {
     console.log("Error connecting to Mongo");
     console.log(err);
   });
+
+app.use("/screens", screenRoutes);
 
 const port = process.env.PORT || 3000;
 
