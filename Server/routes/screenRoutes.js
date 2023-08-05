@@ -9,7 +9,19 @@ router.get("/screens", async(req, res) => {
         const screens = await Screen.find({});
         res.json(screens);
     } catch (err) {
-        res.status(400).json({"Error": err});
+        res.status(400).json({"Error ": err});
     }
 })
 
+// This route will be used to create a new screen
+router.post("/screens/new", async(req, res) => {
+    try {
+        const {screenName, department} = req.body;
+        const screen = new Screen({screenName, department});
+        await screen.save();
+        res.json("Screen created successfully!");
+
+    } catch (err) {
+        res.status(400).json({"Error ": err})
+    }
+})
