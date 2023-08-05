@@ -9,7 +9,7 @@ router.get("/screens", async(req, res) => {
         const screens = await Screen.find({});
         res.json(screens);
     } catch (err) {
-        res.status(400).json({"Error ": err});
+        res.status(400).json({"Error ": err.message});
     }
 })
 
@@ -22,7 +22,7 @@ router.post("/screens/new", async(req, res) => {
         res.json("Screen created successfully!");
 
     } catch (err) {
-        res.status(400).json({"Error ": err})
+        res.status(400).json({"Error ": err.message})
     }
 })
 
@@ -36,7 +36,7 @@ router.get("/screens/:id", async(req, res) => {
         res.json(screen);
 
     } catch(err) {
-        res.status(400).json({"Error " : err});
+        res.status(400).json({"Error " : err.message});
     }
 })
 
@@ -50,8 +50,23 @@ router.delete("/screens/:id", async(req, res) => {
         res.json("Screen deleted successfully");
 
     } catch (err) {
-        res.status(400).json({"Error ": err});
+        res.status(400).json({"Error ": err.message});
     }
 })
+
+// This route will be used to update/edit a screen
+router.put("/screens/:id", async (req, res) => {
+    try {
+        const screen = await Screen.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!screen) {
+            return res.status(400).json({ "Error": "Screen not found" });
+        }
+        await screen.save();
+        res.json(screen);
+    } catch (err) {
+        res.status(400).json({ "Error": err.message });
+    }
+});
+
 
 module.exports = router;
