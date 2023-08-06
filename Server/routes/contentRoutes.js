@@ -45,6 +45,7 @@ router.delete("/content/:contentId", async(req, res) => {
     }
 })
 
+// This route will be used to update content that displays on a screen
 router.put("/content/:contentId", async(req, res) => {
     try {
         const{contentId} = req.params.contentId;
@@ -65,4 +66,20 @@ router.put("/content/:contentId", async(req, res) => {
         res.status(500).json({ "Error updating content" : err });
     }
    
+})
+
+// This route will be used to show all the content on a  specific screen
+router.get("content/:screenId", async(req, res) => {
+    try {
+        const {screenId} = req.params;
+        const screen = await Screen.findById(screenId).populate("content");
+        if (!screen) {
+            return res.status(404).json({Error: "Screen not found"});
+        }
+        res.json(screen.content);
+
+    } catch (err) {
+        res.status(500).json({error: "Errpr retriving screen content"});
+    }
+    
 })
