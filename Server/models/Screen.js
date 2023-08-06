@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const Content = require("../models/Content");
 const {Schema} = mongoose;
 
 const screenSchema = new Schema({
@@ -13,9 +14,21 @@ const screenSchema = new Schema({
     required: true 
 },
 
+user: { 
+  type: mongoose.Schema.Types.ObjectId, 
+  ref: "User" 
+},
+
+content: [
+  { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "Content" 
+  }
+],
+
 }, 
 { timestamps: true });
 
-const Screen = mongoose.model('Screen', screenSchema);
+const Screen = mongoose.model("Screen", screenSchema);
 
 module.exports = Screen; 

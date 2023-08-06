@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const Screen = require("../models/Screen");
 const {Schema} = mongoose;
 
 const contentSchema = new Schema({
@@ -19,12 +20,11 @@ const contentSchema = new Schema({
     required: true,
   },
 
-  screen: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Screen",
-    required: true,
+  screen: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "Screen" 
   },
-  
+
 }, { timestamps: true });
 
 const Content = mongoose.model("Content", contentSchema);
