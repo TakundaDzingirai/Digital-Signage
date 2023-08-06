@@ -14,7 +14,7 @@ router.get("/", async(req, res) => {
 })
 
 // This route will be used to create a new screen
-router.post("/new", async(req, res) => {
+router.post("/", async(req, res) => {
     try {
         const {screenName, department} = req.body;
         const screen = new Screen({screenName, department});
