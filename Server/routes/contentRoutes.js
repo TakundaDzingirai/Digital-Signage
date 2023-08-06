@@ -44,3 +44,25 @@ router.delete("/content/:contentId", async(req, res) => {
         res.status(500).json({ "Error deleting content": err });
     }
 })
+
+router.put("/content/:contentId", async(req, res) => {
+    try {
+        const{contentId} = req.params.contentId;
+        const {type, data, title} = req.body;
+        const content = Content.findById(contentId);
+        if (!content) {
+            return res.status(404).json({ error: "Content not found" });
+        }
+
+        content.title = title;
+        content.type = type;
+        content.data = data;
+
+        const updatedContent = await content.save()
+        res.json(updatedContent);
+
+    } catch(err) { 
+        res.status(500).json({ "Error updating content" : err });
+    }
+   
+})
