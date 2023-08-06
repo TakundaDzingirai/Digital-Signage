@@ -23,3 +23,24 @@ router.post("/content/:screenId", async (req, res) => {
         res.status(500).json({ "Error adding content to screen": err });
     }
 });
+
+// This route will be used to delete content from a screen
+router.delete("/content/:contentId", async(req, res) => {
+    try {
+        const {contentId} = req.params;
+        const content = Content.findById(contentId);
+        if (!content) {
+            res.status(400).json({"Error": "Content not found"});
+        }
+        // Remove the content id from the screen
+        const screenId = content.screen;
+        await Screen.findByIdAndUpdate(screenId, {
+            $pull: { content: contentId },
+        })
+
+        res.json("Content deleted successfully");
+
+    } catch (err) {
+        res.status(500).json({ "Error deleting content": err });
+    }
+})
