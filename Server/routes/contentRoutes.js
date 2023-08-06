@@ -83,3 +83,20 @@ router.get("content/:screenId", async(req, res) => {
     }
     
 })
+
+// This route will be used to view detailed information about a s specific content item
+router.get("/content/:contentId", async(req, res) => {
+    try {
+        const content = Content.findById(req.params.contentId);
+        if (!content) {
+            res.status(404).json({error: "Content not found"});
+        }
+        res.json(content);
+        
+    } catch (err) {
+        res.status(500).json({err: "Error retriving content details"});
+    }
+    
+})
+
+// Consider route for reordering the contents on a screen(Drag and drop functionality)
