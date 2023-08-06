@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Screen = require("../models/Screen");
+const User = require("../models/User");
 const {Schema} = mongoose;
 
 const contentSchema = new Schema({
@@ -23,6 +24,11 @@ const contentSchema = new Schema({
   screen: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Screen" 
+  },
+
+  user: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "User" 
   },
 
 }, { timestamps: true });
