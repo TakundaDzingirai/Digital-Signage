@@ -4,7 +4,7 @@ const Screen = require("../models/Screen");
 const router = express.Router();
 
 // This route will be used to add content to a screen
-router.post("/content/:screenId", async (req, res) => {
+router.post("/:screenId", async (req, res) => {
     try {
         const screenId = req.params.screenId;
         const userId = req.user._id; // Remember to implement sessions for this to work!!!! 
@@ -25,7 +25,7 @@ router.post("/content/:screenId", async (req, res) => {
 });
 
 // This route will be used to delete content from a screen
-router.delete("/content/:contentId", async(req, res) => {
+router.delete("/:contentId", async(req, res) => {
     try {
         const {contentId} = req.params;
         const content = Content.findById(contentId);
@@ -46,7 +46,7 @@ router.delete("/content/:contentId", async(req, res) => {
 })
 
 // This route will be used to update content that displays on a screen
-router.put("/content/:contentId", async(req, res) => {
+router.put("/:contentId", async(req, res) => {
     try {
         const{contentId} = req.params.contentId;
         const {type, data, title} = req.body;
@@ -69,7 +69,7 @@ router.put("/content/:contentId", async(req, res) => {
 })
 
 // This route will be used to show all the content on a  specific screen
-router.get("content/:screenId", async(req, res) => {
+router.get("/:screenId", async(req, res) => {
     try {
         const {screenId} = req.params;
         const screen = await Screen.findById(screenId).populate("content");
@@ -85,7 +85,7 @@ router.get("content/:screenId", async(req, res) => {
 })
 
 // This route will be used to view detailed information about a s specific content item
-router.get("/content/:contentId", async(req, res) => {
+router.get("/:contentId", async(req, res) => {
     try {
         const content = Content.findById(req.params.contentId);
         if (!content) {
@@ -100,3 +100,5 @@ router.get("/content/:contentId", async(req, res) => {
 })
 
 // Consider route for reordering the contents on a screen(Drag and drop functionality)
+
+module.exports = router;

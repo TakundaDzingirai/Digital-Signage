@@ -4,6 +4,7 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 const screenRoutes = require("./routes/screenRoutes");
+const contentRoutes = require("./models/Content");
 
 app.use(express.json());
 app.use(cors());
@@ -23,6 +24,7 @@ mongoose.connect(dbURL, {
   });
 
 app.use("/screens", screenRoutes);
+app.use("/content", contentRoutes);
 
 const port = process.env.PORT || 3000;
 
