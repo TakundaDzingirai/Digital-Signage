@@ -26,6 +26,20 @@ mongoose.connect(dbURL, {
 app.use("/screens", screenRoutes);
 app.use("/content", contentRoutes);
 
+app.get("/newsfeed", async(req, res) => {
+  try {
+
+    const parser = new Parser();
+    const feed = await parser.URL("https://feeds.24.com/articles/news24/TopStories/rss");
+    res.json({news: feed.items});
+
+  } catch (error) {
+    res.status(500).json({error: "Error fetching the RSS feed"});
+  }
+  
+})
+
+
 const port = process.env.PORT || 3000;
 
 app.listen(port, ()=> {
