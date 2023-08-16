@@ -1,11 +1,6 @@
 import Button from "./Button";
 export default function Addbtn({ showForm, onToggleForm }) {
   return (
-    <div>
-      <Button onClick={onToggleForm}>
-        {showForm ? "Submit" : "Add Screen"}
-      </Button>
-     
-    </div>
+    <div>{!showForm && <Button onClick={onToggleForm}>Add screen</Button>}</div>
   );
 }

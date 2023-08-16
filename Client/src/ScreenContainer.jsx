@@ -1,7 +1,8 @@
 import Header from "./Header";
 import Screens from "./Screens";
 import Addbtn from "./Addbtn.jsx";
-import FormPopup from "./FormPopup";
+
+import CreatescreenForm from "./CreateScreenForm";
 
 const initialScreens = [
   { id: "1", name: "CSC Level 3", department: "Computer Science" },
@@ -12,12 +13,26 @@ const initialScreens = [
   { id: "6", name: "CSC Level 6", department: "Computer Science" },
 ];
 
-export default function ScreenContainer({ showForm, onToggleForm }) {
+export default function ScreenContainer({
+  showForm,
+  onToggleForm,
+  listOfUsers,
+  setListOfUsers,
+}) {
   return (
     <div>
       <Header />
-      <Screens screens={initialScreens} />
-      {showForm && <FormPopup />}
+      <Screens
+        listOfUsers={listOfUsers}
+        setListOfUsers={setListOfUsers}
+        screens={initialScreens}
+      />
+      {showForm && (
+        <CreatescreenForm
+          listOfUsers={listOfUsers}
+          setListOfUsers={setListOfUsers}
+        />
+      )}
       <Addbtn showForm={showForm} onToggleForm={onToggleForm} />
       <hr />
     </div>
