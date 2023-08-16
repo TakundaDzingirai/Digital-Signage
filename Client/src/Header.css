@@ -1,0 +1,18 @@
+.Header {
+  display: flex;
+  align-items: center; /* Vertically align the content */
+  background-color: #1e366a;
+  margin: 0;
+  padding: 10px;
+}
+
+.Header img {
+  margin-right: 10px; /* Add some spacing between the image and the heading */
+  color: white;
+  /* margin-top: 5px; */
+}
+
+.Header h2 {
+  margin: 0;
+  color: white; /* Remove any default margin */
+}
