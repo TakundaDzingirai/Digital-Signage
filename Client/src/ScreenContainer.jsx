@@ -18,6 +18,8 @@ export default function ScreenContainer({
         <CreatescreenForm
           listOfUsers={listOfUsers}
           setListOfUsers={setListOfUsers}
+          showForm={showForm}
+          onToggleForm={onToggleForm}
         />
       )}
       <Addbtn showForm={showForm} onToggleForm={onToggleForm} />

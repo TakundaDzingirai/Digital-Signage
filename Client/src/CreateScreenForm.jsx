@@ -3,7 +3,12 @@ import "./FormPopup.css";
 import Button from "./Button";
 import Axios from "axios";
 
-export default function CreateScreenForm({ listOfUsers, setListOfUsers }) {
+export default function CreateScreenForm({
+  listOfUsers,
+  setListOfUsers,
+  showForm,
+  onToggleForm,
+}) {
   const [screenName, setScreenName] = useState("");
   const [department, setDepartment] = useState("");
 
@@ -19,6 +24,7 @@ export default function CreateScreenForm({ listOfUsers, setListOfUsers }) {
 
     setScreenName("");
     setDepartment("");
+    onToggleForm();
   };
 
   return (
