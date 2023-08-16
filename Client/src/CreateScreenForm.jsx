@@ -14,8 +14,11 @@ export default function CreateScreenForm({ listOfUsers, setListOfUsers }) {
       screenName,
       department,
     }).then((response) => {
-      setListOfUsers([...setListOfUsers, { screenName, department }]);
+      setListOfUsers([...listOfUsers, { screenName, department }]);
     });
+
+    setScreenName("");
+    setDepartment("");
   };
 
   return (
