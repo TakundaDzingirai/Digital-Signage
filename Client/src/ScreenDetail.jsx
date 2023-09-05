@@ -17,13 +17,6 @@ export default function ScreenDetail({ listOfUsers,setListOfUsers }) {
         console.error(error);
       });
   }, []);
-//   console.log(id)
-//   console.log(screenData);
-//   const screen = listOfUsers.find((s) => s._id === parseInt(id));
-
-//   if (!screen) {
-//     return <div>Screen not found</div>;
-//   }
 
   return (
     <div>
