@@ -26,7 +26,7 @@ export default function ScreenDetail({ listOfUsers,setListOfUsers }) {
       
       {<p>{screenData.department}</p>}
       {/* Display other screen details here */}
-      <ScreenContentForm/>
+      <ScreenContentForm id={id}/>
       <h3>This screen was created @ {screenData.createdAt}</h3>
     </div>
   );
