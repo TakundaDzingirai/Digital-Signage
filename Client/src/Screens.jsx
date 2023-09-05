@@ -11,11 +11,13 @@ export default function Screens({ listOfUsers, setListOfUsers }) {
       setListOfUsers(response.data);
     });
   }, []);
+  console.log(listOfUsers);
   return (
     <ul className="screen-list">
       {listOfUsers.map((screen) => (
-        <Screen key={screen.id} screen={screen} />
+        <Screen key={screen._id} screen={screen} />
       ))}
+      
     </ul>
   );
 }

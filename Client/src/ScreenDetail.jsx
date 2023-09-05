@@ -2,6 +2,8 @@ import { useParams } from 'react-router-dom';
 import { useEffect } from "react";
 import { useState } from "react";
 import Axios from "axios";
+import "./ScreenDetail.css"
+import ScreenContentForm from "./React-forms/ScreenContentForm";
 export default function ScreenDetail({ listOfUsers,setListOfUsers }) {
   const { id } = useParams();
 
@@ -21,9 +23,11 @@ export default function ScreenDetail({ listOfUsers,setListOfUsers }) {
   return (
     <div>
       <h1>{screenData.screenName} </h1>
-      <h3>This screen was created @ {screenData.createdAt}</h3>
+      
       {<p>{screenData.department}</p>}
       {/* Display other screen details here */}
+      <ScreenContentForm/>
+      <h3>This screen was created @ {screenData.createdAt}</h3>
     </div>
   );
 }
