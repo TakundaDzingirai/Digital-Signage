@@ -12,10 +12,11 @@
 .screen {
   /* flex: 1; */
   height: 200px;
-  width: 22%; /* Adjust as needed */
-  border: 0.1rem solid #4a4e69;
+  width: 22%;
+  /* Adjust as needed */
+  border: 0.1rem solid #ffff;
   border-radius: 5%;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 10px rgba(0, 9, 59, 0.2);
   padding: 1rem;
   margin-top: 15px;
 }

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'; // Import useParams and useHistory
 import { useEffect, useState } from "react";
 import Axios from "axios";
 import "./ScreenDetail.css"
-import ScreenContentForm from "../React-forms/ScreenContentForm"
+import ScreenContentForm from "../React-forms/ScreenContentForm";
 import { TextField, Button } from "@mui/material";
 import Slides from './Slides';
 

@@ -21,9 +21,13 @@ const RegisterForm = () => {
         <>
             <Header />
             <div className='form'
+                style={{
+                    marginTop: "2em",
+                }}
+
             > <h2>Register Form</h2>
                 <form onSubmit={handleSubmit} action={<Link to="/login" />}>
-                    <Stack spacing={2} direction="row" sx={{ marginBottom: 4 }}>
+                    <Stack spacing={2} direction="row" sx={{ marginBottom: 3 }}>
                         <TextField
                             type="text"
                             variant='outlined'
@@ -54,7 +58,7 @@ const RegisterForm = () => {
                         value={department}
                         fullWidth
                         required
-                        sx={{ mb: 4 }}
+                        sx={{ mb: 3 }}
                     />
                     <TextField
                         type="email"
@@ -65,7 +69,7 @@ const RegisterForm = () => {
                         value={email}
                         fullWidth
                         required
-                        sx={{ mb: 4 }}
+                        sx={{ mb: 3 }}
                     />
                     <TextField
                         type="password"
@@ -76,7 +80,7 @@ const RegisterForm = () => {
                         value={password}
                         required
                         fullWidth
-                        sx={{ mb: 4 }}
+                        sx={{ mb: 3 }}
                     />
                     <TextField
                         type="date"
@@ -87,7 +91,7 @@ const RegisterForm = () => {
                         value={dateOfBirth}
                         fullWidth
                         required
-                        sx={{ mb: 4 }}
+                        sx={{ mb: 3 }}
                     />
                     <Button variant="outlined" color="secondary" type="submit">Register</Button>
                 </form>
