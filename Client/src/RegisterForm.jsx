@@ -1,25 +1,36 @@
-import React, {useState} from 'react';
-import { TextField, Button, Container, Stack } from '@mui/material';
+import React, { useState } from 'react';
+import { TextField, Button, Stack } from '@mui/material';
 import { Link } from "react-router-dom"
- 
- 
+
 const RegisterForm = () => {
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
     const [dateOfBirth, setDateOfBirth] = useState('')
     const [password, setPassword] = useState('')
- 
+
     function handleSubmit(event) {
         event.preventDefault();
-        console.log(firstName, lastName, email, dateOfBirth, password) 
+        console.log(firstName, lastName, email, dateOfBirth, password)
     }
- 
+
     return (
-        <React.Fragment>
-            <h2>Register Form</h2>
+        <div
+            style={{
+                boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                borderRadius: "15px",
+                width: "60%",
+                margin: "0 auto",
+                padding: "20px",
+                textAlign: "center",
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)", // Center both horizontally and vertically
+            }}
+        > <h2>Register Form</h2>
             <form onSubmit={handleSubmit} action={<Link to="/login" />}>
-                <Stack spacing={2} direction="row" sx={{marginBottom: 4}}>
+                <Stack spacing={2} direction="row" sx={{ marginBottom: 4 }}>
                     <TextField
                         type="text"
                         variant='outlined'
@@ -50,7 +61,7 @@ const RegisterForm = () => {
                     value={email}
                     fullWidth
                     required
-                    sx={{mb: 4}}
+                    sx={{ mb: 4 }}
                 />
                 <TextField
                     type="password"
@@ -61,7 +72,7 @@ const RegisterForm = () => {
                     value={password}
                     required
                     fullWidth
-                    sx={{mb: 4}}
+                    sx={{ mb: 4 }}
                 />
                 <TextField
                     type="date"
@@ -72,14 +83,14 @@ const RegisterForm = () => {
                     value={dateOfBirth}
                     fullWidth
                     required
-                    sx={{mb: 4}}
+                    sx={{ mb: 4 }}
                 />
                 <Button variant="outlined" color="secondary" type="submit">Register</Button>
             </form>
-            <small>Already have an account? <Link to="/login">Login Here</Link></small>
-     
-        </React.Fragment>
+            <small>Already have an account? <Link to="/">Login Here</Link></small>
+
+        </div>
     )
 }
- 
+
 export default RegisterForm;
