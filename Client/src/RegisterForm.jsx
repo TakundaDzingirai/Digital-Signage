@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { TextField, Button, Stack } from '@mui/material';
-import { Link } from "react-router-dom"
-
+import { Link } from "react-router-dom";
+import Header from "./Header";
+import "./Form.css"
 const RegisterForm = () => {
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
     const [dateOfBirth, setDateOfBirth] = useState('')
     const [password, setPassword] = useState('')
+    const [department, setDepartment] = useState('')
+
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -15,81 +18,83 @@ const RegisterForm = () => {
     }
 
     return (
-        <div
-            style={{
-                boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
-                borderRadius: "15px",
-                width: "60%",
-                margin: "0 auto",
-                padding: "20px",
-                textAlign: "center",
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)", // Center both horizontally and vertically
-            }}
-        > <h2>Register Form</h2>
-            <form onSubmit={handleSubmit} action={<Link to="/login" />}>
-                <Stack spacing={2} direction="row" sx={{ marginBottom: 4 }}>
+        <>
+            <Header />
+            <div className='form'
+            > <h2>Register Form</h2>
+                <form onSubmit={handleSubmit} action={<Link to="/login" />}>
+                    <Stack spacing={2} direction="row" sx={{ marginBottom: 4 }}>
+                        <TextField
+                            type="text"
+                            variant='outlined'
+                            color='secondary'
+                            label="First Name"
+                            onChange={e => setFirstName(e.target.value)}
+                            value={firstName}
+                            fullWidth
+                            required
+                        />
+                        <TextField
+                            type="text"
+                            variant='outlined'
+                            color='secondary'
+                            label="Last Name"
+                            onChange={e => setLastName(e.target.value)}
+                            value={lastName}
+                            fullWidth
+                            required
+                        />
+                    </Stack>
                     <TextField
                         type="text"
                         variant='outlined'
                         color='secondary'
-                        label="First Name"
-                        onChange={e => setFirstName(e.target.value)}
-                        value={firstName}
+                        label="Department"
+                        onChange={e => setDepartment(e.target.value)}
+                        value={department}
                         fullWidth
                         required
+                        sx={{ mb: 4 }}
                     />
                     <TextField
-                        type="text"
+                        type="email"
                         variant='outlined'
                         color='secondary'
-                        label="Last Name"
-                        onChange={e => setLastName(e.target.value)}
-                        value={lastName}
+                        label="Email"
+                        onChange={e => setEmail(e.target.value)}
+                        value={email}
                         fullWidth
                         required
+                        sx={{ mb: 4 }}
                     />
-                </Stack>
-                <TextField
-                    type="email"
-                    variant='outlined'
-                    color='secondary'
-                    label="Email"
-                    onChange={e => setEmail(e.target.value)}
-                    value={email}
-                    fullWidth
-                    required
-                    sx={{ mb: 4 }}
-                />
-                <TextField
-                    type="password"
-                    variant='outlined'
-                    color='secondary'
-                    label="Password"
-                    onChange={e => setPassword(e.target.value)}
-                    value={password}
-                    required
-                    fullWidth
-                    sx={{ mb: 4 }}
-                />
-                <TextField
-                    type="date"
-                    variant='outlined'
-                    color='secondary'
-                    label="Date of Birth"
-                    onChange={e => setDateOfBirth(e.target.value)}
-                    value={dateOfBirth}
-                    fullWidth
-                    required
-                    sx={{ mb: 4 }}
-                />
-                <Button variant="outlined" color="secondary" type="submit">Register</Button>
-            </form>
-            <small>Already have an account? <Link to="/">Login Here</Link></small>
+                    <TextField
+                        type="password"
+                        variant='outlined'
+                        color='secondary'
+                        label="Password"
+                        onChange={e => setPassword(e.target.value)}
+                        value={password}
+                        required
+                        fullWidth
+                        sx={{ mb: 4 }}
+                    />
+                    <TextField
+                        type="date"
+                        variant='outlined'
+                        color='secondary'
+                        label="Date of Birth"
+                        onChange={e => setDateOfBirth(e.target.value)}
+                        value={dateOfBirth}
+                        fullWidth
+                        required
+                        sx={{ mb: 4 }}
+                    />
+                    <Button variant="outlined" color="secondary" type="submit">Register</Button>
+                </form>
+                <small>Already have an account? <Link to="/">Login Here</Link></small>
 
-        </div>
+            </div>
+        </>
     )
 }
 

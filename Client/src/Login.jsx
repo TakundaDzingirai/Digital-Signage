@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { TextField, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import Header from "./Header";
+import "./Form.css"
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -30,19 +31,9 @@ const Login = () => {
     return (
         <>
             <Header />
-            <div
-                style={{
-                    boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)", // Add a box shadow for the card effect
-                    borderRadius: "15px", // Add rounded corners
-                    width: "60%",
-                    margin: "0 auto",
-                    padding: "20px",
-                    textAlign: "center",
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                }}
+            <div className="form"
+
+
             >
                 <h2>Login Form</h2>
                 <form autoComplete="off" onSubmit={handleSubmit}>
