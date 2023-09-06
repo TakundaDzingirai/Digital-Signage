@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./FormPopup.css";
-import Button from "./Button";
+import Button from "../Button";
 import Axios from "axios";
 
 export default function CreateScreenForm({

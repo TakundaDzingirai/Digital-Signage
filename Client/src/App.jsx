@@ -1,10 +1,11 @@
 import "./styles.css";
 import { useState } from "react";
-import ScreenContainer from "./ScreenContainer";
+import ScreenContainer from "./ScreenComponents/ScreenContainer";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./Login";
-import ScreenDetail from "./ScreenDetail";
-import RegisterForm from "./RegisterForm"; // Import the RegisterForm component
+import Login from "./React-forms/Login";
+import ScreenDetail from "./ScreenComponents/ScreenDetail";
+import RegisterForm from "./React-forms/RegisterForm"; // Import the RegisterForm component
+import ScreenContentForm from "./React-forms/ScreenContentForm";
 
 export default function App() {
   const [showForm, setShowForm] = useState(false);
@@ -40,6 +41,7 @@ export default function App() {
             }
           />
           <Route path="/register" element={<RegisterForm />} /> {/* Add the RegisterForm route */}
+          <Route path="/screen/content/:id" element={<ScreenContentForm />} />
         </Routes>
       </Router>
     </div>

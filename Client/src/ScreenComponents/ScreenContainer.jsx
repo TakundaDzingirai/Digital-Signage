@@ -1,8 +1,8 @@
-import Header from "./Header";
+import Header from "../Header";
 import Screens from "./Screens";
-import Addbtn from "./Addbtn.jsx";
+import Addbtn from "../Addbtn.jsx";
 
-import CreatescreenForm from "./CreateScreenForm";
+import CreatescreenForm from "../React-forms/CreateScreenForm";
 
 
 export default function ScreenContainer({

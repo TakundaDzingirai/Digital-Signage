@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import Header from "./Header";
+import Header from "../Header";
 import "./Form.css"
 
 const Login = () => {
@@ -72,6 +72,7 @@ const Login = () => {
                 </form>
                 <small>
                     Need an account? <Link to="/register">Register here</Link>
+                    Skip Login? < Link to = "/dashboard">Click me</Link>
                 </small>
             </div>
         </>

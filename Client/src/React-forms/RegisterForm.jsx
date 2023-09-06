@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, Stack } from '@mui/material';
 import { Link } from "react-router-dom";
-import Header from "./Header";
+import Header from "../Header";
 import "./Form.css"
 const RegisterForm = () => {
     const [firstName, setFirstName] = useState('')
