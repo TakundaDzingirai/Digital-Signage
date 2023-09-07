@@ -1,7 +1,6 @@
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
-
 const express = require("express");
 const app = express();
 
@@ -9,6 +8,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const screenRoutes = require("./routes/screenRoutes");
 const contentRoutes = require("./models/Content");
+const session = require("express-session");
 
 app.use(express.json());
 app.use(cors());
@@ -27,6 +27,23 @@ mongoose
     console.log("Error connecting to Mongo");
     console.log(err);
   });
+
+const secret = process.env.SECRET || "pangapasinakumiramushe";
+
+app.use(
+  session({
+    name: "session",
+    secret,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      httpOnly: true,
+      // secure: true,
+      expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    },
+  })
+);
 
 app.use("/screens", screenRoutes);
 app.use("/content", contentRoutes);
