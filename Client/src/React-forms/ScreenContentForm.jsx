@@ -6,8 +6,10 @@ import ScreenPanel from '../ScreenComponents/ScreenPanel';
 export default function ScreenContentForm(id) {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
+  const [url, seturl] = useState("");
   const [titleError, setTitleError] = useState(false);
   const [textError, setTextError] = useState(false);
+  const [urlError, seturlError] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -20,6 +22,9 @@ export default function ScreenContentForm(id) {
     }
     if (title === "") {
       setTitleError(true);
+    }
+    if (url == "") {
+      seturlError(true);
     }
   };
   // Function to handle image upload
@@ -71,6 +76,18 @@ export default function ScreenContentForm(id) {
           // InputLabelProps={{
           //   style: { color: "lightgrey" }, // Set label color to light grey
           // }}
+          />
+          <TextField
+            label="image url"
+            onChange={(e) => seturl(e.target.value)}
+            required
+            variant="outlined"
+            color="secondary"
+            multiline // Set multiline to true
+            rows={4}   // Optionally, you can set the number of rows to display initially
+            value={url}
+            error={urlError}
+            sx={{ mb: 3, width: "100%" }}
           />
           <input
             type="file"

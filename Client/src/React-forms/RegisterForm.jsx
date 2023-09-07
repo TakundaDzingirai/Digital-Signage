@@ -3,7 +3,7 @@ import { TextField, Button, Stack } from '@mui/material';
 import { Link } from "react-router-dom";
 import Header from "../Header";
 import "./Form.css"
-
+import Axios from "axios";
 const RegisterForm = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -55,6 +55,32 @@ const RegisterForm = () => {
             console.log(firstName, lastName, email, dateOfBirth, password, department);
         }
     }
+    const Register = () => {
+        if (!(firstNameError || lastNameError || emailError || dateOfBirthError || passwordError || departmentError)) {
+
+            // Create an object with the user's registration data
+            const userData = {
+                firstName,
+                lastName,
+                email,
+                dateOfBirth,
+                password,
+                department,
+            };
+
+            // Make a POST request to the registration endpoint with the user's data
+            Axios.post("http://localhost:3000/register", userData)
+                .then((response) => {
+                    // Handle the response from the server (e.g., display a success message)
+                    console.log("Registration successful!", response.data);
+                })
+                .catch((error) => {
+                    // Handle any errors that may occur during the POST request
+                    console.error("Registration failed:", error);
+                });
+        }
+    };
+
 
     return (
         <>
@@ -142,6 +168,7 @@ const RegisterForm = () => {
                         variant="outlined"
                         color="secondary"
                         type="submit"
+                        onClick={Register}
                     >
                         Register
                     </Button>
