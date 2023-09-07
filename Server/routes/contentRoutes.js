@@ -7,7 +7,7 @@ const router = express.Router();
 router.post("/:screenId", async (req, res) => {
   try {
     const screenId = req.params.screenId;
-    // const userId = req.user._id; // Remember to implement sessions for this to work!!!!
+    const userId = req.user._id;
     const { title, type, data } = req.body;
 
     const content = new Content({
@@ -15,7 +15,7 @@ router.post("/:screenId", async (req, res) => {
       post,
       imageUrl,
       screen: screenId,
-      // user: userId,
+      user: userId,
     });
 
     const savedContent = await content.save();
