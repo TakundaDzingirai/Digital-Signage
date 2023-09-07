@@ -1,34 +1,34 @@
 const mongoose = require("mongoose");
 const Content = require("../models/Content");
-const {Schema} = mongoose;
+const { Schema } = mongoose;
 
-const screenSchema = new Schema({
+const screenSchema = new Schema(
+  {
+    screenName: {
+      type: String,
+      required: true,
+    },
 
-  screenName: { 
-    type: String, 
-    required: true 
-},
+    department: {
+      type: String,
+      required: true,
+    },
 
-  department: { 
-    type: String,
-    required: true 
-},
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
 
-user: { 
-  type: mongoose.Schema.Types.ObjectId, 
-  ref: "User" 
-},
-
-content: [
-  { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "Content" 
-  }
-],
-
-}, 
-{ timestamps: true });
+    content: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Content",
+      },
+    ],
+  },
+  { timestamps: true }
+);
 
 const Screen = mongoose.model("Screen", screenSchema);
 
-module.exports = Screen; 
+module.exports = Screen;
