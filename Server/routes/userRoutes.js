@@ -1,22 +1,27 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
+const passport = require("passport");
 const User = require("../models/User");
 
 // This route will be used to register users
 router.post("/register", async (req, res, next) => {
-  const { firstname, lastname, email, username, dateOfBirth, password } =
+  const { firstname, lastname, department, email, username, password, role } =
     req.body;
+
   const user = new User({
     firstname,
     lastname,
+    department,
     email,
+    role,
     username,
-    dateOfBirth,
   });
+
   const registeredUser = await User.register(user, password);
   req.logIn(registeredUser, (err) => {
     if (err) {
       console.log(err);
+      // res.json("User logged in successfully");
       res.redirect("/login");
     } else {
       res.redirect("/screens");
@@ -44,3 +49,5 @@ router.get("/logout", (req, res, next) => {
     res.redirect("/screens");
   });
 });
+
+module.exports = router;

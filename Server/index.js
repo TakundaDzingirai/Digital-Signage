@@ -7,7 +7,8 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 const screenRoutes = require("./routes/screenRoutes");
-const contentRoutes = require("./models/Content");
+const contentRoutes = require("./routes/contentRoutes");
+const userRoutes = require("./routes/userRoutes");
 const User = require("./models/User");
 const session = require("express-session");
 const passport = require("passport");
@@ -56,6 +57,7 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use("/screens", screenRoutes);
 app.use("/content", contentRoutes);
+app.use("/", userRoutes);
 
 app.get("/newsfeed", async (req, res) => {
   try {

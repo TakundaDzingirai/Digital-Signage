@@ -3,7 +3,7 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-  firstame: {
+  firstname: {
     type: String,
     required: [true, "First name must be supplied"],
   },
@@ -20,7 +20,7 @@ const userSchema = new Schema({
 
   username: {
     type: String,
-    required: [true, "username must be supplied"],
+    required: [true, "Username must be supplied"],
   },
 
   email: {
@@ -32,6 +32,7 @@ const userSchema = new Schema({
   role: {
     type: String,
     enum: ["admin", "user"],
+    required: [true, "Role must be supplied"],
     default: "user",
   },
 });
