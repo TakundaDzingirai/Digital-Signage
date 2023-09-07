@@ -8,7 +8,10 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const screenRoutes = require("./routes/screenRoutes");
 const contentRoutes = require("./models/Content");
+const User = require("./models/User");
 const session = require("express-session");
+const passport = require("passport");
+const localStrategy = require("passport-local");
 
 app.use(express.json());
 app.use(cors());
@@ -44,6 +47,12 @@ app.use(
     },
   })
 );
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use("/screens", screenRoutes);
 app.use("/content", contentRoutes);
