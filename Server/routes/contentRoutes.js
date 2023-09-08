@@ -8,7 +8,7 @@ router.post("/:screenId", async (req, res) => {
   try {
     const screenId = req.params.screenId;
     const userId = req.user._id;
-    const { title, type, data } = req.body;
+    const { slideTitle, post, imageUrl } = req.body;
 
     const content = new Content({
       slideTitle,
