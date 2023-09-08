@@ -4,15 +4,17 @@ import { TextField, Button, Paper } from "@mui/material";
 
 import ScreenPanel from '../ScreenComponents/ScreenPanel';
 import { useParams } from 'react-router-dom';
+import Axios from 'axios'
 
-export default function ScreenContentForm(id) {
+export default function ScreenContentForm() {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [url, seturl] = useState("");
   const [titleError, setTitleError] = useState(false);
   const [textError, setTextError] = useState(false);
   const [urlError, seturlError] = useState(false);
-
+  const { screenId } = useParams();
+  console.log(screenId);
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -28,12 +30,22 @@ export default function ScreenContentForm(id) {
     if (url == "") {
       seturlError(true);
     }
-    if (!(textError  || titleError || urlError )) {
-     
+    if (!(textError || titleError || urlError)) {
+      // slideTitle, post, imageUrl
+      const contentData = {
+        slideTitle: title,
+        post: text,
+        imageUrl: url
+
+      }
+      console.log(contentData)
+      Axios.post(`http://localhost:3000/content/${screenId}`, contentData)
+        .then((response) => {
+          console.log(response.data);
+        });
+
 
     }
-    
-
 
   };
   // Function to handle image upload
