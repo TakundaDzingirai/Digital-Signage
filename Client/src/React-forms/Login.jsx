@@ -3,12 +3,15 @@ import { TextField, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import Header from "../Header";
 import "./Form.css"
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
+
+    const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -27,6 +30,11 @@ const Login = () => {
             console.log(email, password);
         }
     };
+    const CarouselRoute = () => {
+        navigate('/carousel');
+
+
+    }
 
     return (
         <>
@@ -72,8 +80,15 @@ const Login = () => {
                 </form>
                 <small>
                     Need an account? <Link to="/register">Register here</Link>
-                    Skip Login? < Link to = "/dashboard">Click me</Link>
+                    Skip Login? < Link to="/dashboard">Click me</Link>
                 </small>
+
+                <Button
+                    onClick={CarouselRoute}
+
+                >
+                    Carousel Sample
+                </Button>
             </div>
         </>
     );
