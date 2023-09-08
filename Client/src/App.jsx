@@ -22,7 +22,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route
-            path="/dashboard"
+            path="/screens"
             element={
               <ScreenContainer
                 listOfUsers={listOfUsers}
@@ -41,8 +41,12 @@ export default function App() {
               />
             }
           />
-          <Route path="/register" element={<RegisterForm />} /> {/* Add the RegisterForm route */}
-          <Route path="/screen/content/:screenId" element={<ScreenContentForm />} />
+          <Route path="/register" element={<RegisterForm />} />{" "}
+          {/* Add the RegisterForm route */}
+          <Route
+            path="/screen/content/:screenId"
+            element={<ScreenContentForm />}
+          />
           <Route path="/carousel" element={<AutoSlider />} />
         </Routes>
       </Router>
