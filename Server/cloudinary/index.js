@@ -9,9 +9,11 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
   cloudinary,
-  folder: "digiSign",
-  allowedFormats: ["jpg", "png", "jpeg"],
-  //   transformation: [{ width: 100, height: 100, crop: "limit" }],
+  params: {
+    folder: "digiSign",
+    allowedFormats: ["jpg", "png", "jpeg"],
+    //   transformation: [{ width: 100, height: 100, crop: "limit" }],
+  },
 });
 
 module.exports = {

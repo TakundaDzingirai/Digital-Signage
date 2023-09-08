@@ -15,6 +15,13 @@ const contentSchema = new Schema(
       required: true,
     },
 
+    images: [
+      {
+        URL: String,
+        filename: String,
+      },
+    ],
+
     imageUrl: {
       type: String,
       required: true,
