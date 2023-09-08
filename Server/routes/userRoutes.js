@@ -4,7 +4,7 @@ const User = require("../models/User");
 
 // This route will be used to register users
 router.post("/register", async (req, res, next) => {
-  const { firstname, lastname, email, username, dateOfBirth, password } =
+  const { firstname, lastname, email, username, dateOfBirth, password, department } =
     req.body;
   const user = new User({
     firstname,
@@ -12,6 +12,7 @@ router.post("/register", async (req, res, next) => {
     email,
     username,
     dateOfBirth,
+    department,
   });
   const registeredUser = await User.register(user, password);
   req.logIn(registeredUser, (err) => {
