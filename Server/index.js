@@ -1,14 +1,18 @@
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
-
 const express = require("express");
 const app = express();
 
 const cors = require("cors");
 const mongoose = require("mongoose");
 const screenRoutes = require("./routes/screenRoutes");
-const contentRoutes = require("./models/Content");
+const contentRoutes = require("./routes/contentRoutes");
+const userRoutes = require("./routes/userRoutes");
+const User = require("./models/User");
+const session = require("express-session");
+const passport = require("passport");
+const localStrategy = require("passport-local");
 
 app.use(express.json());
 app.use(cors());
@@ -28,8 +32,37 @@ mongoose
     console.log(err);
   });
 
+const secret = process.env.SECRET || "pangapasinakumiramushe";
+
+app.use(
+  session({
+    name: "session",
+    secret,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      httpOnly: true,
+      // secure: true,
+      expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use((req, res, next) => {
+  res.locals.currentUser = req.user;
+  next();
+});
+
 app.use("/screens", screenRoutes);
 app.use("/content", contentRoutes);
+app.use("/", userRoutes);
 
 app.get("/newsfeed", async (req, res) => {
   try {

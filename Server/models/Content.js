@@ -1,37 +1,37 @@
 const mongoose = require("mongoose");
 const Screen = require("../models/Screen");
 const User = require("../models/User");
-const {Schema} = mongoose;
+const { Schema } = mongoose;
 
-const contentSchema = new Schema({
-    
-  title: {
-    type: String,
-    required: true,
+const contentSchema = new Schema(
+  {
+    slideTitle: {
+      type: String,
+      required: true,
+    },
+
+    post: {
+      type: String,
+      required: true,
+    },
+
+    imageUrl: {
+      type: String,
+      required: true,
+    },
+
+    screen: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Screen",
+    },
+
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
-
-  type: {
-    type: String,
-    enum: ["text", "image", "video"],
-    required: true,
-  },
-
-  data: {
-    type: String,
-    required: true,
-  },
-
-  screen: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "Screen" 
-  },
-
-  user: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "User" 
-  },
-
-}, { timestamps: true });
+  { timestamps: true }
+);
 
 const Content = mongoose.model("Content", contentSchema);
 
