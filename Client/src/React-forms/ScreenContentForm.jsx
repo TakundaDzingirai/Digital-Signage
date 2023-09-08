@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import "./ScreenContentForm.css"
+import { useState } from "react";
+import "./ScreenContentForm.css";
 import { TextField, Button, Paper } from "@mui/material";
 
 import ScreenPanel from '../ScreenComponents/ScreenPanel';
@@ -54,7 +54,6 @@ export default function ScreenContentForm() {
     setSelectedImage(file);
   };
 
-
   return (
     <>
       <ScreenPanel />
@@ -71,7 +70,11 @@ export default function ScreenContentForm() {
           // backgroundColor: "rgba(10, 10, 10, 0.3)"
         }}
       >
-        <form autoComplete="off" onSubmit={handleSubmit}>
+        <form
+          autoComplete="off"
+          onSubmit={handleSubmit}
+          encType="multipart/form-data"
+        >
           <TextField
             label="Slide Title"
             onChange={(e) => setTitle(e.target.value)}
@@ -90,7 +93,7 @@ export default function ScreenContentForm() {
             variant="outlined"
             color="secondary"
             multiline // Set multiline to true
-            rows={4}   // Optionally, you can set the number of rows to display initially
+            rows={4} // Optionally, you can set the number of rows to display initially
             value={text}
             error={textError}
             sx={{ mb: 3, width: "100%" }}
@@ -105,12 +108,13 @@ export default function ScreenContentForm() {
             variant="outlined"
             color="secondary"
             multiline // Set multiline to true
-            rows={4}   // Optionally, you can set the number of rows to display initially
+            rows={4} // Optionally, you can set the number of rows to display initially
             value={url}
             error={urlError}
             sx={{ mb: 3, width: "100%" }}
           />
           <input
+            name="image"
             type="file"
             accept="image/*" // Specify the accepted file types (in this case, images)
             onChange={(e) => handleImageUpload(e)}

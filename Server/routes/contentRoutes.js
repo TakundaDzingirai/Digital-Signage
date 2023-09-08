@@ -4,23 +4,40 @@ const Screen = require("../models/Screen");
 const router = express.Router();
 const { storage } = require("../cloudinary/index.js");
 const multer = require("multer");
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 1024 * 1024 * 5,
+    files: 10,
+  },
+});
 
 // This route will be used to add content to a screen
-router.post("/:screenId", async (req, res) => {
+router.post("/:screenId", upload.array("image"), async (req, res) => {
   try {
     const screenId = req.params.screenId;
     const userId = req.user._id;
     const { slideTitle, post, imageUrl } = req.body;
 
-    const content = new Content({
+    const contentData = {
       slideTitle,
       post,
       imageUrl,
       screen: screenId,
       user: userId,
-    });
+    };
 
+    // If there are images to upload
+    if (req.files && req.files.length > 0) {
+      contentData.images = req.files.map((f) => ({
+        url: f.path,
+        filename: f.filename,
+      }));
+    }
+
+    const content = new Content(contentData);
+
+    console.log(content);
     const savedContent = await content.save();
 
     await Screen.findByIdAndUpdate(screenId, {
