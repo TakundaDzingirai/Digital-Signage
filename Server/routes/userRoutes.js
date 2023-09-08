@@ -6,8 +6,12 @@ const User = require("../models/User");
 // This route will be used to register users
 router.post("/register", async (req, res, next) => {
   // <<<<<<< HEAD
+  // <<<<<<< HEAD
   const { firstname, lastname, email, username, dateOfBirth, password, department } =
 // =======
+  const { firstname, lastname, department, email, username, password, role } =
+>>>>>>> 0defafb5aa4411f36bd33e7820818d330a2edadf
+=======
   const { firstname, lastname, department, email, username, password, role } =
 >>>>>>> 0defafb5aa4411f36bd33e7820818d330a2edadf
     req.body;
@@ -20,9 +24,12 @@ router.post("/register", async (req, res, next) => {
     role,
     username,
     // <<<<<<< HEAD
+    // <<<<<<< HEAD
     dateOfBirth,
     department,
     // =======
+>>>>>>> 0defafb5aa4411f36bd33e7820818d330a2edadf
+=======
 >>>>>>> 0defafb5aa4411f36bd33e7820818d330a2edadf
   });
 
