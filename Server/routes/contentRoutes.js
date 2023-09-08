@@ -2,6 +2,9 @@ const express = require("express");
 const Content = require("../models/Content");
 const Screen = require("../models/Screen");
 const router = express.Router();
+const { storage } = require("../cloudinary/index.js");
+const multer = require("multer");
+const upload = multer({ storage });
 
 // This route will be used to add content to a screen
 router.post("/:screenId", async (req, res) => {
