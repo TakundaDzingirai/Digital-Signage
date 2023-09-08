@@ -13,7 +13,7 @@ const upload = multer({
 });
 
 // This route will be used to add content to a screen
-router.post("/:screenId", upload.array("images"), async (req, res) => {
+router.post("/:screenId", upload.array("image"), async (req, res) => {
   try {
     const screenId = req.params.screenId;
     const userId = req.user._id;
