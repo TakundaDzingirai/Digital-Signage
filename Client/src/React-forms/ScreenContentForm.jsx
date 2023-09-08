@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import "./ScreenContentForm.css"
 import { TextField, Button, Paper } from "@mui/material";
+
 import ScreenPanel from '../ScreenComponents/ScreenPanel';
+import { useParams } from 'react-router-dom';
 
 export default function ScreenContentForm(id) {
   const [title, setTitle] = useState("");
@@ -26,6 +28,13 @@ export default function ScreenContentForm(id) {
     if (url == "") {
       seturlError(true);
     }
+    if (!(textError  || titleError || urlError )) {
+     
+
+    }
+    
+
+
   };
   // Function to handle image upload
   const handleImageUpload = (e) => {
