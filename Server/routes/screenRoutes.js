@@ -18,12 +18,15 @@ router.post("/", async (req, res) => {
   try {
     console.log(req.body);
     const { screenName, department } = req.body;
-
     // const user = req.user._id;
+    console.log("REQUEST.BODY::", req.body);
+    // Create a new Screen instance with the user's _id
     const screen = new Screen({ screenName, department });
+    console.log("THE SCREEN: ", screen);
     await screen.save();
     res.json("Screen created successfully!");
   } catch (err) {
+    console.error("Error creating screen:", err.message); // Log the error to the console
     res.status(400).json({ "Error ": err.message });
   }
 });

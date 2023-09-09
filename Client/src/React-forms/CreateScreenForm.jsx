@@ -18,10 +18,13 @@ export default function CreateScreenForm({
     Axios.post("http://localhost:3000/screens", {
       screenName,
       department,
-    }).then((response) => {
-      setListOfUsers([...listOfUsers, { screenName, department }]);
-      console.log(response.data);
-    });
+    })
+      .then((response) => {
+        setListOfUsers([...listOfUsers, { screenName, department }]);
+      })
+      .catch((error) => {
+        console.error("Error creating screen:", error);
+      });
 
     setScreenName("");
     setDepartment("");
