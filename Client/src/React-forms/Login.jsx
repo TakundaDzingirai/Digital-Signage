@@ -83,7 +83,7 @@ const Login = () => {
                 </form>
                 <small>
                     Need an account? <Link to="/register">Register here</Link>
-                    Skip Login? < Link to="/dashboard">Click me</Link>
+                    Skip Login? < Link to="/screens">Click me</Link>
                 </small>
 
                 <Button

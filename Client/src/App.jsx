@@ -48,6 +48,7 @@ export default function App() {
             element={<ScreenContentForm />}
           />
           <Route path="/carousel" element={<AutoSlider />} />
+          {/* <Route path="/dashboard" element={<ScreenContainer />} /> */}
         </Routes>
       </Router>
     </div>
