@@ -16,9 +16,11 @@ router.get("/", async (req, res) => {
 // This route will be used to create a new screen
 router.post("/", async (req, res) => {
   try {
+    console.log(req.body);
     const { screenName, department } = req.body;
-    const user = req.user._id;
-    const screen = new Screen({ screenName, department, user });
+
+    // const user = req.user._id;
+    const screen = new Screen({ screenName, department });
     await screen.save();
     res.json("Screen created successfully!");
   } catch (err) {

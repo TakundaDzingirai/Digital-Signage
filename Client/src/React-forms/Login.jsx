@@ -4,35 +4,36 @@ import { Link } from "react-router-dom";
 import Header from "../Header";
 import "./Form.css"
 import { useNavigate } from 'react-router-dom';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+
 
 const Login = () => {
-    const [email, setEmail] = useState("");
+    const [username, setUser] = useState("");
     const [password, setPassword] = useState("");
-    const [emailError, setEmailError] = useState(false);
+    const [usernameError, setUserError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
 
     const navigate = useNavigate();
 
+
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        setEmailError(false);
+        setUserError(false);
         setPasswordError(false);
 
-        if (email === "") {
+        if (username === "") {
             setEmailError(true);
         }
         if (password === "") {
             setPasswordError(true);
         }
 
-        if (email && password) {
-            console.log(email, password);
-        }
+
     };
     const CarouselRoute = () => {
         navigate('/carousel');
-
 
     }
 
@@ -44,18 +45,18 @@ const Login = () => {
 
             >
                 <h2>Login Form</h2>
-                <form autoComplete="off" onSubmit={handleSubmit}>
+                <form autoComplete="off" onSubmit={handleSubmit} >
                     <TextField
-                        label="Email"
-                        onChange={(e) => setEmail(e.target.value)}
+                        label="Username"
+                        onChange={(e) => setUser(e.target.value)}
                         required
                         variant="outlined"
                         color="secondary"
-                        type="email"
+                        type="text"
                         sx={{ mb: 3 }}
                         fullWidth
-                        value={email}
-                        error={emailError}
+                        value={username}
+                        error={usernameError}
                     />
                     <TextField
                         label="Password"
@@ -69,6 +70,8 @@ const Login = () => {
                         fullWidth
                         sx={{ mb: 3 }}
                     />
+
+                    <br /> {/* Add a line break to move the button to the next line */}
                     <Button
                         variant="outlined"
                         color="secondary"

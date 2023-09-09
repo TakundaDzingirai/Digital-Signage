@@ -20,6 +20,7 @@ export default function CreateScreenForm({
       department,
     }).then((response) => {
       setListOfUsers([...listOfUsers, { screenName, department }]);
+      console.log(response.data);
     });
 
     setScreenName("");
