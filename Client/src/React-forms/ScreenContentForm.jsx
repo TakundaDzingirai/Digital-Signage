@@ -2,9 +2,9 @@ import { useState } from "react";
 import "./ScreenContentForm.css";
 import { TextField, Button, Paper } from "@mui/material";
 
-import ScreenPanel from '../ScreenComponents/ScreenPanel';
-import { useParams } from 'react-router-dom';
-import Axios from 'axios'
+import ScreenPanel from "../ScreenComponents/ScreenPanel";
+import { useParams } from "react-router-dom";
+import Axios from "axios";
 
 export default function ScreenContentForm() {
   const [title, setTitle] = useState("");
@@ -14,7 +14,9 @@ export default function ScreenContentForm() {
   const [textError, setTextError] = useState(false);
   const [urlError, seturlError] = useState(false);
   const { screenId } = useParams();
-  console.log(screenId);
+
+  console.log("SCREEN ID: ", screenId);
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -30,29 +32,30 @@ export default function ScreenContentForm() {
     if (url == "") {
       seturlError(true);
     }
+
     if (!(textError || titleError || urlError)) {
-      // slideTitle, post, imageUrl
-      const contentData = {
+      console.log(title, text, url);
+      const data = {
         slideTitle: title,
         post: text,
-        imageUrl: url
-
-      }
-      console.log(contentData)
-      Axios.post(`http://localhost:3000/content/${screenId}`, contentData)
+        imageUrl: url,
+      };
+      console.log(data);
+      Axios.post(`http://localhost:3000/content/${screenId}`, data)
         .then((response) => {
-          console.log(response.data);
+          console.log("THE RESPONSE!!", response);
+        })
+        .catch((err) => {
+          console.log("ERROR ENCOUNTERED: ", err.message);
         });
-
-
     }
-
   };
   // Function to handle image upload
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    setSelectedImage(file);
-  };
+
+  // const handleImageUpload = (e) => {
+  //   const file = e.target.files[0];
+  //   setSelectedImage(file);
+  // };
 
   return (
     <>
@@ -73,7 +76,7 @@ export default function ScreenContentForm() {
         <form
           autoComplete="off"
           onSubmit={handleSubmit}
-          encType="multipart/form-data"
+          // encType="multipart/form-data"
         >
           <TextField
             label="Slide Title"
@@ -97,9 +100,9 @@ export default function ScreenContentForm() {
             value={text}
             error={textError}
             sx={{ mb: 3, width: "100%" }}
-          // InputLabelProps={{
-          //   style: { color: "lightgrey" }, // Set label color to light grey
-          // }}
+            // InputLabelProps={{
+            //   style: { color: "lightgrey" }, // Set label color to light grey
+            // }}
           />
           <TextField
             label="image url"
@@ -113,12 +116,12 @@ export default function ScreenContentForm() {
             error={urlError}
             sx={{ mb: 3, width: "100%" }}
           />
-          <input
+          {/* <input
             name="image"
             type="file"
             accept="image/*" // Specify the accepted file types (in this case, images)
             onChange={(e) => handleImageUpload(e)}
-          />
+          /> */}
           <Button
             variant="outlined"
             color="secondary"
