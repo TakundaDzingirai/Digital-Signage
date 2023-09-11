@@ -7,6 +7,7 @@ import ScreenDetail from "./ScreenComponents/ScreenDetail";
 import RegisterForm from "./React-forms/RegisterForm"; // Import the RegisterForm component
 import ScreenContentForm from "./React-forms/ScreenContentForm";
 import AutoSlider from "./SlidingComponents/AutoSlider";
+import SlideContent from "./ScreenComponents/SlideContent";
 
 export default function App() {
   const [showForm, setShowForm] = useState(false);
@@ -49,6 +50,7 @@ export default function App() {
           />
           <Route path="/carousel" element={<AutoSlider />} />
           {/* <Route path="/dashboard" element={<ScreenContainer />} /> */}
+          <Route path="/content/more/:contentId" element={<SlideContent />} />
         </Routes>
       </Router>
     </div>

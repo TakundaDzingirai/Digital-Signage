@@ -89,7 +89,7 @@ router.get("/:screenId", async (req, res) => {
     const { screenId } = req.params;
     const screen = await Screen.findById(screenId).populate("content");
     if (!screen) {
-      return res.status(404).json({ Error: "Screen not found" });
+      return res.status(404).json({ Error: "Screen not found***" });
     }
     console.log("Screen content:", screen.content)
     res.json(screen.content);
@@ -99,17 +99,23 @@ router.get("/:screenId", async (req, res) => {
 });
 
 // This route will be used to view detailed information about a s specific content item
-router.get("/:contentId", async (req, res) => {
+router.get("/more/:contentId", async (req, res) => {
   try {
-    const content = Content.findById(req.params.contentId);
+    const { contentId } = req.params;
+    const content = await Content.findById(contentId);
+
     if (!content) {
       res.status(404).json({ error: "Content not found" });
+    } else {
+      res.json(content)
     }
-    res.json(content);
+
   } catch (err) {
     res.status(500).json({ err: "Error retriving content details" });
   }
 });
+
+
 
 // Consider route for reordering the contents on a screen(Drag and drop functionality)
 

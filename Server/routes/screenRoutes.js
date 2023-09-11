@@ -36,7 +36,7 @@ router.get("/:id", async (req, res) => {
   try {
     const screen = await Screen.findById(req.params.id);
     if (!screen) {
-      return res.status(404).json({ Error: "Screen not found" });
+      return res.status(404).json({ Error: "Screen not found!!!" });
     }
     res.json(screen);
   } catch (err) {
@@ -49,7 +49,7 @@ router.delete("/:id", async (req, res) => {
   try {
     const screen = await Screen.findByIdAndDelete(req.params.id);
     if (!screen) {
-      return res.status(400).json({ Error: "Screen not found" });
+      return res.status(400).json({ Error: "Screen not found@@@" });
     }
     res.json("Screen deleted successfully");
   } catch (err) {
@@ -64,7 +64,7 @@ router.put("/:id", async (req, res) => {
       new: true,
     });
     if (!screen) {
-      return res.status(400).json({ Error: "Screen not found" });
+      return res.status(400).json({ Error: "Screen not found$$$" });
     }
     await screen.save();
     res.json(screen);
