@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./FormPopup.css";
 import Button from "../Button";
 import Axios from "axios";
 
 export default function CreateScreenForm({
-  listOfUsers,
-  setListOfUsers,
+  listOfScreen,
+  setListOfScreen,
   showForm,
   onToggleForm,
 }) {
@@ -14,17 +14,35 @@ export default function CreateScreenForm({
   const [id, setId] = useState("");
   const [found, setFound] = useState(false);
 
+
+
+  // console.log("After");
+  // Axios.post("http://localhost:3000/screens", {
+  //   screenName,
+  //   department,
+  // })
+  //   .then((response) => {
+  //     setListOfUsers([...listOfScreen, { screenName, department }]);
+  //     // window.location.reload();
+  //   })
+  //   .catch((error) => {
+  //     console.error("Error creating screen:", error);
+  //   });
+
+  // setScreenName("");
+  // setDepartment("");
+  // onToggleForm();
+
   const createScreen = (e) => {
     e.preventDefault();
     console.log("Before");
-
     console.log("After");
     Axios.post("http://localhost:3000/screens", {
       screenName,
       department,
     })
       .then((response) => {
-        setListOfUsers([...listOfUsers, { screenName, department }]);
+        setListOfScreen([...listOfScreen, { screenName, department }]);
         // window.location.reload();
       })
       .catch((error) => {
@@ -36,6 +54,7 @@ export default function CreateScreenForm({
     onToggleForm();
   };
 
+
   const handleCancel = () => {
     setScreenName("");
     setDepartment("");
@@ -45,7 +64,7 @@ export default function CreateScreenForm({
   const handleDelete = () => {
     // window.location.reload();
     // Find the screen by name in listOfUsers
-    const screenToDelete = listOfUsers.find(
+    const screenToDelete = listOfScreen.find(
       (screen) => {
         console.log(screen.screenName);
 
@@ -58,10 +77,10 @@ export default function CreateScreenForm({
           Axios.delete(`http://localhost:3000/screens/${screen._id}`)
             .then(() => {
               // Remove the deleted screen from your local state
-              const updateList = listOfUsers.filter((user) => user._id !== screen._id);
+              const updateList = listOfScreen.filter((user) => user._id !== screen._id);
               console.log(updateList);
 
-              setListOfUsers(
+              setListOfScreen(
                 updateList
               );
               console.log("Deleted successfully");

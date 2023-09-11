@@ -11,7 +11,7 @@ import SlideContent from "./ScreenComponents/SlideContent";
 
 export default function App() {
   const [showForm, setShowForm] = useState(false);
-  const [listOfUsers, setListOfUsers] = useState([]);
+  const [listOfScreen, setListOfUsers] = useState([]);
 
   const toggleForm = () => {
     setShowForm((s) => !s);
@@ -26,8 +26,8 @@ export default function App() {
             path="/screens"
             element={
               <ScreenContainer
-                listOfUsers={listOfUsers}
-                setListOfUsers={setListOfUsers}
+                listOfScreen={listOfScreen}
+                setListOfScreen={setListOfUsers}
                 showForm={showForm}
                 onToggleForm={toggleForm}
               />
@@ -37,7 +37,7 @@ export default function App() {
             path="/screens/:id"
             element={
               <ScreenDetail
-                listOfUsers={listOfUsers}
+                listOfUsers={listOfScreen}
                 setListOfUsers={setListOfUsers}
               />
             }

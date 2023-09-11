@@ -12,8 +12,8 @@ import CreatescreenForm from "../React-forms/CreateScreenForm";
 export default function ScreenContainer({
   showForm,
   onToggleForm,
-  listOfUsers,
-  setListOfUsers,
+  listOfScreen,
+  setListOfScreen,
 }) {
 
 
@@ -22,25 +22,19 @@ export default function ScreenContainer({
   return (
     <div>
       <Header />
-      <Screens listOfUsers={listOfUsers} setListOfUsers={setListOfUsers} />
+      <Screens listOfScreen={listOfScreen} setListOfScreen={setListOfScreen} />
 
       {showForm && (
         <CreatescreenForm
-          listOfUsers={listOfUsers}
-          setListOfUsers={setListOfUsers}
+          listOfScreen={listOfScreen}
+          setListOfScreen={setListOfScreen}
           showForm={showForm}
           onToggleForm={onToggleForm}
         />
       )}
       <Addbtn buttonName={"Add Screen"} showForm={showForm} onToggleForm={onToggleForm} />
 
-      <button style={
-        {
-          display: "inline-block",
 
-        }
-      }
-      >Delete Screen</button>
       <hr />
     </div>
   );
