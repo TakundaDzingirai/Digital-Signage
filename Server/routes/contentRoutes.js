@@ -13,42 +13,32 @@ const upload = multer({
 });
 
 // This route will be used to add content to a screen
-router.post("/:screenId", upload.array("image"), async (req, res) => {
+router.post("/:screenId", async (req, res) => {
   try {
-    console.log(req.body);
-    const screenId = req.params.screenId;
-    const userId = req.user._id;
     const { slideTitle, post, imageUrl } = req.body;
+    const screenId = req.params.screenId;
+    // const userId = req.user._id;
 
     const contentData = {
       slideTitle,
       post,
       imageUrl,
       screen: screenId,
-      user: userId,
+      // user: userId,
     };
-
-    // If there are images to upload
-    if (req.files && req.files.length > 0) {
-      contentData.images = req.files.map((f) => ({
-        url: f.path,
-        filename: f.filename,
-      }));
-    }
 
     const content = new Content(contentData);
 
-    console.log(content);
+    console.log("REQUEST BOYD: ", req.body);
     const savedContent = await content.save();
 
     await Screen.findByIdAndUpdate(screenId, {
       $push: { content: savedContent._id },
     });
+
     res.json(savedContent);
   } catch (err) {
-    console.log(req.body);
-    res.status(500).json({ error: "Error adding content to screen", details: err.message });
-
+    res.status(500).json({ "Error adding content to screen": err.message });
   }
 });
 
