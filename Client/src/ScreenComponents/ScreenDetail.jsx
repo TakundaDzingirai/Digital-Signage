@@ -33,10 +33,10 @@ export default function ScreenDetail() {
     <div>
       <h1>{screenData.screenName} </h1>
       <p>{screenData.department}</p>
-      {/* Display other screen details here */}
-      {/* <ScreenContentForm id={id} /> */}
-      {/* <Slides screenData={screenData} /> */}
+
+      <Slides key={id} />
       <Button
+
         onClick={handleButtonClick}
         variant="outlined"
         color="secondary"

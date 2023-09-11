@@ -7,29 +7,17 @@ export default function Item({ item }) {
         <Paper className="paper"
             style={{
                 backgroundColor: randomColor,
-                width: "100%", // Set the width to 100% of the Carousel
+                width: "100%",
                 height: "60vh",
                 margin: "0",
                 display: 'flex',
-                flexDirection: 'column', // Ensure content is stacked vertically
+                flexDirection: 'column',
                 justifyContent: 'center',
-                alignItems: 'center', // Center content horizontally
+                alignItems: 'center',
                 textAlign: "center"
-
-            }}
-        >
-            <h2
-                style={{
-                    paddingBottom: "2em",
-                    margin: 0,
-                }}
-            >{item.Title}</h2>
-            <p
-                style={{
-                    margin: 0,
-                }}
-            >{item.Body}</p>
+            }}>
+            <h2 style={{ paddingBottom: "2em", margin: 0 }}>{item.Title}</h2>
+            <p style={{ margin: 0 }}>{item.Body}</p>
         </Paper>
-
     );
 }

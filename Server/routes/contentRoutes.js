@@ -15,6 +15,7 @@ const upload = multer({
 // This route will be used to add content to a screen
 router.post("/:screenId", upload.array("image"), async (req, res) => {
   try {
+    console.log(req.body);
     const screenId = req.params.screenId;
     const userId = req.user._id;
     const { slideTitle, post, imageUrl } = req.body;
@@ -45,7 +46,9 @@ router.post("/:screenId", upload.array("image"), async (req, res) => {
     });
     res.json(savedContent);
   } catch (err) {
-    res.status(500).json({ "Error adding content to screen": err });
+    console.log(req.body);
+    res.status(500).json({ error: "Error adding content to screen", details: err.message });
+
   }
 });
 
@@ -98,6 +101,7 @@ router.get("/:screenId", async (req, res) => {
     if (!screen) {
       return res.status(404).json({ Error: "Screen not found" });
     }
+    console.log("Screen content:", screen.content)
     res.json(screen.content);
   } catch (err) {
     res.status(500).json({ error: "Errpr retriving screen content" });

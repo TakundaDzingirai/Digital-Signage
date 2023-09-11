@@ -11,16 +11,21 @@ export default function CreateScreenForm({
 }) {
   const [screenName, setScreenName] = useState("");
   const [department, setDepartment] = useState("");
+  const [id, setId] = useState("");
+  const [found, setFound] = useState(false);
 
   const createScreen = (e) => {
     e.preventDefault();
+    console.log("Before");
 
+    console.log("After");
     Axios.post("http://localhost:3000/screens", {
       screenName,
       department,
     })
       .then((response) => {
         setListOfUsers([...listOfUsers, { screenName, department }]);
+        // window.location.reload();
       })
       .catch((error) => {
         console.error("Error creating screen:", error);
@@ -30,6 +35,53 @@ export default function CreateScreenForm({
     setDepartment("");
     onToggleForm();
   };
+
+  const handleCancel = () => {
+    setScreenName("");
+    setDepartment("");
+    onToggleForm();
+  };
+
+  const handleDelete = () => {
+    // window.location.reload();
+    // Find the screen by name in listOfUsers
+    const screenToDelete = listOfUsers.find(
+      (screen) => {
+        console.log(screen.screenName);
+
+        if (screen.screenName === screenName) {
+          console.log("found")
+          setFound(true);
+          setId(screen._id);
+          console.log(screen._id);
+
+          Axios.delete(`http://localhost:3000/screens/${screen._id}`)
+            .then(() => {
+              // Remove the deleted screen from your local state
+              const updateList = listOfUsers.filter((user) => user._id !== screen._id);
+              console.log(updateList);
+
+              setListOfUsers(
+                updateList
+              );
+              console.log("Deleted successfully");
+
+            })
+            .catch((error) => {
+              console.error("Error deleting screen:", error);
+            });
+
+        }
+      }
+    );
+
+
+
+    setScreenName("");
+    setDepartment("");
+    onToggleForm();
+  };
+
 
   return (
     <form onSubmit={createScreen}>
@@ -48,6 +100,17 @@ export default function CreateScreenForm({
       />
 
       <Button>Create screen</Button>
+
+      {showForm && (
+        <>
+          <button type="button" onClick={handleDelete}>
+            Delete
+          </button>
+          <button type="button" onClick={handleCancel}>
+            Cancel
+          </button>
+        </>
+      )}
     </form>
   );
 }
