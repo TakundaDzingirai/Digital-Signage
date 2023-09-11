@@ -24,7 +24,9 @@ export default function SlideContent() {
     }, [contentId]);
 
     const handleDelete = () => {
-        Axios.delete(`http://localhost:3000/content/${contentId}`);
+        Axios.delete(`http://localhost:3000/content/${contentId}`).then(
+            setContent([])
+        );
 
 
     }
