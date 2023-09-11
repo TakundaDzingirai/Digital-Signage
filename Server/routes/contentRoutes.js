@@ -62,24 +62,29 @@ router.delete("/:contentId", async (req, res) => {
   }
 });
 
-// This route will be used to update content that displays on a screen
-router.put("/:contentId", async (req, res) => {
+// This route will be used to edit individual screen content
+router.put("/edit/:contentId", async (req, res) => {
   try {
-    const { contentId } = req.params.contentId;
-    const { type, data, title } = req.body;
-    const content = Content.findById(contentId);
+    const { contentId } = req.params;
+    const { slideTitle, post, imageUrl } = req.body;
+
+    const content = await Content.findById(contentId);
+
     if (!content) {
       return res.status(404).json({ error: "Content not found" });
     }
 
-    content.title = title;
-    content.type = type;
-    content.data = data;
+    content.slideTitle = slideTitle;
+    content.post = post;
+    content.imageUrl = imageUrl;
 
     const updatedContent = await content.save();
+
     res.json(updatedContent);
   } catch (err) {
-    res.status(500).json({ "Error updating content": err });
+    res
+      .status(500)
+      .json({ error: "Error updating content", details: err.message });
   }
 });
 
@@ -91,7 +96,7 @@ router.get("/:screenId", async (req, res) => {
     if (!screen) {
       return res.status(404).json({ Error: "Screen not found***" });
     }
-    console.log("Screen content:", screen.content)
+    console.log("Screen content:", screen.content);
     res.json(screen.content);
   } catch (err) {
     res.status(500).json({ error: "Errpr retriving screen content" });
@@ -107,15 +112,12 @@ router.get("/more/:contentId", async (req, res) => {
     if (!content) {
       res.status(404).json({ error: "Content not found" });
     } else {
-      res.json(content)
+      res.json(content);
     }
-
   } catch (err) {
     res.status(500).json({ err: "Error retriving content details" });
   }
 });
-
-
 
 // Consider route for reordering the contents on a screen(Drag and drop functionality)
 
