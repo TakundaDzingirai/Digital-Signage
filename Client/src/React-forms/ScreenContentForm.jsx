@@ -44,7 +44,7 @@ export default function ScreenContentForm() {
       console.log(data);
       Axios.post(`http://localhost:3000/content/${screenId}`, data)
         .then((response) => {
-          console.log("THE RESPONSE!!", response);
+          console.log("THE RESPONSE!!", response.data);
         })
         .catch((err) => {
           console.log("ERROR ENCOUNTERED: ", err.message);

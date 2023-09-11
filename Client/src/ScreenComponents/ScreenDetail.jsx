@@ -26,7 +26,7 @@ export default function ScreenDetail() {
 
   const handleButtonClick = () => {
     // Navigate to the CreateContentForm component
-    history(`/screen/content/${id}`);
+    history(`/screens/content/${id}`);
   };
 
   return (
