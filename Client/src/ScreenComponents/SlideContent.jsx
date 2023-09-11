@@ -9,22 +9,32 @@ export default function SlideContent() {
   const [content, setContent] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [editedContent, setEditedContent] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchDetailedData = async () => {
+    try {
+      setIsLoading(true);
+      const res = await Axios.get(
+        `http://localhost:3000/content/more/${contentId}`
+      );
+
+      const obj = res.data;
+      setContent([obj]);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   useEffect(() => {
-    Axios.get(`http://localhost:3000/content/more/${contentId}`)
-      .then((res) => {
-        console.log("RES.......", res);
-        const obj = res.data;
-        setContent([obj]);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+    fetchDetailedData();
   }, [contentId]);
 
   const handleDelete = () => {
+    setIsLoading(true);
     Axios.delete(`http://localhost:3000/content/${contentId}`).then(() => {
       setContent([]); // Delete successful, clear content data
+      setIsLoading(false);
     });
   };
 
@@ -36,21 +46,15 @@ export default function SlideContent() {
   const handleCancelEdit = () => {
     setEditMode(false);
     setEditedContent({});
-    Axios.get(`http://localhost:3000/content/more/${contentId}`)
-      .then((res) => {
-        console.log("RES.......", res);
-        const obj = res.data;
-        setContent([obj]);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+    fetchDetailedData();
   };
 
   const handleSaveEdit = () => {
+    setIsLoading(true);
     Axios.put(`http://localhost:3000/content/edit/${contentId}`, editedContent)
       .then((res) => {
         setContent([res.data]);
+        setIsLoading(false);
         setEditMode(false);
       })
       .catch((error) => {
@@ -58,7 +62,7 @@ export default function SlideContent() {
       });
   };
 
-  console.log("this", content);
+  // console.log("this", content);
 
   return (
     <>
@@ -81,7 +85,9 @@ export default function SlideContent() {
             }
           />
 
-          <Button onClick={handleSaveEdit}>Save</Button>
+          <Button onClick={handleSaveEdit}>
+            {isLoading ? "Saving..." : "Save"}
+          </Button>
           <Button onClick={handleCancelEdit}>Cancel</Button>
         </div>
       ) : (
@@ -90,7 +96,9 @@ export default function SlideContent() {
             <h1>{c.slideTitle}</h1>
             <h4>{c.post}</h4>
             <h6>Created on: {c.createdAt}</h6>
-            <Button onClick={handleDelete}>Delete</Button>
+            <Button onClick={handleDelete}>
+              {isLoading ? "Deleting..." : "Delete"}
+            </Button>
             <Button onClick={handleEdit}>Edit</Button>
           </div>
         ))
