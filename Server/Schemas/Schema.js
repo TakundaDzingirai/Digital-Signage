@@ -66,7 +66,47 @@ const contentSchema = Joi.object({
   }),
 });
 
+const userSchema = Joi.object({
+  firstname: Joi.string()
+    .trim()
+    .required()
+    .messages({ "any.required": "First name must be provided" })
+    .escapeHTML(),
+  lastname: Joi.string()
+    .trim()
+    .required()
+    .messages({ "any.required": "Last name must be provided" })
+    .escapeHTML(),
+  department: Joi.string()
+    .trim()
+    .required()
+    .messages({ "any.required": "Department must be provided" })
+    .escapeHTML(),
+  username: Joi.string()
+    .trim()
+    .required()
+    .messages({ "any.required": "Username must be provided" })
+    .escapeHTML(),
+  email: Joi.string()
+    .trim()
+    .email()
+    .required()
+    .messages({ "any.required": "Email must be provided" })
+    .escapeHTML(),
+  role: Joi.string()
+    .valid("admin", "user")
+    .default("user")
+    .messages({ "any.required": "Role must be provided" })
+    .escapeHTML(),
+  password: Joi.string()
+    .min(8)
+    .required()
+    .messages({ "any.required": "Password must be provided" }),
+  confirmPassword: Joi.string().valid(Joi.ref("password")).required(),
+});
+
 module.exports = {
   screenSchema,
   contentSchema,
+  userSchema,
 };
