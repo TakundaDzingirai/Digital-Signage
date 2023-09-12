@@ -3,11 +3,13 @@ import { Link } from 'react-router-dom';
 import { useNavigate, useParams } from "react-router-dom";
 
 
-export default function Slide({ s }) {
+export default function Slide({ s, screenId }) {
     // const { id } = useParams();
-    const History = useNavigate();
+    console.log("inSlide", screenId)
+    const navigate = useNavigate();
     function handleNavigation() {
-        History(`/content/more/${s._id}`);
+        navigate(`/content/more/${s._id}`, { state: { screenId } }); // Pass screenId in the state object
+        ; // s._id is the slide id
     }
 
     //   console.log(`this:${screen._id}`);

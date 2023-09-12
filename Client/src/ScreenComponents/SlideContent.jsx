@@ -1,15 +1,19 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import ScreenPanel from "./ScreenPanel";
 import Axios from "axios";
 import { useState, useEffect } from "react";
 import { TextField, Button } from "@mui/material";
 
-export default function SlideContent() {
+export default function SlideContent(props) {
   const { contentId } = useParams();
+  const location = useLocation();
+  const { screenId } = location.state || {};
+  console.log(screenId);
   const [content, setContent] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [editedContent, setEditedContent] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const fetchDetailedData = async () => {
     try {
@@ -32,10 +36,13 @@ export default function SlideContent() {
 
   const handleDelete = () => {
     setIsLoading(true);
+    console.log("before Delete", contentId);
     Axios.delete(`http://localhost:3000/content/${contentId}`).then(() => {
+      console.log("deleted");
       setContent([]); // Delete successful, clear content data
       setIsLoading(false);
     });
+    navigate(`/screens/${screenId}`)
   };
 
   const handleEdit = () => {

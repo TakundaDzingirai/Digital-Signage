@@ -22,7 +22,7 @@ export default function Slides() {
     return (
         <ul className="Slide-list">
             {sldData.map((s) => (
-                <Slide key={s._id} s={s} />
+                <Slide key={s._id} s={s} screenId={id} />
             ))}
 
         </ul>

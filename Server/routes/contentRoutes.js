@@ -46,7 +46,7 @@ router.post("/:screenId", async (req, res) => {
 router.delete("/:contentId", async (req, res) => {
   try {
     const { contentId } = req.params;
-    const content = Content.findById(contentId);
+    const content = await Content.findById(contentId);
     if (!content) {
       res.status(400).json({ Error: "Content not found" });
     }
@@ -56,7 +56,8 @@ router.delete("/:contentId", async (req, res) => {
       $pull: { content: contentId },
     });
 
-    res.json("Content deleted successfully");
+    // res.json("Content deleted successfully");
+    // res.redirect(`/screens/${screenId}`)
   } catch (err) {
     res.status(500).json({ "Error deleting content": err });
   }
