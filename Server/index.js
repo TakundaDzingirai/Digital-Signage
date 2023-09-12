@@ -15,6 +15,7 @@ const passport = require("passport");
 const localStrategy = require("passport-local");
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 const dbURL = process.env.DB_URL;
