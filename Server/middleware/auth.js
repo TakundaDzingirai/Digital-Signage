@@ -16,3 +16,16 @@ const isAdmin = (req, res, next) => {
   // req.flash("error", "You do not have permission to access that route");
   res.redirect("/screens");
 };
+
+const storeReturnTo = (req, res, next) => {
+  if (req.session.returnTo) {
+    res.locals.returnTo = req.session.returnTo;
+  }
+  next();
+};
+
+module.exports = {
+  isLoggedIn,
+  isAdmin,
+  storeReturnTo,
+};
