@@ -32,13 +32,13 @@ router.post("/register", async (req, res, next) => {
 // This route will be used to login a user
 router.post(
   "/login",
-  passport.authenticate("local", {
-    failureFlash: true,
-    failureRedirect: "/login",
-  }),
+  passport.authenticate("local"),
   (req, res) => {
-    const redirectUrl = "/screens";
-    res.redirect(redirectUrl);
+    if (req.user) {
+      res.json({ success: true, message: "Login Successful" })
+    } else {
+      res.status(401).json({ success: false, message: "Incorrect username or password" })
+    }
   }
 );
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextField, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import Header from "../Header";
@@ -8,16 +8,16 @@ import { ToastContainer, toast } from "react-toastify";
 import Axios from "axios";
 
 const Login = () => {
-    const [username, setUser] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [usernameError, setUserError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
-    const [loginSuccess, setLoginSuccess] = useState("");
-    const [loginError, setLoginError] = useState("");
+    const [loginSuccess, setLoginSuccess] = useState(false);
+    const [toastId, setToastId] = useState(null); // Store toastId in state
 
     const navigate = useNavigate();
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         setUserError(false);
@@ -30,39 +30,49 @@ const Login = () => {
             setPasswordError(true);
             return;
         }
+        try {
+            const response = await Axios.post("http://localhost:3000/login", {
+                username,
+                password,
+            });
 
-        Axios.post(`http://localhost:3000/login`, { username, password }).then(
-            (res) => {
-                if (res.data.error) {
-                    setLoginError("Incorrect pawword or username!");
-                    toast.error("Incorrect pawword or username!")
-                    setLoginSuccess("");
-                } else {
-                    localStorage.setItem("token", res.data.token);
-                    setLoginSuccess("You are Logged in");
-                    setLoginError("");
-                    toast.success("You are Logged in");
+            if (response.data.success) {
+                const id = toast.success("Login Successful");
+                setToastId(id); // Store the toastId in state
+                setLoginSuccess(true);
+            } else {
+                toast.error("Incorrect username or password");
+            }
+        } catch (error) {
+            toast.error("Incorrect username or password");
+            console.error("Login error:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (loginSuccess && toastId) {
+            // Check the status after a delay
+            setTimeout(() => {
+                const isActive = toast.isActive(toastId);
+                if (isActive) {
+                    toast.done(); // Mark the toast as done
+                    console.log("Done");
                     navigate("/screens");
                 }
-            }
-        );
-    };
+            }, 1000); // Adjust the delay as needed
+        }
+    }, [loginSuccess, toastId, navigate]);
 
-    const CarouselRoute = () => {
-        navigate("/carousel");
-    };
 
     return (
         <>
             <Header />
             <div className="form">
                 <h2>Login Form</h2>
-                {loginSuccess && <div className="success">{loginSuccess}</div>}
-                {loginError && <div className="error">{loginError}</div>}
                 <form autoComplete="off" onSubmit={handleSubmit}>
                     <TextField
                         label="Username"
-                        onChange={(e) => setUser(e.target.value)}
+                        onChange={(e) => setUsername(e.target.value)}
                         required
                         variant="outlined"
                         color="secondary"
@@ -95,13 +105,12 @@ const Login = () => {
                         Login
                     </Button>
                 </form>
+
                 <ToastContainer />
                 <small>
                     Need an account? <Link to="/register">Register here</Link>
                     Skip Login? <Link to="/screens">Click me</Link>
                 </small>
-
-                <Button onClick={CarouselRoute}>Carousel Sample</Button>
             </div>
         </>
     );
