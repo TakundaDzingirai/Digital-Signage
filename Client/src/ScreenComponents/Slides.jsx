@@ -20,7 +20,7 @@ export default function Slides() {
     console.log("After get request:")
     console.log(sldData);
     return (
-        <ul className="slide-list">
+        <ul className="Slide-list">
             {sldData.map((s) => (
                 <Slide key={s._id} s={s} />
             ))}

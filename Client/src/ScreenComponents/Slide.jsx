@@ -12,11 +12,11 @@ export default function Slide({ s }) {
 
     //   console.log(`this:${screen._id}`);
     return (
-        <li onClick={handleNavigation} className="slide">
+        <div onClick={handleNavigation} className="slide">
 
 
             <h1>{s.slideTitle}</h1>
 
-        </li>
+        </div>
     );
 }
