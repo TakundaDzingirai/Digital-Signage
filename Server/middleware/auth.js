@@ -8,3 +8,11 @@ const isLoggedIn = (req, res, next) => {
   // req.flash("error", "You must be signed in !");
   return res.redirect("/login");
 };
+
+const isAdmin = (req, res, next) => {
+  if (req.user && req.isAuthenticated() && req.user.role === "admin") {
+    return next();
+  }
+  // req.flash("error", "You do not have permission to access that route");
+  res.redirect("/screens");
+};
