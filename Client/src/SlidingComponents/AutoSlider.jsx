@@ -8,14 +8,16 @@ import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { Paper } from "@mui/material";
 // import Carousel from "./Carousel";
-
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function AutoSlider() {
     const [fadeEnter, setFadeEnter] = useState(false);
     const [fadeEnterActive, setFadeEnterActive] = useState(true);
     const [slideDuration, setSlideDuration] = useState(2);
     const [slideInterval, setSlideInterval] = useState(25);
-
+    const location = useLocation(); // Use useLocation to access location state
+    const { SlideData } = location.state || {}; // Extract SlideData from location state
+    console.log(SlideData);
 
 
     const items = [
@@ -65,7 +67,7 @@ export default function AutoSlider() {
                 interval={slideInterval * 1000} // Convert seconds to milliseconds
 
             >
-                {items.map((item) => <Item key={item.id} item={item} />)}
+                {SlideData.map((item) => <Item key={item._id} item={item} />)}
             </Carousel>
 
             <br></br>

@@ -17,7 +17,7 @@ export default function Item({ item }) {
                 textAlign: "center"
             }}>
             <h2 style={{ paddingBottom: "2em", margin: 0 }}>{item.Title}</h2>
-            <p style={{ margin: 0 }}>{item.Body}</p>
+            <p style={{ margin: 0 }}>{item.slideTitle}<br></br>{item.post}</p>
         </Paper>
     );
 }
