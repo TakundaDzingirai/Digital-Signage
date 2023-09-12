@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./ScreenContentForm.css";
 import { TextField, Button, Paper } from "@mui/material";
-
+import { ToastContainer, toast } from "react-toastify";
 import ScreenPanel from "../ScreenComponents/ScreenPanel";
 import { useParams } from "react-router-dom";
 import Axios from "axios";
@@ -14,9 +14,23 @@ export default function ScreenContentForm() {
   const [textError, setTextError] = useState(false);
   const [urlError, seturlError] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [isAdded, setAdded] = useState(false);
   const { screenId } = useParams();
 
   console.log("SCREEN ID: ", screenId);
+
+  useEffect(() => {
+    if (isAdded) {
+      setTitle("");
+      setText("");
+      seturl("");
+      setSelectedImage(null);
+      setAdded(false);
+
+    }
+
+  },)
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -44,6 +58,10 @@ export default function ScreenContentForm() {
       console.log(data);
       Axios.post(`http://localhost:3000/content/${screenId}`, data)
         .then((response) => {
+          toast.success("Added Succesfully!");
+          setAdded(true);
+
+
           console.log("THE RESPONSE!!", response.data);
         })
         .catch((err) => {
@@ -74,6 +92,7 @@ export default function ScreenContentForm() {
           // backgroundColor: "rgba(10, 10, 10, 0.3)"
         }}
       >
+        <ToastContainer />
         <form
           autoComplete="off"
           onSubmit={handleSubmit}
