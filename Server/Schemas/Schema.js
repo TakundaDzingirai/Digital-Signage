@@ -45,4 +45,28 @@ const screenSchema = Joi.object({
     .escapeHTML(),
 });
 
-module.exports = screenSchema;
+const contentSchema = Joi.object({
+  slideTitle: Joi.string()
+    .trim()
+    .required()
+    .messages({
+      "any.required": "The slide title must be provided",
+    })
+    .escapeHTML(),
+  post: Joi.string()
+    .trim()
+    .required()
+    .messages({
+      "any.required": "The post content must be provided",
+    })
+    .escapeHTML(),
+  imageUrl: Joi.string().trim().required().uri().messages({
+    "any.required": "The image URL must be provided",
+    "string.uri": "Invalid image URL format",
+  }),
+});
+
+module.exports = {
+  screenSchema,
+  contentSchema,
+};
