@@ -13,6 +13,7 @@ const User = require("./models/User");
 const session = require("express-session");
 const passport = require("passport");
 const localStrategy = require("passport-local");
+const ErrorResponse = require("./utilities/ErrorResponse");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -75,6 +76,16 @@ app.get("/newsfeed", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Error fetching the RSS feed" });
   }
+});
+
+app.all("*", (req, res, next) => {
+  next(new ErrorResponse("Page Not found", 404));
+});
+
+app.use((err, req, res, next) => {
+  const { statusCode = 500 } = err;
+  if (!err.message) err.message = "Oh No, Something Went Wrong!";
+  res.status(statusCode).json({ error: err.message });
 });
 
 const port = process.env.PORT || 3000;
