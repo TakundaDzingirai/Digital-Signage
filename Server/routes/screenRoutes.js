@@ -1,17 +1,25 @@
+// const User = require("../models/User");
 const express = require("express");
 const router = express.Router({ mergeParams: true });
 const Screen = require("../models/Screen");
-
+const User = require("../models/User");
 // This route will be used to display all the active screens
+// This route will be used to display screens based on the user's department
 router.get("/", async (req, res) => {
   try {
-    // Retrieve all screens from the database
-    const screens = await Screen.find({});
+    // Get the department from the logged-in user
+    const { department } = req.query;
+    console.log(department)
+
+    // Retrieve screens that belong to the user's department
+    const screens = await Screen.find({ department });
+
     res.json(screens);
   } catch (err) {
-    res.status(400).json({ "Error ": err.message });
+    res.status(400).json({ Error: err.message });
   }
 });
+
 
 // This route will be used to create a new screen
 router.post("/", async (req, res) => {

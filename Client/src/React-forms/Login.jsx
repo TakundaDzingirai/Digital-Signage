@@ -14,6 +14,8 @@ const Login = () => {
     const [passwordError, setPasswordError] = useState(false);
     const [loginSuccess, setLoginSuccess] = useState(false);
     const [toastId, setToastId] = useState(null); // Store toastId in state
+    const [departmnt, setDepartment] = useState("")
+    const dep = "";
 
     const navigate = useNavigate();
 
@@ -35,8 +37,14 @@ const Login = () => {
                 username,
                 password,
             });
-
             if (response.data.success) {
+                // Successful login
+                const { department } = response.data;
+                // Now, you can use the 'department' variable as needed in your frontend code
+                console.log(department)
+                setDepartment(department)
+                console.log('User department:', department);
+
                 const id = toast.success("Login Successful");
                 setToastId(id); // Store the toastId in state
                 setLoginSuccess(true);
@@ -56,8 +64,9 @@ const Login = () => {
                 const isActive = toast.isActive(toastId);
                 if (isActive) {
                     toast.done(); // Mark the toast as done
-                    console.log("Done");
-                    navigate("/screens");
+                    console.log("Done:", departmnt);
+                    navigate("/screens", { state: { departmnt } });
+
                 }
             }, 1000); // Adjust the delay as needed
         }

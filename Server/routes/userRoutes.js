@@ -24,23 +24,28 @@ router.post("/register", async (req, res, next) => {
       // res.json("User logged in successfully");
       res.redirect("/login");
     } else {
+      res
       res.redirect("/screens");
     }
   });
 });
 
 // This route will be used to login a user
+// In userRoutes.js
 router.post(
   "/login",
   passport.authenticate("local"),
-  (req, res) => {
+  async (req, res) => {
     if (req.user) {
-      res.json({ success: true, message: "Login Successful" })
+      // Include department information in the response
+      const { department } = req.user;
+      res.json({ success: true, message: "Login Successful", department });
     } else {
-      res.status(401).json({ success: false, message: "Incorrect username or password" })
+      res.status(401).json({ success: false, message: "Incorrect username or password" });
     }
   }
 );
+
 
 // This route will be used to logout a user
 router.get("/logout", (req, res, next) => {
