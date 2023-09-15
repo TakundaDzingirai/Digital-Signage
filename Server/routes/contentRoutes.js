@@ -16,6 +16,7 @@ const upload = multer({
 router.post("/:screenId", async (req, res) => {
   try {
     const { slideTitle, post, imageUrl } = req.body;
+    console.log(imageUrl);
     const screenId = req.params.screenId;
     // const userId = req.user._id;
 

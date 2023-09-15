@@ -6,6 +6,8 @@ import "./Form.css";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import Axios from "axios";
+import CircularIndeterminate from "../CircularIndeterminate";
+
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -14,8 +16,12 @@ const Login = () => {
     const [passwordError, setPasswordError] = useState(false);
     const [loginSuccess, setLoginSuccess] = useState(false);
     const [toastId, setToastId] = useState(null); // Store toastId in state
-    const [departmnt, setDepartment] = useState("")
-    const dep = "";
+    const [departmnt, setDepartment] = useState("");
+    const [start, setStart] = useState(false)
+
+
+
+
 
     const navigate = useNavigate();
 
@@ -32,11 +38,15 @@ const Login = () => {
             setPasswordError(true);
             return;
         }
+        setStart(true);
         try {
+
             const response = await Axios.post("http://localhost:3000/login", {
                 username,
                 password,
             });
+
+
             if (response.data.success) {
                 // Successful login
                 const { department } = response.data;
@@ -50,16 +60,21 @@ const Login = () => {
                 setLoginSuccess(true);
             } else {
                 toast.error("Incorrect username or password");
+                setStart(false);
             }
         } catch (error) {
             toast.error("Incorrect username or password");
+            setStart(false);
             console.error("Login error:", error);
         }
     };
 
     useEffect(() => {
+
+
         if (loginSuccess && toastId) {
             // Check the status after a delay
+            setStart(false);
             setTimeout(() => {
                 const isActive = toast.isActive(toastId);
                 if (isActive) {
@@ -70,13 +85,14 @@ const Login = () => {
                 }
             }, 1000); // Adjust the delay as needed
         }
-    }, [loginSuccess, toastId, navigate]);
+    }, [start, loginSuccess, toastId, navigate]);
 
 
     return (
         <>
             <Header />
             <div className="form">
+
                 <h2>Login Form</h2>
                 <form autoComplete="off" onSubmit={handleSubmit}>
                     <TextField
@@ -114,8 +130,9 @@ const Login = () => {
                         Login
                     </Button>
                 </form>
-
+                {start && (<CircularIndeterminate info={"Verifying..."} />)}
                 <ToastContainer />
+
                 <small>
                     Need an account? <Link to="/register">Register here</Link>
                     Skip Login? <Link to="/screens">Click me</Link>

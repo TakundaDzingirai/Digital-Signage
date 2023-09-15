@@ -1,17 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TextField, Button, Stack } from "@mui/material";
 import { Link } from "react-router-dom";
 import Header from "../Header";
 import "./Form.css";
 import Axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import CircularIndeterminate from "../CircularIndeterminate";
 
 const RegisterForm = () => {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
-    const [dateOfBirth, setDateOfBirth] = useState("");
     const [password, setPassword] = useState("");
     const [department, setDepartment] = useState("");
     const [userName, setUser] = useState("");
@@ -24,8 +26,29 @@ const RegisterForm = () => {
     const [departmentError, setDepartmentError] = useState(false);
     const [userNameError, setuserNameError] = useState(false);
     const [roleError, setRoleError] = useState(false);
-
+    const [start, setStart] = useState(false);
+    const [toastId, setToastId] = useState(null);
+    const [registered, setRegister] = useState(false);
     const [role, setRole] = useState('');
+
+    const navigate = useNavigate();
+    useEffect(() => {
+
+        if (registered && toastId) {
+            // Check the status after a delay
+            setStart(false);
+            setTimeout(() => {
+                const isActive = toast.isActive(toastId);
+                if (isActive) {
+                    toast.done(); // Mark the toast as done
+
+                    navigate("/");
+
+                }
+            }, 1000); // Adjust the delay as needed
+        }
+    }, [start, registered, toastId, navigate]);
+
 
 
 
@@ -55,9 +78,7 @@ const RegisterForm = () => {
         if (email === "") {
             setEmailError(true);
         }
-        if (dateOfBirth === "") {
-            setDateOfBirthError(true);
-        }
+
         if (password === "") {
             setPasswordError(true);
         }
@@ -111,14 +132,20 @@ const RegisterForm = () => {
             console.log(userData)
 
             // Make a POST request to the registration endpoint with the user's data
+            setStart(true)
             Axios.post("http://localhost:3000/register", userData)
                 .then((response) => {
                     // Handle the response from the server (e.g., display a success message)
-                    console.log("Registration successful!", response.data);
+
+
+                    const id = toast.success("Registration successful!", response.data);
+                    setToastId(id);
+                    setRegister(true);
                 })
                 .catch((error) => {
                     // Handle any errors that may occur during the POST request
                     console.error("Registration failed:", error);
+                    setStart(false);
                 });
         }
     };
@@ -129,10 +156,11 @@ const RegisterForm = () => {
             <div
                 className="form"
                 style={{
-                    marginTop: "2em",
+                    marginTop: "10vh",
                 }}
             >
                 <h2>Register Form</h2>
+                {start && (<CircularIndeterminate color={"red"} info="Registering..." />)}
                 <form onSubmit={handleSubmit} action={<Link to="/login" />} style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
                     <Stack spacing={2} direction="row" sx={{ marginBottom: 3 }}>
                         <TextField
@@ -240,6 +268,7 @@ const RegisterForm = () => {
                     >
                         Register
                     </Button>
+                    <ToastContainer />
                 </form>
                 <small>
                     Already have an account? <Link to="/">Login Here</Link>

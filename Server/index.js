@@ -15,6 +15,9 @@ const passport = require("passport");
 const localStrategy = require("passport-local");
 const ErrorResponse = require("./utilities/ErrorResponse");
 
+const cloudinary = require("./cloudinary/cloudinary")
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());

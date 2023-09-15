@@ -53,7 +53,7 @@ export default function ScreenContentForm() {
       const data = {
         slideTitle: title,
         post: text,
-        imageUrl: url,
+        imageUrl: selectedImage,
       };
       console.log(data);
       Axios.post(`http://localhost:3000/content/${screenId}`, data)
@@ -71,10 +71,20 @@ export default function ScreenContentForm() {
   };
   // Function to handle image upload
 
-  // const handleImageUpload = (e) => {
-  //   const file = e.target.files[0];
-  //   setSelectedImage(file);
-  // };
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    previewFiles(file);
+  };
+
+
+  // previewFile function
+  const previewFiles = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setSelectedImage(reader.result);
+    };
+  }
 
   return (
     <>
@@ -136,12 +146,12 @@ export default function ScreenContentForm() {
             error={urlError}
             sx={{ mb: 3, width: "100%" }}
           />
-          {/* <input
+          <input
             name="image"
             type="file"
             accept="image/*" // Specify the accepted file types (in this case, images)
             onChange={(e) => handleImageUpload(e)}
-          /> */}
+          />
           <Button
             variant="outlined"
             color="secondary"
@@ -151,7 +161,13 @@ export default function ScreenContentForm() {
             Add
           </Button>
         </form>
+        {selectedImage && (
+          <img
+            src={selectedImage}
+            style={{ width: "10%", height: "15vh" }}
+          />)}
       </Paper>
+
     </>
   );
 }
