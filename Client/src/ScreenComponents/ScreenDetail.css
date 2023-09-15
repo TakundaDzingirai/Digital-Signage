@@ -1,13 +1,16 @@
 /* ScreenDetail.css */
 .container {
-    position: relative; /* Establish a positioning context for the child element */
-  }
-  
-  /* Style for the h3 element */
-  h3 {
-    position: absolute; /* Position the element absolutely within the container */
-    bottom: 0; /* Place the element at the bottom of the container */
-    left: 0; /* Place the element at the left side of the container */
-    margin: 0; /* Remove any default margin */
-  }
-  
+  position: relative;
+  /* Establish a positioning context for the child element */
+}
+
+/* Style for the h3 element */
+h3 {
+  /* position: absolute; Position the element absolutely within the container */
+  bottom: 0;
+  /* Place the element at the bottom of the container */
+  left: 0;
+  /* Place the element at the left side of the container */
+  margin: 0;
+  /* Remove any default margin */
+}

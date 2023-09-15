@@ -6,6 +6,7 @@ import "./ScreenDetail.css"
 import ScreenContentForm from "../React-forms/ScreenContentForm";
 import { TextField, Button } from "@mui/material";
 import Slides from './Slides';
+import ScreenPanel from './ScreenPanel';
 
 export default function ScreenDetail() {
   const { id } = useParams();
@@ -31,10 +32,11 @@ export default function ScreenDetail() {
 
   return (
     <div>
+      <ScreenPanel />
       <h1>{screenData.screenName} </h1>
-      <p>{screenData.department}</p>
 
       <Slides key={id} />
+
       <Button
 
         onClick={handleButtonClick}
@@ -42,9 +44,9 @@ export default function ScreenDetail() {
         color="secondary"
         style={{ borderRadius: "5px" }}
       >
-        Add
+        Add Slide
       </Button>
       <h3>This screen was created @ {screenData.createdAt}</h3>
-    </div>
+    </div >
   );
 }

@@ -7,7 +7,10 @@
     margin: 0 auto;
     width: 90%;
     flex-wrap: wrap;
-    margin-top: 2%;
+    margin-top: 2vh;
+    margin-bottom: 3vh;
+
+
 }
 
 .slide {
@@ -18,6 +21,7 @@
     /* border: 0.1rem solid #4a4e69; */
     border-radius: 5%;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    margin-top: 3vh;
 
 
 }

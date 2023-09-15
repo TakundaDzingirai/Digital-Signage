@@ -1,9 +1,9 @@
 import "../Header.css";
-export default function ScreenPanel({ source }) {
+export default function ScreenPanel({ h_vh = "5vh" }) {
     return (
         <div className="Header"
             style={{
-                height: "5vh",
+                height: h_vh,
             }}
 
         >
