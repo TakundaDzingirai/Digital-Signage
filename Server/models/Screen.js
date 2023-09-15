@@ -14,7 +14,7 @@ const screenSchema = new Schema(
       required: true,
     },
 
-    user: {
+    createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },

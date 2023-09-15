@@ -1,252 +1,237 @@
-import React, { useState } from "react";
-import { TextField, Button, Stack } from "@mui/material";
-import { Link } from "react-router-dom";
-import Header from "../Header";
-import "./Form.css";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Axios from "axios";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
+import {
+  Button,
+  Container,
+  CssBaseline,
+  TextField,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography,
+  Avatar,
+  Grid,
+  Box,
+  Checkbox,
+  FormControlLabel,
+  Link as MUILink,
+  Paper,
+  ThemeProvider,
+  createTheme,
+} from "@mui/material";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { ToastContainer, toast } from "react-toastify";
 
-const RegisterForm = () => {
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [dateOfBirth, setDateOfBirth] = useState("");
-    const [password, setPassword] = useState("");
-    const [department, setDepartment] = useState("");
-    const [userName, setUser] = useState("");
+const theme = createTheme();
 
-    const [firstNameError, setFirstNameError] = useState(false);
-    const [lastNameError, setLastNameError] = useState(false);
-    const [emailError, setEmailError] = useState(false);
-    const [dateOfBirthError, setDateOfBirthError] = useState(false);
-    const [passwordError, setPasswordError] = useState(false);
-    const [departmentError, setDepartmentError] = useState(false);
-    const [userNameError, setuserNameError] = useState(false);
-    const [roleError, setRoleError] = useState(false);
+function RegisterForm() {
+  const navigate = useNavigate();
 
-    const [role, setRole] = useState('');
+  const [registrationData, setRegistrationData] = useState({
+    firstname: "",
+    lastname: "",
+    department: "",
+    email: "",
+    username: "",
+    password: "",
+  });
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setRegistrationData({
+      ...registrationData,
+      [name]: value,
+    });
+  };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    const handleChange = (event) => {
-        setRole(event.target.value);
-    };
-    function handleSubmit(event) {
-        event.preventDefault();
+    try {
+      const response = await Axios.post(
+        "http://localhost:3000/register",
+        registrationData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-        // Reset previous errors
-        setFirstNameError(false);
-        setLastNameError(false);
-        setEmailError(false);
-        setDateOfBirthError(false);
-        setPasswordError(false);
-        setDepartmentError(false);
-        setRoleError(false);
-        setuserNameError(false);
+      if (response.status === 201) {
+        const data = response.data;
+        const { firstName } = data.user;
+        console.log("FIRSTNAME FROM REGISTRATION.......", firstName);
+        toast.success(`Welcome to Digi Sign, ${firstName}!`, {
+          position: "top-center",
+          autoClose: 2000,
+        });
 
-        // Perform validation and set errors if necessary
-        if (firstName === "") {
-            setFirstNameError(true);
-        }
-        if (lastName === "") {
-            setLastNameError(true);
-        }
-        if (email === "") {
-            setEmailError(true);
-        }
-        if (dateOfBirth === "") {
-            setDateOfBirthError(true);
-        }
-        if (password === "") {
-            setPasswordError(true);
-        }
-        if (department === "") {
-            setDepartmentError(true);
-        }
-        if (userName === "") {
-            setuserNameError(true);
-        }
-        if (role === "") {
-            setRoleError(true)
-        }
+        const token = data.token;
+        localStorage.setItem("token", token);
 
-        // Continue with form submission if no errors
-        if (
-            !(
-                firstNameError ||
-                lastNameError ||
-                emailError ||
-                dateOfBirthError ||
-                passwordError ||
-                departmentError
-            )
-        ) {
-            console.log(firstName, lastName, email, dateOfBirth, password, department);
-        }
+        navigate("/screens");
+      } else {
+        toast.error("Registration failed", {
+          position: "top-center",
+          autoClose: 2000,
+        });
+      }
+    } catch (error) {
+      console.error("Error:", error);
     }
+  };
 
-    const Register = () => {
-        if (
-            !(
-                firstNameError ||
-                lastNameError ||
-                emailError ||
-                dateOfBirthError ||
-                passwordError ||
-                departmentError
-            )
-        ) {
-            // Create an object with the user's registration data
-
-            const userData = {
-                firstname: firstName,
-                lastname: lastName,
-                department: department,
-                email: email,
-                username: userName,
-                password: password,
-                role: role
-            };
-            console.log(userData)
-
-            // Make a POST request to the registration endpoint with the user's data
-            Axios.post("http://localhost:3000/register", userData)
-                .then((response) => {
-                    // Handle the response from the server (e.g., display a success message)
-                    console.log("Registration successful!", response.data);
-                })
-                .catch((error) => {
-                    // Handle any errors that may occur during the POST request
-                    console.error("Registration failed:", error);
-                });
-        }
-    };
-
-    return (
-        <>
-            <Header />
-            <div
-                className="form"
-                style={{
-                    marginTop: "2em",
-                }}
+  return (
+    <ThemeProvider theme={theme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Paper
+          elevation={3}
+          sx={{
+            padding: 4,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign up
+          </Typography>
+          <Box
+            component="form"
+            noValidate
+            onSubmit={handleSubmit}
+            action={<Link to="/login" />}
+            sx={{ mt: 3, width: "100%" }}
+          >
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  autoComplete="given-name"
+                  name="firstname"
+                  required
+                  fullWidth
+                  id="firstname"
+                  label="First Name"
+                  autoFocus
+                  value={registrationData.firstname}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  fullWidth
+                  id="lastname"
+                  label="Last Name"
+                  name="lastname"
+                  value={registrationData.lastname}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  value={registrationData.email}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="username"
+                  label="Username"
+                  name="username"
+                  value={registrationData.username}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  value={registrationData.password}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  required
+                >
+                  <InputLabel id="department-label">Department</InputLabel>
+                  <Select
+                    labelId="department-label"
+                    id="department"
+                    name="department"
+                    value={registrationData.department}
+                    onChange={handleChange}
+                    label="Department"
+                  >
+                    <MenuItem value="Computer Science">
+                      Computer Science
+                    </MenuItem>
+                    <MenuItem value="Information Systems">
+                      Information Systems
+                    </MenuItem>
+                    <MenuItem value="Accounting">Accounting</MenuItem>
+                    <MenuItem value="Economics">Economics</MenuItem>
+                    <MenuItem value="Applied Statistics">
+                      Applied Statistics
+                    </MenuItem>
+                    <MenuItem value="Law">Law</MenuItem>
+                    {/* Add more department options here */}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox value="allowExtraEmails" color="primary" />
+                  }
+                  label="I want to receive inspiration, marketing promotions and updates via email."
+                />
+              </Grid>
+            </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
             >
-                <h2>Register Form</h2>
-                <form onSubmit={handleSubmit} action={<Link to="/login" />} style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
-                    <Stack spacing={2} direction="row" sx={{ marginBottom: 3 }}>
-                        <TextField
-                            type="text"
-                            variant="outlined"
-                            color="secondary"
-                            label="First Name"
-                            onChange={(e) => setFirstName(e.target.value)}
-                            value={firstName}
-                            fullWidth
-                            required
-                            error={firstNameError}
-                        />
-                        <TextField
-                            type="text"
-                            variant="outlined"
-                            color="secondary"
-                            label="Last Name"
-                            onChange={(e) => setLastName(e.target.value)}
-                            value={lastName}
-                            fullWidth
-                            required
-                            error={lastNameError}
-                        />
-                    </Stack>
-                    <Select
-
-                        value={department}
-                        onChange={(e) => setDepartment(e.target.value)}
-                        sx={{ mb: 3 }}
-                        error={departmentError}
-                        displayEmpty
-                        inputProps={{ 'aria-label': 'Select an option' }}
-                    >
-                        <MenuItem value="" disabled >
-                            <p style={{ color: "red", margin: "0", padding: "0" }}>Select Department*</p>
-                        </MenuItem>
-                        <MenuItem value="Computer Science">Computer Science</MenuItem>
-                        <MenuItem value="Information Systems">Information Systems</MenuItem>
-                        <MenuItem value="Applied and Mathematical Statistics">Applied and Mathematical Statistics </MenuItem>
-                        <MenuItem value="Applied Mathematics">Applied Mathematics </MenuItem>
-                        <MenuItem value="Law">Law </MenuItem>
-
-
-                    </Select>
-                    <Select
-                        value={role}
-                        onChange={handleChange}
-                        sx={{ mb: 3 }}
-                        error={roleError}
-                        displayEmpty
-                        inputProps={{ 'aria-label': 'Select an option' }}
-                    >
-
-                        <MenuItem value="" disabled>
-                            <p style={{ color: "red", margin: "0", padding: "0" }}> Select Role*</p>
-                        </MenuItem>
-                        <MenuItem value="admin">admin</MenuItem>
-                        <MenuItem value="user">user</MenuItem>
-
-                    </Select>
-                    <TextField
-                        type="email"
-                        variant="outlined"
-                        color="secondary"
-                        label="Email"
-                        onChange={(e) => setEmail(e.target.value)}
-                        value={email}
-                        fullWidth
-                        required
-                        sx={{ mb: 3 }}
-                        error={emailError}
-                    />
-                    <TextField
-                        type="text"
-                        variant="outlined"
-                        color="secondary"
-                        label="Username"
-                        onChange={(e) => setUser(e.target.value)}
-                        value={userName}
-                        fullWidth
-                        required
-                        sx={{ mb: 3 }}
-                        error={userNameError}
-                    />
-                    <TextField
-                        type="password"
-                        variant="outlined"
-                        color="secondary"
-                        label="Password"
-                        onChange={(e) => setPassword(e.target.value)}
-                        value={password}
-                        required
-                        fullWidth
-                        sx={{ mb: 3 }}
-                        error={passwordError}
-                    />
-
-                    <Button
-                        variant="outlined"
-                        color="secondary"
-                        type="submit"
-                        onClick={Register}
-                        style={{ width: "20%", marginLeft: "40%" }}
-                    >
-                        Register
-                    </Button>
-                </form>
-                <small>
-                    Already have an account? <Link to="/">Login Here</Link>
-                </small>
-            </div>
-        </>
-    );
-};
+              Sign Up
+            </Button>
+            <Grid container justifyContent="flex-end">
+              <Grid item>
+                <MUILink component={Link} to="/" variant="body2">
+                  Already have an account? Sign in
+                </MUILink>
+              </Grid>
+            </Grid>
+          </Box>
+        </Paper>
+        <ToastContainer />
+      </Container>
+    </ThemeProvider>
+  );
+}
 
 export default RegisterForm;

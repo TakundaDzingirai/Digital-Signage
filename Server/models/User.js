@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
-const passportLocalMongoose = require("passport-local-mongoose");
+
+const bcrypt = require("bcrypt");
+
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
@@ -29,6 +31,11 @@ const userSchema = new Schema({
     unique: true,
   },
 
+  password: {
+    type: String,
+    required: true,
+  },
+
   role: {
     type: String,
     enum: ["admin", "user"],
@@ -37,6 +44,10 @@ const userSchema = new Schema({
   },
 });
 
-userSchema.plugin(passportLocalMongoose);
+userSchema.methods.verifyPassword = function (password) {
+  return bcrypt.compareSync(password, this.password);
+};
+
+// userSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model("User", userSchema);

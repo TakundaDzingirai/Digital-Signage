@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./FormPopup.css";
 import Button from "../Button";
 import Axios from "axios";
@@ -14,33 +14,25 @@ export default function CreateScreenForm({
   const [id, setId] = useState("");
   const [found, setFound] = useState(false);
 
-
-
-  // console.log("After");
-  // Axios.post("http://localhost:3000/screens", {
-  //   screenName,
-  //   department,
-  // })
-  //   .then((response) => {
-  //     setListOfUsers([...listOfScreen, { screenName, department }]);
-  //     // window.location.reload();
-  //   })
-  //   .catch((error) => {
-  //     console.error("Error creating screen:", error);
-  //   });
-
-  // setScreenName("");
-  // setDepartment("");
-  // onToggleForm();
-
   const createScreen = (e) => {
     e.preventDefault();
-    console.log("Before");
-    console.log("After");
-    Axios.post("http://localhost:3000/screens", {
-      screenName,
-      department,
-    })
+    const token = localStorage.getItem("token");
+    console.log("TOKEN FROM CREATING SCREEN!!!!", token);
+    if (!token) return;
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+
+    Axios.post(
+      "http://localhost:3000/screens",
+      {
+        screenName,
+        department,
+      },
+      { headers }
+    )
       .then((response) => {
         setListOfScreen([...listOfScreen, { screenName, department }]);
         // window.location.reload();
@@ -54,7 +46,6 @@ export default function CreateScreenForm({
     onToggleForm();
   };
 
-
   const handleCancel = () => {
     setScreenName("");
     setDepartment("");
@@ -62,45 +53,36 @@ export default function CreateScreenForm({
   };
 
   const handleDelete = () => {
-    // window.location.reload();
-    // Find the screen by name in listOfUsers
-    const screenToDelete = listOfScreen.find(
-      (screen) => {
-        console.log(screen.screenName);
+    const screenToDelete = listOfScreen.find((screen) => {
+      console.log(screen.screenName);
 
-        if (screen.screenName === screenName) {
-          console.log("found")
-          setFound(true);
-          setId(screen._id);
-          console.log(screen._id);
+      if (screen.screenName === screenName) {
+        console.log("found");
+        setFound(true);
+        setId(screen._id);
+        console.log(screen._id);
 
-          Axios.delete(`http://localhost:3000/screens/${screen._id}`)
-            .then(() => {
-              // Remove the deleted screen from your local state
-              const updateList = listOfScreen.filter((user) => user._id !== screen._id);
-              console.log(updateList);
+        Axios.delete(`http://localhost:3000/screens/${screen._id}`)
+          .then(() => {
+            // Remove the deleted screen from your local state
+            const updateList = listOfScreen.filter(
+              (user) => user._id !== screen._id
+            );
+            console.log(updateList);
 
-              setListOfScreen(
-                updateList
-              );
-              console.log("Deleted successfully");
-
-            })
-            .catch((error) => {
-              console.error("Error deleting screen:", error);
-            });
-
-        }
+            setListOfScreen(updateList);
+            console.log("Deleted successfully");
+          })
+          .catch((error) => {
+            console.error("Error deleting screen:", error);
+          });
       }
-    );
-
-
+    });
 
     setScreenName("");
     setDepartment("");
     onToggleForm();
   };
-
 
   return (
     <form onSubmit={createScreen}>

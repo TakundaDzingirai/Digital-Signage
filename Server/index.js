@@ -1,24 +1,31 @@
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
+
 const express = require("express");
+const mongoose = require("mongoose");
+const session = require("express-session");
+const User = require("./models/User.js");
+const userRoutes = require("./routes/userRoutes.js");
+const screenRoutes = require("./routes/screenRoutes.js");
+const jwtStrategy = require("passport-jwt").Strategy;
+const extractJwt = require("passport-jwt").ExtractJwt;
+const contentRoutes = require("./routes/contentRoutes");
+const MongoStore = require("connect-mongo");
+const cors = require("cors");
+const morgan = require("morgan");
+
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+
 const app = express();
 
-const cors = require("cors");
-const mongoose = require("mongoose");
-const screenRoutes = require("./routes/screenRoutes");
-const contentRoutes = require("./routes/contentRoutes");
-const userRoutes = require("./routes/userRoutes");
-const User = require("./models/User");
-const session = require("express-session");
-const passport = require("passport");
-const localStrategy = require("passport-local");
-const ErrorResponse = require("./utilities/ErrorResponse");
-
+// Express middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(morgan("dev"));
 
+// Connect to the database
 const dbURL = process.env.DB_URL;
 
 mongoose
@@ -34,48 +41,32 @@ mongoose
     console.log(err);
   });
 
-const secret = process.env.SECRET || "pangapasinakumiramushe";
+// JWT Secret
+
+const secret =
+  process.env.SECRET ||
+  "eyJhbGciOiJIUzM4NCJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY5NDcwOTg2MSwiaWF0IjoxNjk0NzA5ODYxfQ.XCMXxrh12xDS6Kum5d3E_n_VntWvjQv0e7JrM_I2eBkrSKTNnfdd45B5yImjCT6D";
+
+// Passport JWT strategy setup
+const jwtOptions = {
+  jwtFromRequest: extractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: secret,
+};
 
 app.use(
-  session({
-    name: "session",
-    secret,
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      httpOnly: true,
-      // secure: true,
-      expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    },
+  cors({
+    origin: ["http://localhost:5173", "http://localhost:3000"],
+    credentials: true,
   })
 );
-
-app.use(passport.initialize());
-app.use(passport.session());
-passport.use(new localStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
-
-app.use((req, res, next) => {
-  res.locals.currentUser = req.user;
-  next();
-});
 
 app.use("/screens", screenRoutes);
 app.use("/content", contentRoutes);
 app.use("/", userRoutes);
 
-app.get("/newsfeed", async (req, res) => {
-  try {
-    const parser = new Parser();
-    const feed = await parser.URL(
-      "https://feeds.24.com/articles/news24/TopStories/rss"
-    );
-    res.json({ news: feed.items });
-  } catch (error) {
-    res.status(500).json({ error: "Error fetching the RSS feed" });
-  }
+app.use((req, res, next) => {
+  console.log("req.session", req.session);
+  return next();
 });
 
 app.all("*", (req, res, next) => {
