@@ -1,5 +1,6 @@
 import { Paper } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import "./Item.css"
 
 export default function Item({ item }) {
     const randomColor = '#' + (Math.random().toString(16) + '000000').slice(2, 8);
@@ -27,7 +28,7 @@ export default function Item({ item }) {
             }}>
             <h2 style={{ paddingBottom: "2em", margin: 0 }}>{item.Title}</h2>
             <p style={{ margin: 0 }}>{item.slideTitle}<br></br>{item.post}</p>
-            {ismage && <img src={item.imageUrl} />}
+            {ismage && <img className="Image" src={item.imageUrl} />}
         </Paper>
     );
 }

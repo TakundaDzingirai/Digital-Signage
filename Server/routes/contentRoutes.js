@@ -28,14 +28,15 @@ router.post(
     // Get the screen ID from the URL parameters
     const screenId = req.params.screenId;
     // Get the ID of the authenticated user
-    const createdBy = req.user.id;
+    // const createdBy = req.user.id;
     // Create an object with the content data
+    console.log(req.user)
     const contentData = {
       slideTitle,
       post,
       imageUrl,
       screen: screenId,
-      createdBy,
+      // createdBy,
     };
     // Create a new Content instance with the content data
     const content = new Content(contentData);
