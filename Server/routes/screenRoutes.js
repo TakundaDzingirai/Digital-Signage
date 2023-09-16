@@ -1,40 +1,38 @@
-// const User = require("../models/User");
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const express = require("express");
 const router = express.Router({ mergeParams: true });
 const Screen = require("../models/Screen");
-const User = require("../models/User");
+const { authenticateJwt } = require("../middleware/auth");
+
 // This route will be used to display all the active screens
-// This route will be used to display screens based on the user's department
-router.get("/", async (req, res) => {
+router.get("/", authenticateJwt, async (req, res) => {
   try {
-    // Get the department from the logged-in user
-    const { department } = req.query;
-    console.log(department)
-
-    // Retrieve screens that belong to the user's department
-    const screens = await Screen.find({ department });
-
+    console.log("THE LOGGED IN USER....... ", req.user);
+    // Retrieve all screens from the database
+    const screens = await Screen.find({ department: req.user.department });
+    console.log("THE LOGGED IN USER....... ", req.user);
     res.json(screens);
   } catch (err) {
-    res.status(400).json({ Error: err.message });
+    console.log(err.message);
+    res.status(400).json({ "Error ": err.message });
   }
 });
 
-
 // This route will be used to create a new screen
-router.post("/", async (req, res) => {
+router.post("/", authenticateJwt, async (req, res) => {
   try {
     console.log(req.body);
     const { screenName, department } = req.body;
-    // const user = req.user._id;
-    console.log("REQUEST.BODY::", req.body);
-    // Create a new Screen instance with the user's _id
-    const screen = new Screen({ screenName, department });
+    const createdBy = req.user.id;
+    const screen = new Screen({ screenName, department, createdBy });
     console.log("THE SCREEN: ", screen);
     await screen.save();
     res.json("Screen created successfully!");
   } catch (err) {
-    console.error("Error creating screen:", err.message); // Log the error to the console
+    console.error("Error creating screen:", err.message);
     res.status(400).json({ "Error ": err.message });
   }
 });

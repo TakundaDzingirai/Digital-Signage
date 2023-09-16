@@ -1,7 +1,10 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 const express = require("express");
 const Content = require("../models/Content");
 const Screen = require("../models/Screen");
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 const { storage } = require("../cloudinary/index.js");
 const multer = require("multer");
 const upload = multer({
@@ -16,7 +19,6 @@ const upload = multer({
 router.post("/:screenId", async (req, res) => {
   try {
     const { slideTitle, post, imageUrl } = req.body;
-    console.log(imageUrl);
     const screenId = req.params.screenId;
     // const userId = req.user._id;
 
