@@ -60,6 +60,23 @@ class screenController {
     await screen.save();
     res.json(screen);
   }
+
+  static async updateScreenSettings(req, res) {
+    const screen = await Screen.findById(req.params.screenId);
+    if (!screen) {
+      return res.status(404).json({ Error: "Screen not found" });
+    }
+
+    const { duration, interval, fadeEnter, fadeEnterActive } = req.body;
+
+    screen.duration = duration;
+    screen.interval = interval;
+    screen.fadeEnter = fadeEnter;
+    screen.fadeEnterActive = fadeEnterActive;
+
+    const updatedScreen = await Screen.save();
+    return res.json(updatedScreen);
+  }
 }
 
 module.exports = screenController;

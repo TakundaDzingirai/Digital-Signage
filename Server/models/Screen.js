@@ -25,6 +25,24 @@ const screenSchema = new Schema(
         ref: "Content",
       },
     ],
+
+    duration: {
+      type: Number,
+    },
+
+    interval: {
+      type: Number,
+    },
+
+    fadeEnter: {
+      type: Boolean,
+      default: false,
+    },
+
+    fadeEnterActive: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
