@@ -1,7 +1,8 @@
 .form {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   border-radius: 15px;
-  width: 50%;
+  position: relative;
+  width: 40%;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
@@ -19,4 +20,15 @@
   /* Adjust the opacity as needed to achieve the desired dimming effect */
   pointer-events: none;
   /* Prevent user interaction with the dimmed form */
+}
+
+.TextField {
+  width: 98%;
+
+}
+
+h2 {
+  color: rgb(67, 2, 128);
+  margin-top: 2vh;
+
 }
