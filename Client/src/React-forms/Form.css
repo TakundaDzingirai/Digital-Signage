@@ -12,3 +12,11 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+/* In your CSS file (e.g., Form.css) */
+.dimmed-form {
+  opacity: 0.4;
+  /* Adjust the opacity as needed to achieve the desired dimming effect */
+  pointer-events: none;
+  /* Prevent user interaction with the dimmed form */
+}
