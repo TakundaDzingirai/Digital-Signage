@@ -38,7 +38,7 @@ export default function ScreenContainer({
           onToggleForm={onToggleForm}
         />
       )}
-      <Button showForm={showForm} onToggleForm={onToggleForm} >Add Screen</Button>
+      <Addbtn buttonName={"Add Screen"} showForm={showForm} onToggleForm={onToggleForm} />
 
 
       <hr />
