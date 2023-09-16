@@ -52,37 +52,6 @@ export default function CreateScreenForm({
     onToggleForm();
   };
 
-  const handleDelete = () => {
-    const screenToDelete = listOfScreen.find((screen) => {
-      console.log(screen.screenName);
-
-      if (screen.screenName === screenName) {
-        console.log("found");
-        setFound(true);
-        setId(screen._id);
-        console.log(screen._id);
-
-        Axios.delete(`http://localhost:3000/screens/${screen._id}`)
-          .then(() => {
-            // Remove the deleted screen from your local state
-            const updateList = listOfScreen.filter(
-              (user) => user._id !== screen._id
-            );
-            console.log(updateList);
-
-            setListOfScreen(updateList);
-            console.log("Deleted successfully");
-          })
-          .catch((error) => {
-            console.error("Error deleting screen:", error);
-          });
-      }
-    });
-
-    setScreenName("");
-    setDepartment("");
-    onToggleForm();
-  };
 
   return (
     <form style={{ marginTop: "2vh" }} onSubmit={createScreen}>
@@ -100,7 +69,7 @@ export default function CreateScreenForm({
         type="text"
       />
 
-      <Button>Create screen</Button>
+      <Button onClick={createScreen}>Create screen</Button>
 
       {showForm && (
         <>

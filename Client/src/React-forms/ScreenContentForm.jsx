@@ -80,9 +80,12 @@ export default function ScreenContentForm() {
   const previewFiles = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
+
     reader.onloadend = () => {
       setSelectedImage(reader.result);
     };
+
+    console.log(selectedImage)
   }
 
 
@@ -139,13 +142,21 @@ export default function ScreenContentForm() {
             sx={{ mb: 3, }}
             InputLabelProps={{ style: { color: 'blue' } }}
           />
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <input
+              name="image"
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleImageUpload(e)}
+            />
+            {selectedImage && (
+              <img
+                src={selectedImage}
+                style={{ width: "40%", height: "15vh", marginLeft: '10px' }}
+              />
+            )}
+          </div>
 
-          <input
-            name="image"
-            type="file"
-            accept="image/*" // Specify the accepted file types (in this case, images)
-            onChange={(e) => handleImageUpload(e)}
-          />
           <Button
             variant="outlined"
             color="secondary"
@@ -156,11 +167,7 @@ export default function ScreenContentForm() {
             Add
           </Button>
         </form>
-        {selectedImage && (
-          <img
-            src={selectedImage}
-            style={{ width: "10%", height: "15vh" }}
-          />)}
+
       </Paper>
 
     </>
