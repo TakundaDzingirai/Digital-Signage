@@ -60,7 +60,7 @@ const contentSchema = Joi.object({
       "any.required": "The post content must be provided",
     })
     .escapeHTML(),
-  imageUrl: Joi.string().trim().required().uri().messages({
+  imageUrl: Joi.string().trim().uri().messages({
     "any.required": "The image URL must be provided",
     "string.uri": "Invalid image URL format",
   }),

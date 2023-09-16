@@ -17,7 +17,6 @@ const contentSchema = new Schema(
 
     imageUrl: {
       type: String,
-      required: [true, "image url must be provided"],
     },
 
     screen: {
