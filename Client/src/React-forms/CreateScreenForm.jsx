@@ -17,7 +17,7 @@ export default function CreateScreenForm({
   const createScreen = (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
-    console.log("TOKEN FROM CREATING SCREEN!!!!", token);
+
     if (!token) return;
 
     const headers = {
@@ -52,7 +52,6 @@ export default function CreateScreenForm({
     onToggleForm();
   };
 
-
   return (
     <form style={{ marginTop: "2vh" }} onSubmit={createScreen}>
       <label>Name</label>
@@ -73,7 +72,6 @@ export default function CreateScreenForm({
 
       {showForm && (
         <>
-
           <Button type="button" onClick={handleCancel}>
             Cancel
           </Button>
