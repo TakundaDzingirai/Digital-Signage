@@ -10,10 +10,12 @@ const bcrypt = require("bcrypt");
 const router = express.Router({ mergeParams: true });
 const { blacklist, authenticateJwt } = require("../middleware/auth");
 const catchAsync = require("../utilities/catchAsync");
+const { validateUser } = require("../middleware/validation");
 
 // This route will be used to register users
 router.post(
   "/register",
+  validateUser,
   catchAsync(async (req, res, next) => {
     // Destructure user input data from the request body
     const { firstname, lastname, department, email, username, password, role } =
