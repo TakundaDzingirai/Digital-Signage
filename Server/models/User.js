@@ -7,39 +7,39 @@ const { Schema } = mongoose;
 const userSchema = new Schema({
   firstname: {
     type: String,
-    required: [true, "First name must be supplied"],
+    required: [true, "Firstname must be provided"],
   },
 
   lastname: {
     type: String,
-    required: [true, "Last name must be supplied"],
+    required: [true, "Lastname must be provided"],
   },
 
   department: {
     type: String,
-    required: [true, "Department must be supplied"],
+    required: [true, "Department must be provided"],
   },
 
   username: {
     type: String,
-    required: [true, "Username must be supplied"],
+    required: [true, "Username must be provided"],
   },
 
   email: {
     type: String,
-    required: [true, "Email address must be supplied"],
+    required: [true, "Email address must be provided"],
     unique: true,
   },
 
   password: {
     type: String,
-    required: true,
+    required: [true, "Password must be provided"],
   },
 
   role: {
     type: String,
     enum: ["admin", "user"],
-    required: [true, "Role must be supplied"],
+    required: [true, "Role must be provided"],
     default: "user",
   },
 });
@@ -47,7 +47,5 @@ const userSchema = new Schema({
 userSchema.methods.verifyPassword = function (password) {
   return bcrypt.compareSync(password, this.password);
 };
-
-// userSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model("User", userSchema);

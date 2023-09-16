@@ -6,12 +6,12 @@ const screenSchema = new Schema(
   {
     screenName: {
       type: String,
-      required: true,
+      required: [true, "Screen name must be provided"],
     },
 
     department: {
       type: String,
-      required: true,
+      required: [true, "Department must be provided"],
     },
 
     createdBy: {

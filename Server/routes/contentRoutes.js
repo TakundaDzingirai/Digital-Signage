@@ -16,10 +16,12 @@ const upload = multer({
 });
 
 const catchAsync = require("../utilities/catchAsync");
+const { validateContent } = require("../middleware/validation");
 
 // This route will be used to add content to a screen
 router.post(
   "/:screenId",
+  validateContent,
   catchAsync(async (req, res) => {
     // Extract data from the request body
     const { slideTitle, post, imageUrl } = req.body;
@@ -71,6 +73,7 @@ router.delete(
 // This route will be used to edit individual screen content
 router.put(
   "/edit/:contentId",
+  validateContent,
   catchAsync(async (req, res) => {
     const { contentId } = req.params;
     // Extract content data from the re.body
