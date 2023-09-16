@@ -38,7 +38,7 @@ const screenSchema = Joi.object({
     .messages({
       "any.required": "The department of the screen must be provided",
     })
-    .valid("CSC", "Inf", "Accounting", "Politics")
+    // .valid("CSC", "Inf", "Accounting", "Politics")
     .messages({
       "any.required": "The department of the screen must be provided",
     })
