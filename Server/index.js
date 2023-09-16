@@ -9,7 +9,7 @@ const User = require("./models/User.js");
 const userRoutes = require("./routes/userRoutes.js");
 const screenRoutes = require("./routes/screenRoutes.js");
 const contentRoutes = require("./routes/contentRoutes");
-
+const ErrorResponse = require("./utilities/ErrorResponse.js");
 const extractJwt = require("passport-jwt").ExtractJwt;
 
 const cors = require("cors");
@@ -49,12 +49,6 @@ app.use(
 app.use("/screens", screenRoutes);
 app.use("/content", contentRoutes);
 app.use("/", userRoutes);
-
-// Middleware to log the session
-app.use((req, res, next) => {
-  console.log("req.session", req.session);
-  return next();
-});
 
 // Catch-all route for handling 404 errors
 app.all("*", (req, res, next) => {

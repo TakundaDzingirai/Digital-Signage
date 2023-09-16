@@ -101,7 +101,7 @@ const userSchema = Joi.object({
   password: Joi.string()
     .required()
     .messages({ "any.required": "Password must be provided" }),
-  confirmPassword: Joi.string().valid(Joi.ref("password")).required(),
+  // confirmPassword: Joi.string().valid(Joi.ref("password")).required(),
 });
 
 module.exports = {
