@@ -32,7 +32,7 @@ const contentSchema = new Schema(
       ref: "Screen",
     },
 
-    user: {
+    createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
