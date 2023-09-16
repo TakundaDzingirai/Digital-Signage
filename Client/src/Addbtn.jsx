@@ -1,6 +1,7 @@
-import Button from "./Button";
+import Button_btn from "./Button_btn";
+
 export default function Addbtn({ showForm, onToggleForm, buttonName }) {
   return (
-    <div>{!showForm && <Button onClick={onToggleForm}>{buttonName}</Button>}</div>
+    <div>{!showForm && <Button_btn onClick={onToggleForm}>{buttonName}</Button_btn>}</div>
   );
 }

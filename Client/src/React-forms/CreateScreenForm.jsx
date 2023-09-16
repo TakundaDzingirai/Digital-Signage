@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./FormPopup.css";
-import Button from "../Button";
+import Button from "../Button_btn";
 import Axios from "axios";
 
 export default function CreateScreenForm({
@@ -85,7 +85,7 @@ export default function CreateScreenForm({
   };
 
   return (
-    <form onSubmit={createScreen}>
+    <form style={{ marginTop: "2vh" }} onSubmit={createScreen}>
       <label>Name</label>
       <input
         value={screenName}
@@ -104,12 +104,10 @@ export default function CreateScreenForm({
 
       {showForm && (
         <>
-          <button type="button" onClick={handleDelete}>
-            Delete
-          </button>
-          <button type="button" onClick={handleCancel}>
+
+          <Button type="button" onClick={handleCancel}>
             Cancel
-          </button>
+          </Button>
         </>
       )}
     </form>
