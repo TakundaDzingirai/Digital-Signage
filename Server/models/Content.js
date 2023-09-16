@@ -7,24 +7,17 @@ const contentSchema = new Schema(
   {
     slideTitle: {
       type: String,
-      required: true,
+      required: [true, "slide title must be provided"],
     },
 
     post: {
       type: String,
-      required: true,
+      required: [true, "post must be provided"],
     },
-
-    images: [
-      {
-        URL: String,
-        filename: String,
-      },
-    ],
 
     imageUrl: {
       type: String,
-      required: true,
+      required: [true, "image url must be provided"],
     },
 
     screen: {
@@ -32,7 +25,7 @@ const contentSchema = new Schema(
       ref: "Screen",
     },
 
-    user: {
+    createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
