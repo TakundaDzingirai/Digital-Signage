@@ -1,21 +1,23 @@
 import { useEffect, useState } from "react";
-import "./ScreenContentForm.css";
+import "./Form.css";
 import { TextField, Button, Paper } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import ScreenPanel from "../ScreenComponents/ScreenPanel";
 import { useParams } from "react-router-dom";
 import Axios from "axios";
+import CircularIndeterminate from "../CircularIndeterminate";
 
 export default function ScreenContentForm() {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
-  const [url, seturl] = useState("");
+
   const [titleError, setTitleError] = useState(false);
   const [textError, setTextError] = useState(false);
   const [urlError, seturlError] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isAdded, setAdded] = useState(false);
   const { screenId } = useParams();
+  const [show, setShow] = useState(false);
 
   console.log("SCREEN ID: ", screenId);
 
@@ -23,13 +25,13 @@ export default function ScreenContentForm() {
     if (isAdded) {
       setTitle("");
       setText("");
-      seturl("");
+
       setSelectedImage(null);
       setAdded(false);
-
+      toast.success("Added Succesfully!");
     }
 
-  },)
+  }, [isAdded, show])
 
 
   const handleSubmit = (event) => {
@@ -44,28 +46,25 @@ export default function ScreenContentForm() {
     if (title === "") {
       setTitleError(true);
     }
-    if (url == "") {
-      seturlError(true);
-    }
 
-    if (!(textError || titleError || urlError)) {
-      console.log(title, text, url);
+
+    if (!(textError || titleError)) {
+
       const data = {
         slideTitle: title,
         post: text,
         imageUrl: selectedImage,
       };
-      console.log(data);
+      setShow(true);
       Axios.post(`http://localhost:3000/content/${screenId}`, data)
         .then((response) => {
-          toast.success("Added Succesfully!");
+
           setAdded(true);
-
-
-          console.log("THE RESPONSE!!", response.data);
+          setShow(false);
         })
         .catch((err) => {
-          console.log("ERROR ENCOUNTERED: ", err.message);
+          toast.error(err);
+          setShow(false);
         });
     }
   };
@@ -86,40 +85,48 @@ export default function ScreenContentForm() {
     };
   }
 
+
+  const styl = {
+    marginTop: show ? "2vh" : "2vh", // Conditionally set marginTop
+    opacity: show ? "0.3" : "1", // Conditionally set opacity
+    pointerEvents: show ? "none" : "auto", // Conditionally set pointerEvents
+  };
+
   return (
     <>
       <ScreenPanel />
-      <h2>Adding new Slide</h2>
+
       <Paper
         elevation={3} // Adds a shadow effect
-        style={{
-          padding: "20px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "70%", // Adjust the width as needed
-          margin: "0 auto", // Center the form horizontally
-          // backgroundColor: "rgba(10, 10, 10, 0.3)"
-        }}
+
       >
         <ToastContainer />
-        <form
+        {show && (<CircularIndeterminate />)}
+
+        <form className="form"
           autoComplete="off"
           onSubmit={handleSubmit}
-        // encType="multipart/form-data"
+          // encType="multipart/form-data"
+
+          style={styl}
         >
+          <h2>Adding new Slide</h2>
           <TextField
+            className="TextField"
             label="Slide Title"
             onChange={(e) => setTitle(e.target.value)}
             required
             variant="outlined"
             color="secondary"
             type="text"
-            sx={{ mb: 3, width: "100%" }}
+            sx={{ mb: 3 }}
             value={title}
             error={titleError}
+            InputLabelProps={{ style: { color: 'blue' } }}
           />
           <TextField
+            className="TextField"
+
             label="Post"
             onChange={(e) => setText(e.target.value)}
             required
@@ -129,23 +136,10 @@ export default function ScreenContentForm() {
             rows={4} // Optionally, you can set the number of rows to display initially
             value={text}
             error={textError}
-            sx={{ mb: 3, width: "100%" }}
-          // InputLabelProps={{
-          //   style: { color: "lightgrey" }, // Set label color to light grey
-          // }}
+            sx={{ mb: 3, }}
+            InputLabelProps={{ style: { color: 'blue' } }}
           />
-          <TextField
-            label="image url"
-            onChange={(e) => seturl(e.target.value)}
-            required
-            variant="outlined"
-            color="secondary"
-            multiline // Set multiline to true
-            rows={4} // Optionally, you can set the number of rows to display initially
-            value={url}
-            error={urlError}
-            sx={{ mb: 3, width: "100%" }}
-          />
+
           <input
             name="image"
             type="file"
@@ -156,7 +150,8 @@ export default function ScreenContentForm() {
             variant="outlined"
             color="secondary"
             type="submit"
-            style={{ borderRadius: "5px" }}
+            style={{ borderRadius: "5px", width: "30%", marginTop: "2vh", color: 'blue', borderColor: 'blue' }}
+
           >
             Add
           </Button>
