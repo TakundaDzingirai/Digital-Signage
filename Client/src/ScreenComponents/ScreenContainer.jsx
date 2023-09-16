@@ -1,6 +1,7 @@
 import Header from "../Header";
 import Screens from "./Screens";
 import Addbtn from "../Addbtn.jsx";
+import { TextField, Button } from "@mui/material";
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import ThreeDRotation from '@mui/icons-material/ThreeDRotation';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -37,7 +38,7 @@ export default function ScreenContainer({
           onToggleForm={onToggleForm}
         />
       )}
-      <Addbtn buttonName={"Add Screen"} showForm={showForm} onToggleForm={onToggleForm} />
+      <Button showForm={showForm} onToggleForm={onToggleForm} >Add Screen</Button>
 
 
       <hr />

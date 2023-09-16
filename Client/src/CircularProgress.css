@@ -1,0 +1,7 @@
+.circular-progress {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Add styles for your circular progress indicator, e.g., width, height, colors, etc. */
+  }

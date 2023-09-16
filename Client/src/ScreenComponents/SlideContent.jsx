@@ -8,7 +8,7 @@ export default function SlideContent(props) {
   const { contentId } = useParams();
   const location = useLocation();
   const { screenId } = location.state || {};
-  console.log(screenId);
+
   const [content, setContent] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [editedContent, setEditedContent] = useState({});
@@ -38,7 +38,7 @@ export default function SlideContent(props) {
     setIsLoading(true);
     console.log("before Delete", contentId);
     Axios.delete(`http://localhost:3000/content/${contentId}`).then(() => {
-      console.log("deleted");
+
       setContent([]); // Delete successful, clear content data
       setIsLoading(false);
     });
