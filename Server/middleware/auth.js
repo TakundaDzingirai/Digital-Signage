@@ -1,23 +1,9 @@
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
-
 const express = require("express");
-const jwtStrategy = require("passport-jwt").Strategy;
-const extractJwt = require("passport-jwt").ExtractJwt;
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
-
-const secret =
-  process.env.SECRET ||
-  "eyJhbGciOiJIUzM4NCJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY5NDcwOTg2MSwiaWF0IjoxNjk0NzA5ODYxfQ.XCMXxrh12xDS6Kum5d3E_n_VntWvjQv0e7JrM_I2eBkrSKTNnfdd45B5yImjCT6D";
-
-const isLoggedIn = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  return res.status(401).json({ error: "You must be signed in !" });
-};
+const blacklist = new Set();
 
 const authenticateJwt = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -25,7 +11,12 @@ const authenticateJwt = (req, res, next) => {
     return res.status(401).json({ message: "No token provided" });
   }
 
-  jwt.verify(token, secret, (err, decoded) => {
+  // Check if the token is blacklisted
+  if (blacklist.has(token)) {
+    return res.status(401).json({ message: "Token has been revoked" });
+  }
+
+  jwt.verify(token, process.env.SECRET, (err, decoded) => {
     if (err) {
       console.log(err.message);
       return res.status(401).json({ message: "Failed to authenticate token" });
@@ -36,24 +27,23 @@ const authenticateJwt = (req, res, next) => {
   });
 };
 
+/*
+This middlware will be used to check if a logged in user is an admin and should come after the user 
+is suthenticated */
 const isAdmin = (req, res, next) => {
-  if (req.user && req.isAuthenticated() && req.user.role === "admin") {
-    return next();
-  }
-  // req.flash("error", "You do not have permission to access that route");
-  res.redirect("/screens");
-};
+  const user = req.user;
 
-const storeReturnTo = (req, res, next) => {
-  if (req.session.returnTo) {
-    res.locals.returnTo = req.session.returnTo;
+  if (user && user.role === "admin") {
+    return next();
+  } else {
+    return res
+      .status(403)
+      .json({ message: "You do not have permission to access this route" });
   }
-  next();
 };
 
 module.exports = {
-  isLoggedIn,
   isAdmin,
-  storeReturnTo,
   authenticateJwt,
+  blacklist,
 };
