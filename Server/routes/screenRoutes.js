@@ -6,6 +6,7 @@ const router = express.Router({ mergeParams: true });
 const Screen = require("../models/Screen");
 const { authenticateJwt } = require("../middleware/auth");
 const catchAsync = require("../utilities/catchAsync");
+const { validateScreen } = require("../middleware/validation");
 
 // This route will be used to display all the active screens
 router.get(
@@ -31,6 +32,7 @@ router.get(
 router.post(
   "/",
   authenticateJwt,
+  validateScreen,
   catchAsync(async (req, res) => {
     // Extract data for creating a new screen from the request body
     const { screenName, department } = req.body;
@@ -73,6 +75,7 @@ router.delete(
 // This route will be used to update/edit a screen
 router.put(
   "/:id",
+  validateScreen,
   catchAsync(async (req, res) => {
     // Find the screen by its ID and update it with the data in req.body
     const screen = await Screen.findByIdAndUpdate(req.params.id, req.body, {
