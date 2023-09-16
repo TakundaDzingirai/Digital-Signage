@@ -9,15 +9,17 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const router = express.Router({ mergeParams: true });
 const { blacklist, authenticateJwt } = require("../middleware/auth");
+const catchAsync = require("../utilities/catchAsync");
 
 // This route will be used to register users
-router.post("/register", async (req, res, next) => {
-  try {
+router.post(
+  "/register",
+  catchAsync(async (req, res, next) => {
     // Destructure user input data from the request body
     const { firstname, lastname, department, email, username, password, role } =
       req.body;
 
-    // Hash the user supplied password
+    // Hash the user-supplied password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create a new User object with the hashed password
@@ -50,22 +52,18 @@ router.post("/register", async (req, res, next) => {
       }
     );
     console.log(token);
+
     // Respond with a success message, the new user, and the JWT
     res
       .status(201)
       .json({ message: "User registered successfully", user: newUser, token });
-  } catch (error) {
-    console.log(error);
-    console.log(error.message);
+  })
+);
 
-    // If an error occurs, respond with a 500 (Internal Server Error) status and an error message
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// This route will be used to login a user
-router.post("/login", async (req, res, next) => {
-  try {
+// This route will be used for user login
+router.post(
+  "/login",
+  catchAsync(async (req, res, next) => {
     // Destructure username and password from the request body
     const { username, password } = req.body;
 
@@ -93,15 +91,9 @@ router.post("/login", async (req, res, next) => {
     );
 
     // Respond with the JWT
-    res.json({ message: "Login successfull", token });
-  } catch (error) {
-    console.log(error);
-    console.log(error.message);
-
-    // If an error occurs, respond with a 500 (Internal Server Error) status and an error message
-    res.status(500).json({ error: error.message });
-  }
-});
+    res.json({ message: "Login successful", token });
+  })
+);
 
 // Route to log out a user
 router.post("/logout", authenticateJwt, (req, res) => {

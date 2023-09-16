@@ -64,6 +64,7 @@ app.all("*", (req, res, next) => {
 // Error handling middleware to send appropriate error responses
 app.use((err, req, res, next) => {
   const { statusCode = 500 } = err;
+  console.log(err);
   if (!err.message) err.message = "Oh No, Something Went Wrong!";
   res.status(statusCode).json({ error: err.message });
 });
