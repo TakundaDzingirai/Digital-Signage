@@ -1,0 +1,14 @@
+.carousel {
+    width: "800px";
+    height: "60vh";
+    margin-top: 1vh;
+}
+
+.fade {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.fade.active {
+    opacity: 1;
+}

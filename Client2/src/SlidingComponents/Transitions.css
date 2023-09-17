@@ -1,0 +1,17 @@
+.carousel-item-fade-enter {
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+.carousel-item-fade-enter-active {
+    opacity: 1;
+}
+
+.carousel-item-fade-exit {
+    opacity: 1;
+    transition: opacity 1s;
+}
+
+.carousel-item-fade-exit-active {
+    opacity: 0;
+}
