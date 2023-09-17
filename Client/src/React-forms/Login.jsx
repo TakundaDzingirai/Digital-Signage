@@ -3,14 +3,12 @@ import { ToastContainer, toast } from "react-toastify";
 import jwt_decode from "jwt-decode";
 import Axios from "axios";
 import Header from "../Header.jsx";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import {
   Avatar,
   Button,
   CssBaseline,
   TextField,
-  FormControlLabel,
-  Checkbox,
   Link,
   Paper,
   Box,
@@ -27,28 +25,21 @@ export default function Login() {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
-  const [toastId, setToastId] = useState(null); // Store toastId in state
-
-
+  const [toastId, setToastId] = useState(null);
 
   useEffect(() => {
-
-
     if (loginSuccess && toastId) {
       // Check the status after a delay
       setShow(false);
       setTimeout(() => {
         const isActive = toast.isActive(toastId);
         if (isActive) {
-          toast.done(); // Mark the toast as done
-
+          toast.done();
           navigate("/screens");
-
         }
-      }, 2000); // Adjust the delay as needed
+      }, 2000);
     }
   }, [show, loginSuccess, toastId, navigate]);
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -61,7 +52,6 @@ export default function Login() {
         password: data.get("password"),
       });
 
-
       if (response.status === 200) {
         // Successful login
         const responseData = response.data;
@@ -72,31 +62,25 @@ export default function Login() {
         localStorage.setItem("token", token);
         const id = toast.success(`Welcome back, ${username}`);
 
-        setToastId(id); // Store the toastId in state
+        setToastId(id);
         setLoginSuccess(true);
       } else {
-        toast.error("Incorrect username or password");
+        toast.error("Incorrect username and or password");
 
         setShow(false);
       }
     } catch (error) {
-      toast.error("Incorrect username or password");
+      toast.error("Incorrect username and or password");
       setShow(false);
-
-    };
-
-
-  }
-
+    }
+  };
 
   return (
     <>
-
       <Header />
       <ToastContainer />
-      <div styles={{ position: "relative" }}>
-        {show && (<CircularIndeterminate info={"Verifying..."} />)}
-        {/* <ToastContainer /> */}
+      <div style={{ position: "relative" }}>
+        {show && <CircularIndeterminate info={"Logging in..."} />}
         <ThemeProvider theme={createTheme()}>
           <Grid container component="main" sx={{ height: "100vh" }}>
             <CssBaseline />
@@ -179,7 +163,11 @@ export default function Login() {
                   </Button>
                   <Grid container>
                     <Grid item>
-                      <Link component={RouterLink} to="/register" variant="body2">
+                      <Link
+                        component={RouterLink}
+                        to="/register"
+                        variant="body2"
+                      >
                         {"Don't have an account? Sign Up"}
                       </Link>
                     </Grid>
