@@ -15,8 +15,6 @@ import {
   Avatar,
   Grid,
   Box,
-  Checkbox,
-  FormControlLabel,
   Link as MUILink,
   Paper,
   ThemeProvider,
@@ -24,7 +22,6 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { ToastContainer, toast } from "react-toastify";
-import ScreenPanel from "../ScreenComponents/ScreenPanel";
 import Header from "../Header";
 import CircularIndeterminate from "../CircularIndeterminate";
 
@@ -40,34 +37,26 @@ function RegisterForm() {
     email: "",
     username: "",
     password: "",
-    role: ""
+    role: "",
   });
   const [registered, setRegister] = useState(false);
   const [show, setShow] = useState(false);
 
-  const [toastId, setToastId] = useState(null); // Store toastId in state
-
-  const dimmedFormClass = show ? "dimmed-form" : "";
+  const [toastId, setToastId] = useState(null);
 
   useEffect(() => {
-
-
     if (registered && toastId) {
-      // Check the status after a delay
       setShow(false);
       setTimeout(() => {
         const isActive = toast.isActive(toastId);
         if (isActive) {
-          toast.done(); // Mark the toast as done
+          toast.done();
 
           navigate("/screens");
-
         }
-      }, 2000); // Adjust the delay as needed
+      }, 2000);
     }
   }, [show, registered, toastId, navigate]);
-
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -94,12 +83,15 @@ function RegisterForm() {
 
       if (response.status === 201) {
         const data = response.data;
-
-
-        setToastId(toast.success(`Welcome to Digi Sign, ${registrationData.firstname}!`, {
-          position: "top-center",
-          autoClose: 2000,
-        }));
+        setToastId(
+          toast.success(
+            `Welcome to Digi Sign, ${registrationData.firstname}!`,
+            {
+              position: "top-center",
+              autoClose: 2000,
+            }
+          )
+        );
 
         const token = data.token;
         localStorage.setItem("token", token);
@@ -113,23 +105,25 @@ function RegisterForm() {
       }
       setShow(false);
     } catch (error) {
-      console.error("Error:", error);
+      toast.error(error.response.data.error, {
+        position: "top-center",
+        autoClose: 2000,
+      });
     }
     setShow(false);
   };
 
   const styl = {
-    marginTop: show ? "2vh" : "2vh", // Conditionally set marginTop
-    opacity: show ? "0.4" : "1", // Conditionally set opacity
-    pointerEvents: show ? "none" : "auto", // Conditionally set pointerEvents
+    marginTop: show ? "2vh" : "2vh",
+    opacity: show ? "0.4" : "1",
+    pointerEvents: show ? "none" : "auto",
   };
-
 
   return (
     <>
       <Header />
 
-      {show && (<CircularIndeterminate info={"Registering..."} />)}
+      {show && <CircularIndeterminate info={"Registering..."} />}
       <ToastContainer />
 
       <ThemeProvider theme={theme}>
@@ -233,7 +227,6 @@ function RegisterForm() {
                       onChange={handleChange}
                       label="Department"
                     >
-
                       <MenuItem value="Computer Science">
                         Computer Science
                       </MenuItem>
@@ -246,18 +239,20 @@ function RegisterForm() {
                         Applied Statistics
                       </MenuItem>
                       <MenuItem value="Law">Law</MenuItem>
-
-
-
                     </Select>
                   </FormControl>
                 </Grid>
                 <Grid item xs={12}>
-                  <FormControl variant="outlined" fullWidth margin="normal" required>
+                  <FormControl
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    required
+                  >
                     <InputLabel id="Role-label">Role</InputLabel>
                     <Select
                       labelId="Role-label"
-                      id="role" // Change the id to "role"
+                      id="role"
                       name="role"
                       value={registrationData.role}
                       onChange={handleChange}
@@ -268,8 +263,7 @@ function RegisterForm() {
                     </Select>
                   </FormControl>
                 </Grid>
-
-              </Grid> {/* Close the Grid container */}
+              </Grid>{" "}
               <Button
                 type="submit"
                 fullWidth
@@ -278,8 +272,6 @@ function RegisterForm() {
               >
                 Sign Up
               </Button>
-              {/* Close the Box component */}
-
               <Grid container justifyContent="flex-end">
                 <Grid item>
                   <MUILink component={Link} to="/" variant="body2">
@@ -288,10 +280,10 @@ function RegisterForm() {
                 </Grid>
               </Grid>
             </Box>
-          </Paper >
+          </Paper>
           <ToastContainer />
-        </Container >
-      </ThemeProvider >
+        </Container>
+      </ThemeProvider>
     </>
   );
 }
