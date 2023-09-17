@@ -48,7 +48,7 @@ export default function App() {
             path="/screens/content/:screenId"
             element={<ScreenContentForm />}
           />
-          <Route path="/carousel" element={<AutoSlider />} />
+          <Route path="/carousel/:id" element={<AutoSlider />} />
           {/* <Route path="/dashboard" element={<ScreenContainer />} /> */}
           <Route path="/content/more/:contentId" element={<SlideContent />} />
         </Routes>

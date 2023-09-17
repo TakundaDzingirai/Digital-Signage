@@ -32,4 +32,12 @@ router.put(
   catchAsync(screenController.updateSceenDetails)
 );
 
+// screen settings
+
+// POST route to update screen settings
+router.post(
+  "/carousel/:screenId",
+  catchAsync(screenController.updateScreenSettings)
+);
+
 module.exports = router;
