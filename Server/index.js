@@ -15,16 +15,16 @@ const extractJwt = require("passport-jwt").ExtractJwt;
 const cors = require("cors");
 const morgan = require("morgan");
 const connectToDatabase = require("./database/db.js");
-
+const mongoSanitize = require("express-mongo-sanitize");
 const app = express();
 
+// Connect to MongoDB
+connectToDatabase();
 // Express middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
-
-// Connect to MongoDB
-connectToDatabase();
+app.use(mongoSanitize());
 
 // JWT Secret key for token validation
 const secret =
@@ -40,7 +40,11 @@ const jwtOptions = {
 // Enable CORS for specific origins with credentials support
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:3000", "http://localhost:5174"],
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:3000",
+      "http://localhost:5174",
+    ],
     credentials: true,
   })
 );

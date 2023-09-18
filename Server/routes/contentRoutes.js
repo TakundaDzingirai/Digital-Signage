@@ -30,7 +30,7 @@ router.delete("/:contentId", catchAsync(contentController.deleteContent));
 // This route will be used to edit individual screen content
 router.put(
   "/edit/:contentId",
-  validateContent,
+  // validateContent,
   catchAsync(contentController.editContent)
 );
 
