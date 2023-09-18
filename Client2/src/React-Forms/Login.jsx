@@ -9,6 +9,10 @@ import {
   Button,
   CssBaseline,
   TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
   FormControlLabel,
   Checkbox,
   Link,
@@ -22,38 +26,73 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import CircularIndeterminate from "../Components/CircularIndeterminate";
 import { useEffect, useState } from "react";
-
+import "./Form.css"
 export default function Login() {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
   const [toastId, setToastId] = useState(null); // Store toastId in state
   const [showDropdown, setShowDropdown] = useState(false);
-  const [screenId, setScreen] = useState(false);
+  const [screenId, setScreen] = useState("");
+  const [screenData, setScreenData] = useState([]);
 
-
+  const [selected, setSelected] = useState(false);
   useEffect(() => {
 
 
     if (loginSuccess && toastId) {
       // Check the status after a delay
       setShow(false);
-      setTimeout(() => {
-        const isActive = toast.isActive(toastId);
-        if (isActive) {
-          toast.done(); // Mark the toast as done
+      setShowDropdown(true);
+      console.log("ScreenData:", screenData)
+      console.log(screenId)
+      if (selected) {
 
-          navigate("/content");
+        const screenObj = {
+          screenId: screenId,
+          fadeEnter: screenData.fadeEnter,
+          fadeEnterActive: screenData.fadeEnterActive
 
         }
-      }, 2000); // Adjust the delay as needed
+
+        navigate(`/content/${screenId}`, { state: { screenId } });
+
+      }
+
     }
-  }, [show, loginSuccess, toastId, navigate]);
+  }, [show, loginSuccess, selected, screenId, navigate]);
+
+  const styl = {
 
 
+    opacity: showDropdown ? "0.4" : "1", // Conditionally set opacity
+    pointerEvents: showDropdown ? "none" : "auto", // Conditionally set pointerEvents
+
+  }
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+
+    const fetchData = () => {
+      const token = localStorage.getItem("token");
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+      console.log(token);
+
+      Axios.get("http://localhost:3000/screens", { headers })
+        .then((response) => {
+          console.log(response.data)
+          setScreenData(response.data);
+
+        })
+        .catch((error) => {
+          console.error("Error fetching screens:", error.message);
+        });
+
+    }
 
     try {
       setShow(true);
@@ -72,9 +111,11 @@ export default function Login() {
 
         localStorage.setItem("token", token);
         const id = toast.success(`Welcome back, ${username}`);
+        fetchData()
 
         setToastId(id); // Store the toastId in state
         setLoginSuccess(true);
+
       } else {
         toast.error("Incorrect username or password");
 
@@ -88,7 +129,11 @@ export default function Login() {
 
 
   }
-
+  const handleSelectChange = (event) => {
+    setScreen(event.target.value);
+    console.log("Selected value:", event.target.value);
+    setSelected(true);
+  };
 
   return (
     <>
@@ -157,6 +202,7 @@ export default function Login() {
                     label="Username"
                     name="username"
                     autoComplete="username"
+                    style={styl}
                   />
                   <TextField
                     variant="outlined"
@@ -168,29 +214,51 @@ export default function Login() {
                     type="password"
                     id="password"
                     autoComplete="current-password"
+                    style={styl}
                   />
+
+                  {showDropdown && (<Grid item xs={12}>
+                    <FormControl variant="outlined" fullWidth margin="normal" required>
+                      <InputLabel style={{ color: "purple" }} htmlFor="_id">Select an option</InputLabel>
+                      <Select
+                        className="custom-select"
+                        label="Select an option"
+                        value={screenId}
+                        onChange={handleSelectChange}
+                        inputProps={{
+                          name: "_id",
+                          id: "_id",
+                        }}
+
+                      >
+                        {screenData.map((item) => (
+                          <MenuItem key={item._id} value={item._id}>
+                            {item.screenName}
+                          </MenuItem>
+                        ))}
+
+                      </Select>
+                    </FormControl>
+                  </Grid>)}
 
                   <Button
                     type="submit"
                     fullWidth
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
+                    style={styl}
                   >
                     Sign In
                   </Button>
                   <Grid container>
-                    <Grid item>
-                      <Link component={RouterLink} to="/register" variant="body2">
-                        {"Don't have an account? Sign Up"}
-                      </Link>
-                    </Grid>
+
                   </Grid>
                 </Box>
               </Box>
             </Grid>
           </Grid>
         </ThemeProvider>
-      </div>
+      </div >
     </>
   );
 }

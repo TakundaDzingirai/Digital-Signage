@@ -32,3 +32,10 @@ h2 {
   margin-top: 2vh;
 
 }
+
+.custom-select {
+  border: 1px solid blue;
+  /* Set the border color to blue */
+}
+
+/* Inline style object (not recommended for larger styles) */

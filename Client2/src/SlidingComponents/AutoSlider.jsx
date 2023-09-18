@@ -1,15 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Carousel from 'react-material-ui-carousel';
 import Item from './Item';
 import "./Carousel.css";
-import Slider from '@mui/material/Slider';
-import Typography from '@mui/material/Typography';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { Paper } from "@mui/material";
-// import Carousel from "./Carousel";
-import { useNavigate, useLocation } from "react-router-dom"
-
+import Axios from "axios"
+import { useLocation, useParams } from "react-router-dom"
 
 export default function AutoSlider() {
     const [fadeEnter, setFadeEnter] = useState(false);
@@ -17,9 +11,8 @@ export default function AutoSlider() {
     const [slideDuration, setSlideDuration] = useState(2);
     const [slideInterval, setSlideInterval] = useState(25);
     const location = useLocation(); // Use useLocation to access location state
-    const { SlideData } = location.state || {}; // Extract SlideData from location state
-    console.log(SlideData);
-
+    const { screenId } = location.state || {}; // Extract SlideData from location state
+    console.log(screenId);
 
     // Function to handle slider value change
     const handleSlideDurationChange = (event, newValue) => {
@@ -28,28 +21,43 @@ export default function AutoSlider() {
     const handleSlideIntervalChange = (event, newValue) => {
         setSlideInterval(newValue);
     };
+    const { id } = useParams();
+    console.log("Id:", id);
+    const [slideData, setsldData] = useState([]);
+
+    useEffect(() => {
+        Axios.get(`http://localhost:3000/content/${id}`).then((response) => {
+            setsldData(response.data);
+            console.log("RESPONSE MHANI!!! ", response.data);
+        });
+    }, [])
 
     return (
         <>
-
-            <div className="caroul" style={{
-                width: "100%",
-                height: "100vh",
-                justifyContent: "center",
-                position: "absolute",
-
-            }}>
-                <Carousel
-                    animation={fadeEnter && fadeEnterActive ? "fade" : "slide"} // Set the animation based on state
-                    duration={slideDuration * 1000}
-                    interval={slideInterval * 1000} // Convert seconds to milliseconds
-
-                >
-                    {SlideData.map((item) => <Item key={item._id} item={item} />)}
-                </Carousel>
-
-
-
+            <div className="caroul-wrapper"> {/* Wrapping div */}
+                <div className="caroul" style={{
+                    width: "100%",
+                    height: "100vh",
+                    justifyContent: "center",
+                    position: "absolute",
+                }}>
+                    <Carousel
+                        animation={fadeEnter && fadeEnterActive ? "fade" : "slide"}
+                        duration={slideDuration * 1000}
+                        interval={slideInterval * 1000}
+                        stopAutoPlayOnHover={false}
+                        indicators={false}
+                        navButtonsAlwaysVisible={false}
+                        autoPlay={true} // Enable auto-play
+                        navButtonsProps={{
+                            style: {
+                                display: "none", // Hide the navigation buttons
+                            },
+                        }}
+                    >
+                        {slideData.map((item) => <Item key={item._id} item={item} />)}
+                    </Carousel>
+                </div>
             </div>
         </>
     );

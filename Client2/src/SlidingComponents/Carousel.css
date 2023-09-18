@@ -12,3 +12,8 @@
 .fade.active {
     opacity: 1;
 }
+
+/* Hide navigation buttons when hovering over the carousel */
+.caroul:hover .Carousel-button {
+    display: none;
+}
