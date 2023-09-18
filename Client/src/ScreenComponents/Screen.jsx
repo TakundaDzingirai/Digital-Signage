@@ -23,8 +23,8 @@ const customStyles = {
     backgroundColor: "rgba(0, 0, 0, 0.4)",
   },
 };
+
 export default function Screen({ screen, listOfScreen, setListOfScreen }) {
-  const [isHovered, setIsHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDelete = async () => {
@@ -50,7 +50,7 @@ export default function Screen({ screen, listOfScreen, setListOfScreen }) {
         });
       }
     } catch (error) {
-      toast.error("An error occurred while deleting screen", {
+      toast.error("An error occurred while deleting the screen", {
         position: "top-center",
         autoClose: 2000,
       });
@@ -64,12 +64,7 @@ export default function Screen({ screen, listOfScreen, setListOfScreen }) {
   };
 
   return (
-    <Card
-      elevation={3}
-      className="screen"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <Card elevation={3} className="screen">
       <CardContent>
         <Link to={`/screens/${screen._id}`} style={{ textDecoration: "none" }}>
           <Typography variant="h6">{screen.screenName}</Typography>
@@ -77,18 +72,16 @@ export default function Screen({ screen, listOfScreen, setListOfScreen }) {
         </Link>
       </CardContent>
       <CardContent>
-        {isHovered && (
-          <div style={{ textAlign: "center", marginTop: "8px" }}>
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={handleDelete}
-              aria-label={`Delete screen ${screen.screenName}`}
-            >
-              Delete
-            </Button>
-          </div>
-        )}
+        <div style={{ textAlign: "center", marginTop: "8px" }}>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={handleDelete}
+            aria-label={`Delete screen ${screen.screenName}`}
+          >
+            Delete
+          </Button>
+        </div>
       </CardContent>
       <ToastContainer position="top-center" />
       <Modal

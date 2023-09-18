@@ -12,9 +12,7 @@ export default function ScreenContainer({
   return (
     <div>
       <Header />
-      <h1>Screen Container Start</h1>
       <Screens listOfScreen={listOfScreen} setListOfScreen={setListOfScreen} />
-
       {showForm && (
         <CreatescreenForm
           listOfScreen={listOfScreen}
@@ -28,7 +26,6 @@ export default function ScreenContainer({
         showForm={showForm}
         onToggleForm={onToggleForm}
       />
-      <h1>Screen Container End</h1>
       <Footer />
     </div>
   );
