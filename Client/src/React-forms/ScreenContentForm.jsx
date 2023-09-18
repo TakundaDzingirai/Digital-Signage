@@ -1,80 +1,82 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./Form.css";
-import { TextField, Button, Paper } from "@mui/material";
+import { TextField, Button, Paper, Typography } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import ScreenPanel from "../ScreenComponents/ScreenPanel";
 import { useParams } from "react-router-dom";
 import Axios from "axios";
 import CircularIndeterminate from "../CircularIndeterminate";
+import { contentValidation } from "../Validations/validations.js";
+import * as Yup from "yup";
 
 export default function ScreenContentForm() {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
-
-  const [titleError, setTitleError] = useState(false);
-  const [textError, setTextError] = useState(false);
-  const [urlError, seturlError] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [isAdded, setAdded] = useState(false);
   const { screenId } = useParams();
   const [show, setShow] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
 
-  console.log("SCREEN ID: ", screenId);
-
-  useEffect(() => {
-    if (isAdded) {
-      setTitle("");
-      setText("");
-
-      setSelectedImage(null);
-      setAdded(false);
-      toast.success("Added Succesfully!");
-    }
-
-  }, [isAdded, show])
-
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    setTextError(false);
-    setTitleError(false);
-
-    if (text === "") {
-      setTextError(true);
-    }
-    if (title === "") {
-      setTitleError(true);
-    }
-
-
-    if (!(textError || titleError)) {
-
-      const data = {
-        slideTitle: title,
-        post: text,
-        imageUrl: selectedImage,
-      };
-      setShow(true);
-      Axios.post(`http://localhost:3000/content/${screenId}`, data)
-        .then((response) => {
-
-          setAdded(true);
-          setShow(false);
-        })
-        .catch((err) => {
-          toast.error(err);
-          setShow(false);
-        });
+  const handleInputChange = (name, value) => {
+    setValidationErrors({ ...validationErrors, [name]: "" });
+    if (name === "slideTitle") {
+      setTitle(value);
+    } else if (name === "post") {
+      setText(value);
     }
   };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const data = {
+      slideTitle: title,
+      post: text,
+      imageUrl: selectedImage,
+    };
+    setShow(true);
+
+    try {
+      await contentValidation.validate(data, { abortEarly: false });
+
+      const response = await Axios.post(
+        `http://localhost:3000/content/${screenId}`,
+        data
+      );
+      toast.success("Content uploaded successfully.");
+      setShow(false);
+    } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        const validationErrors = {};
+        error.inner.forEach((err) => {
+          validationErrors[err.path] = err.message;
+        });
+
+        setValidationErrors(validationErrors);
+        console.error(validationErrors);
+      } else {
+        if (error.response) {
+          toast.error(error.response.data.error, {
+            position: "top-center",
+            autoClose: 2000,
+          });
+        } else {
+          toast.error("Error uploading content. Please try again later.", {
+            position: "top-center",
+            autoClose: 2000,
+          });
+        }
+      }
+      setShow(false);
+    }
+  };
+
   // Function to handle image upload
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     previewFiles(file);
   };
-
 
   // previewFile function
   const previewFiles = (file) => {
@@ -84,65 +86,59 @@ export default function ScreenContentForm() {
     reader.onloadend = () => {
       setSelectedImage(reader.result);
     };
-
-    console.log(selectedImage)
-  }
-
+  };
 
   const styl = {
-    marginTop: show ? "2vh" : "2vh", // Conditionally set marginTop
-    opacity: show ? "0.3" : "1", // Conditionally set opacity
-    pointerEvents: show ? "none" : "auto", // Conditionally set pointerEvents
+    marginTop: show ? "2vh" : "2vh",
+    opacity: show ? "0.3" : "1",
+    pointerEvents: show ? "none" : "auto",
   };
 
   return (
     <>
       <ScreenPanel />
 
-      <Paper
-        elevation={3} // Adds a shadow effect
-
-      >
+      <Paper elevation={3}>
         <ToastContainer />
-        {show && (<CircularIndeterminate />)}
+        {show && <CircularIndeterminate />}
 
-        <form className="form"
+        <form
+          className="form"
           autoComplete="off"
           onSubmit={handleSubmit}
-          // encType="multipart/form-data"
-
           style={styl}
         >
-          <h2>Adding new Slide</h2>
+          <Typography variant="h5" color="primary" sx={{ mb: 3 }}>
+            Add a new slide
+          </Typography>
           <TextField
             className="TextField"
             label="Slide Title"
-            onChange={(e) => setTitle(e.target.value)}
-            required
+            onChange={(e) => handleInputChange("slideTitle", e.target.value)}
             variant="outlined"
-            color="secondary"
+            color="primary"
+            fullWidth
             type="text"
             sx={{ mb: 3 }}
             value={title}
-            error={titleError}
-            InputLabelProps={{ style: { color: 'blue' } }}
+            error={!!validationErrors.slideTitle}
+            helperText={validationErrors.slideTitle}
           />
           <TextField
             className="TextField"
-
             label="Post"
-            onChange={(e) => setText(e.target.value)}
-            required
+            onChange={(e) => handleInputChange("post", e.target.value)}
             variant="outlined"
-            color="secondary"
-            multiline // Set multiline to true
-            rows={4} // Optionally, you can set the number of rows to display initially
+            color="primary"
+            fullWidth
+            multiline
+            rows={4}
             value={text}
-            error={textError}
-            sx={{ mb: 3, }}
-            InputLabelProps={{ style: { color: 'blue' } }}
+            sx={{ mb: 3 }}
+            error={!!validationErrors.post}
+            helperText={validationErrors.post}
           />
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ display: "flex", alignItems: "center" }}>
             <input
               name="image"
               type="file"
@@ -152,24 +148,20 @@ export default function ScreenContentForm() {
             {selectedImage && (
               <img
                 src={selectedImage}
-                style={{ width: "40%", height: "15vh", marginLeft: '10px' }}
+                style={{ width: "40%", height: "15vh", marginLeft: "10px" }}
               />
             )}
           </div>
-
           <Button
-            variant="outlined"
-            color="secondary"
+            variant="contained"
+            color="primary"
             type="submit"
-            style={{ borderRadius: "5px", width: "30%", marginTop: "2vh", color: 'blue', borderColor: 'blue' }}
-
+            sx={{ mt: 3 }}
           >
-            Add
+            Add Slide
           </Button>
         </form>
-
       </Paper>
-
     </>
   );
 }

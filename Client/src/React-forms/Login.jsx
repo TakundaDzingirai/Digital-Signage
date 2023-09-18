@@ -20,12 +20,21 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import CircularIndeterminate from "../CircularIndeterminate";
 import { useEffect, useState } from "react";
+import { validationSchema } from "../Validations/validations.js";
+import * as Yup from "yup";
+
+const theme = createTheme();
 
 export default function Login() {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
   const [toastId, setToastId] = useState(null);
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (loginSuccess && toastId) {
@@ -41,15 +50,30 @@ export default function Login() {
     }
   }, [show, loginSuccess, toastId, navigate]);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+
+    // Clear the error for this field
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: undefined,
+    }));
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
 
     try {
+      await validationSchema.validate(formData, { abortEarly: false });
+
       setShow(true);
       const response = await Axios.post("http://localhost:3000/login", {
-        username: data.get("username"),
-        password: data.get("password"),
+        username: formData.username,
+        password: formData.password,
       });
 
       if (response.status === 200) {
@@ -70,8 +94,16 @@ export default function Login() {
         setShow(false);
       }
     } catch (error) {
-      toast.error("Incorrect username and or password");
-      setShow(false);
+      if (error instanceof Yup.ValidationError) {
+        const validationErrors = {};
+        error.inner.forEach((err) => {
+          validationErrors[err.path] = err.message;
+        });
+        setErrors(validationErrors);
+      } else {
+        toast.error("Incorrect username and or password");
+        setShow(false);
+      }
     }
   };
 
@@ -81,7 +113,7 @@ export default function Login() {
       <ToastContainer />
       <div style={{ position: "relative" }}>
         {show && <CircularIndeterminate info={"Logging in..."} />}
-        <ThemeProvider theme={createTheme()}>
+        <ThemeProvider theme={theme}>
           <Grid container component="main" sx={{ height: "100vh" }}>
             <CssBaseline />
             <Grid
@@ -140,6 +172,10 @@ export default function Login() {
                     label="Username"
                     name="username"
                     autoComplete="username"
+                    value={formData.username}
+                    onChange={handleChange}
+                    error={!!errors.username}
+                    helperText={errors.username}
                   />
                   <TextField
                     variant="outlined"
@@ -151,6 +187,10 @@ export default function Login() {
                     type="password"
                     id="password"
                     autoComplete="current-password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    error={!!errors.password}
+                    helperText={errors.password}
                   />
 
                   <Button

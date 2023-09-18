@@ -15,21 +15,19 @@ import {
   Avatar,
   Grid,
   Box,
-  Checkbox,
-  FormControlLabel,
   Link as MUILink,
   Paper,
   ThemeProvider,
   createTheme,
+  FormHelperText,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { ToastContainer, toast } from "react-toastify";
-import ScreenPanel from "../ScreenComponents/ScreenPanel";
 import Header from "../Header";
 import CircularIndeterminate from "../CircularIndeterminate";
+import { registrationValidation } from "../Validations/validations";
+import * as Yup from "yup";
 
 const theme = createTheme();
-
 function RegisterForm() {
   const navigate = useNavigate();
 
@@ -40,37 +38,31 @@ function RegisterForm() {
     email: "",
     username: "",
     password: "",
-    role: ""
+    role: "",
   });
   const [registered, setRegister] = useState(false);
   const [show, setShow] = useState(false);
-
-  const [toastId, setToastId] = useState(null); // Store toastId in state
-
-  const dimmedFormClass = show ? "dimmed-form" : "";
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
-
-
-    if (registered && toastId) {
-      // Check the status after a delay
+    if (registered) {
       setShow(false);
       setTimeout(() => {
-        const isActive = toast.isActive(toastId);
-        if (isActive) {
-          toast.done(); // Mark the toast as done
-
-          navigate("/screens");
-
-        }
-      }, 2000); // Adjust the delay as needed
+        navigate("/screens");
+      }, 2000);
     }
-  }, [show, registered, toastId, navigate]);
+  }, [show, registered, navigate]);
 
-  
-
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value } = e.target;
+
+    try {
+      await registrationValidation.validateAt(name, { [name]: value });
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+    } catch (error) {
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: error.message }));
+    }
+
     setRegistrationData({
       ...registrationData,
       [name]: value,
@@ -81,6 +73,10 @@ function RegisterForm() {
     e.preventDefault();
 
     try {
+      await registrationValidation.validate(registrationData, {
+        abortEarly: false,
+      });
+
       setShow(true);
       const response = await Axios.post(
         "http://localhost:3000/register",
@@ -95,42 +91,39 @@ function RegisterForm() {
       if (response.status === 201) {
         const data = response.data;
 
-
-        setToastId(toast.success(`Welcome to Digi Sign, ${registrationData.firstname}!`, {
-          position: "top-center",
-          autoClose: 2000,
-        }));
-
         const token = data.token;
         localStorage.setItem("token", token);
 
         setRegister(true);
       } else {
-        toast.error("Registration failed", {
-          position: "top-center",
-          autoClose: 2000,
-        });
+        console.error("Registration failed");
       }
       setShow(false);
     } catch (error) {
-      console.error("Error:", error);
+      if (error instanceof Yup.ValidationError) {
+        const validationErrors = {};
+        error.inner.forEach((err) => {
+          validationErrors[err.path] = err.message;
+        });
+        setErrors(validationErrors);
+      } else {
+        console.error(error.response.data.error);
+      }
+      setShow(false);
     }
-    setShow(false);
   };
 
   const styl = {
-    marginTop: show ? "2vh" : "2vh", // Conditionally set marginTop
-    opacity: show ? "0.4" : "1", // Conditionally set opacity
-    pointerEvents: show ? "none" : "auto", // Conditionally set pointerEvents
+    marginTop: show ? "2vh" : "2vh",
+    opacity: show ? "0.4" : "1",
+    pointerEvents: show ? "none" : "auto",
   };
-
 
   return (
     <>
       <Header />
 
-      {show && (<CircularIndeterminate info={"Registering..."} />)}
-      <ToastContainer />
+      {show && <CircularIndeterminate info={"Registering..."} />}
 
       <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xs" style={styl}>
@@ -169,6 +162,13 @@ function RegisterForm() {
                     autoFocus
                     value={registrationData.firstname}
                     onChange={handleChange}
+                    error={!!errors.firstname}
+                    helperText={errors.firstname}
+                    inputProps={{
+                      style: {
+                        borderColor: errors.firstname ? "red" : "green",
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -180,6 +180,13 @@ function RegisterForm() {
                     name="lastname"
                     value={registrationData.lastname}
                     onChange={handleChange}
+                    error={!!errors.lastname}
+                    helperText={errors.lastname}
+                    inputProps={{
+                      style: {
+                        borderColor: errors.lastname ? "red" : "green",
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -192,6 +199,13 @@ function RegisterForm() {
                     autoComplete="email"
                     value={registrationData.email}
                     onChange={handleChange}
+                    error={!!errors.email}
+                    helperText={errors.email}
+                    inputProps={{
+                      style: {
+                        borderColor: errors.email ? "red" : "green",
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -203,6 +217,13 @@ function RegisterForm() {
                     name="username"
                     value={registrationData.username}
                     onChange={handleChange}
+                    error={!!errors.username}
+                    helperText={errors.username}
+                    inputProps={{
+                      style: {
+                        borderColor: errors.username ? "red" : "green",
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -215,6 +236,13 @@ function RegisterForm() {
                     id="password"
                     value={registrationData.password}
                     onChange={handleChange}
+                    error={!!errors.password}
+                    helperText={errors.password}
+                    inputProps={{
+                      style: {
+                        borderColor: errors.password ? "red" : "green",
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -223,6 +251,7 @@ function RegisterForm() {
                     fullWidth
                     margin="normal"
                     required
+                    error={!!errors.department}
                   >
                     <InputLabel id="department-label">Department</InputLabel>
                     <Select
@@ -232,8 +261,12 @@ function RegisterForm() {
                       value={registrationData.department}
                       onChange={handleChange}
                       label="Department"
+                      inputProps={{
+                        style: {
+                          borderColor: errors.department ? "red" : "green",
+                        },
+                      }}
                     >
-
                       <MenuItem value="Computer Science">
                         Computer Science
                       </MenuItem>
@@ -246,30 +279,43 @@ function RegisterForm() {
                         Applied Statistics
                       </MenuItem>
                       <MenuItem value="Law">Law</MenuItem>
-
-
-
                     </Select>
                   </FormControl>
+                  {errors.department && (
+                    <FormHelperText error>{errors.department}</FormHelperText>
+                  )}
                 </Grid>
                 <Grid item xs={12}>
-                  <FormControl variant="outlined" fullWidth margin="normal" required>
+                  <FormControl
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    required
+                    error={!!errors.role}
+                  >
                     <InputLabel id="Role-label">Role</InputLabel>
                     <Select
                       labelId="Role-label"
-                      id="role" // Change the id to "role"
+                      id="role"
                       name="role"
                       value={registrationData.role}
                       onChange={handleChange}
                       label="Role"
+                      inputProps={{
+                        style: {
+                          borderColor: errors.role ? "red" : "green",
+                        },
+                      }}
                     >
                       <MenuItem value="admin">Admin</MenuItem>
                       <MenuItem value="user">User</MenuItem>
                     </Select>
                   </FormControl>
+                  {errors.role && (
+                    <FormHelperText error>{errors.role}</FormHelperText>
+                  )}
                 </Grid>
-
-              </Grid> {/* Close the Grid container */}
+              </Grid>{" "}
               <Button
                 type="submit"
                 fullWidth
@@ -278,8 +324,6 @@ function RegisterForm() {
               >
                 Sign Up
               </Button>
-              {/* Close the Box component */}
-
               <Grid container justifyContent="flex-end">
                 <Grid item>
                   <MUILink component={Link} to="/" variant="body2">
@@ -288,10 +332,9 @@ function RegisterForm() {
                 </Grid>
               </Grid>
             </Box>
-          </Paper >
-          <ToastContainer />
-        </Container >
-      </ThemeProvider >
+          </Paper>
+        </Container>
+      </ThemeProvider>
     </>
   );
 }

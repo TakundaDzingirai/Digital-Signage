@@ -34,6 +34,12 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: [true, "Password must be provided"],
+    validate: {
+      validator: function (value) {
+        return value.length >= 8;
+      },
+      message: "Password must be at least 8 characters long",
+    },
   },
 
   role: {

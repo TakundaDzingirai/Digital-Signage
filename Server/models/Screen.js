@@ -28,10 +28,12 @@ const screenSchema = new Schema(
 
     duration: {
       type: Number,
+      default: 2,
     },
 
     interval: {
       type: Number,
+      default: 10,
     },
 
     fadeEnter: {
