@@ -99,8 +99,11 @@ const userSchema = Joi.object({
     .messages({ "any.required": "Role must be provided" })
     .escapeHTML(),
   password: Joi.string()
+    .min(8)
     .required()
-    .messages({ "any.required": "Password must be provided" }),
+    .messages({ "any.required": "Password must be provided" })
+    .escapeHTML(),
+
   // confirmPassword: Joi.string().valid(Joi.ref("password")).required(),
 });
 
