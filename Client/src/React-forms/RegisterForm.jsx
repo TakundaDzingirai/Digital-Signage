@@ -67,7 +67,7 @@ function RegisterForm() {
     }
   }, [show, registered, toastId, navigate]);
 
-
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
