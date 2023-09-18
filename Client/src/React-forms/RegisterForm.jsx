@@ -19,14 +19,15 @@ import {
   Paper,
   ThemeProvider,
   createTheme,
+  FormHelperText,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { ToastContainer, toast } from "react-toastify";
 import Header from "../Header";
 import CircularIndeterminate from "../CircularIndeterminate";
+import { registrationValidation } from "../Validations/userValidations";
+import * as Yup from "yup";
 
 const theme = createTheme();
-
 function RegisterForm() {
   const navigate = useNavigate();
 
@@ -41,25 +42,27 @@ function RegisterForm() {
   });
   const [registered, setRegister] = useState(false);
   const [show, setShow] = useState(false);
-
-  const [toastId, setToastId] = useState(null);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (registered && toastId) {
+    if (registered) {
       setShow(false);
       setTimeout(() => {
-        const isActive = toast.isActive(toastId);
-        if (isActive) {
-          toast.done();
-
-          navigate("/screens");
-        }
+        navigate("/screens");
       }, 2000);
     }
-  }, [show, registered, toastId, navigate]);
+  }, [show, registered, navigate]);
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value } = e.target;
+
+    try {
+      await registrationValidation.validateAt(name, { [name]: value });
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+    } catch (error) {
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: error.message }));
+    }
+
     setRegistrationData({
       ...registrationData,
       [name]: value,
@@ -70,6 +73,10 @@ function RegisterForm() {
     e.preventDefault();
 
     try {
+      await registrationValidation.validate(registrationData, {
+        abortEarly: false,
+      });
+
       setShow(true);
       const response = await Axios.post(
         "http://localhost:3000/register",
@@ -83,34 +90,27 @@ function RegisterForm() {
 
       if (response.status === 201) {
         const data = response.data;
-        setToastId(
-          toast.success(
-            `Welcome to Digi Sign, ${registrationData.firstname}!`,
-            {
-              position: "top-center",
-              autoClose: 2000,
-            }
-          )
-        );
 
         const token = data.token;
         localStorage.setItem("token", token);
 
         setRegister(true);
       } else {
-        toast.error("Registration failed", {
-          position: "top-center",
-          autoClose: 2000,
-        });
+        console.error("Registration failed");
       }
       setShow(false);
     } catch (error) {
-      toast.error(error.response.data.error, {
-        position: "top-center",
-        autoClose: 2000,
-      });
+      if (error instanceof Yup.ValidationError) {
+        const validationErrors = {};
+        error.inner.forEach((err) => {
+          validationErrors[err.path] = err.message;
+        });
+        setErrors(validationErrors);
+      } else {
+        console.error(error.response.data.error);
+      }
+      setShow(false);
     }
-    setShow(false);
   };
 
   const styl = {
@@ -124,7 +124,6 @@ function RegisterForm() {
       <Header />
 
       {show && <CircularIndeterminate info={"Registering..."} />}
-      <ToastContainer />
 
       <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xs" style={styl}>
@@ -163,6 +162,13 @@ function RegisterForm() {
                     autoFocus
                     value={registrationData.firstname}
                     onChange={handleChange}
+                    error={!!errors.firstname}
+                    helperText={errors.firstname}
+                    inputProps={{
+                      style: {
+                        borderColor: errors.firstname ? "red" : "green",
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -174,6 +180,13 @@ function RegisterForm() {
                     name="lastname"
                     value={registrationData.lastname}
                     onChange={handleChange}
+                    error={!!errors.lastname}
+                    helperText={errors.lastname}
+                    inputProps={{
+                      style: {
+                        borderColor: errors.lastname ? "red" : "green",
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -186,6 +199,13 @@ function RegisterForm() {
                     autoComplete="email"
                     value={registrationData.email}
                     onChange={handleChange}
+                    error={!!errors.email}
+                    helperText={errors.email}
+                    inputProps={{
+                      style: {
+                        borderColor: errors.email ? "red" : "green",
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -197,6 +217,13 @@ function RegisterForm() {
                     name="username"
                     value={registrationData.username}
                     onChange={handleChange}
+                    error={!!errors.username}
+                    helperText={errors.username}
+                    inputProps={{
+                      style: {
+                        borderColor: errors.username ? "red" : "green",
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -209,6 +236,13 @@ function RegisterForm() {
                     id="password"
                     value={registrationData.password}
                     onChange={handleChange}
+                    error={!!errors.password}
+                    helperText={errors.password}
+                    inputProps={{
+                      style: {
+                        borderColor: errors.password ? "red" : "green",
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -217,6 +251,7 @@ function RegisterForm() {
                     fullWidth
                     margin="normal"
                     required
+                    error={!!errors.department}
                   >
                     <InputLabel id="department-label">Department</InputLabel>
                     <Select
@@ -226,6 +261,11 @@ function RegisterForm() {
                       value={registrationData.department}
                       onChange={handleChange}
                       label="Department"
+                      inputProps={{
+                        style: {
+                          borderColor: errors.department ? "red" : "green",
+                        },
+                      }}
                     >
                       <MenuItem value="Computer Science">
                         Computer Science
@@ -241,6 +281,9 @@ function RegisterForm() {
                       <MenuItem value="Law">Law</MenuItem>
                     </Select>
                   </FormControl>
+                  {errors.department && (
+                    <FormHelperText error>{errors.department}</FormHelperText>
+                  )}
                 </Grid>
                 <Grid item xs={12}>
                   <FormControl
@@ -248,6 +291,7 @@ function RegisterForm() {
                     fullWidth
                     margin="normal"
                     required
+                    error={!!errors.role}
                   >
                     <InputLabel id="Role-label">Role</InputLabel>
                     <Select
@@ -257,11 +301,19 @@ function RegisterForm() {
                       value={registrationData.role}
                       onChange={handleChange}
                       label="Role"
+                      inputProps={{
+                        style: {
+                          borderColor: errors.role ? "red" : "green",
+                        },
+                      }}
                     >
                       <MenuItem value="admin">Admin</MenuItem>
                       <MenuItem value="user">User</MenuItem>
                     </Select>
                   </FormControl>
+                  {errors.role && (
+                    <FormHelperText error>{errors.role}</FormHelperText>
+                  )}
                 </Grid>
               </Grid>{" "}
               <Button
@@ -281,7 +333,6 @@ function RegisterForm() {
               </Grid>
             </Box>
           </Paper>
-          <ToastContainer />
         </Container>
       </ThemeProvider>
     </>
