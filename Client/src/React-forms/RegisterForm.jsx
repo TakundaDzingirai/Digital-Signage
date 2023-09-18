@@ -24,7 +24,7 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Header from "../Header";
 import CircularIndeterminate from "../CircularIndeterminate";
-import { registrationValidation } from "../Validations/userValidations";
+import { registrationValidation } from "../Validations/validations";
 import * as Yup from "yup";
 
 const theme = createTheme();

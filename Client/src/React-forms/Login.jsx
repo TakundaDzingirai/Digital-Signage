@@ -20,7 +20,7 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import CircularIndeterminate from "../CircularIndeterminate";
 import { useEffect, useState } from "react";
-import { validationSchema } from "../Validations/userValidations.js";
+import { validationSchema } from "../Validations/validations.js";
 import * as Yup from "yup";
 
 const theme = createTheme();

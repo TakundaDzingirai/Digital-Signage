@@ -1,15 +1,5 @@
 import * as Yup from "yup";
 
-export const userSchema = Yup.object().shape({
-  firstname: Yup.string().trim().required(),
-  lastname: Yup.string().trim().required(),
-  department: Yup.string().trim().required(),
-  email: Yup.string().email().trim().required(),
-  username: Yup.string().min(4).trim().required(),
-  password: Yup.string().min(4).trim().required(),
-  role: Yup.string().trim().required,
-});
-
 export const validationSchema = Yup.object({
   username: Yup.string().required("Username is required"),
   password: Yup.string().required("Password is required"),
@@ -27,4 +17,14 @@ export const registrationValidation = Yup.object({
     .min(8, "Password must be at least 8 characters")
     .required("Password is required"),
   role: Yup.string().required("Role is required"),
+});
+
+export const screenValidation = Yup.object({
+  screenName: Yup.string().required("Name of screen is required"),
+  department: Yup.string().required("Department is required"),
+});
+
+export const contentValidation = Yup.object({
+  slideTitle: Yup.string().required("Slide title is required"),
+  post: Yup.string().required("Post is required"),
 });

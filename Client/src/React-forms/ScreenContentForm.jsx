@@ -1,11 +1,13 @@
 import { useState } from "react";
 import "./Form.css";
-import { TextField, Button, Paper } from "@mui/material";
+import { TextField, Button, Paper, Typography } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import ScreenPanel from "../ScreenComponents/ScreenPanel";
 import { useParams } from "react-router-dom";
 import Axios from "axios";
 import CircularIndeterminate from "../CircularIndeterminate";
+import { contentValidation } from "../Validations/validations.js";
+import * as Yup from "yup";
 
 export default function ScreenContentForm() {
   const [title, setTitle] = useState("");
@@ -13,6 +15,16 @@ export default function ScreenContentForm() {
   const [selectedImage, setSelectedImage] = useState(null);
   const { screenId } = useParams();
   const [show, setShow] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
+
+  const handleInputChange = (name, value) => {
+    setValidationErrors({ ...validationErrors, [name]: "" });
+    if (name === "slideTitle") {
+      setTitle(value);
+    } else if (name === "post") {
+      setText(value);
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -25,6 +37,8 @@ export default function ScreenContentForm() {
     setShow(true);
 
     try {
+      await contentValidation.validate(data, { abortEarly: false });
+
       const response = await Axios.post(
         `http://localhost:3000/content/${screenId}`,
         data
@@ -32,16 +46,26 @@ export default function ScreenContentForm() {
       toast.success("Content uploaded successfully.");
       setShow(false);
     } catch (error) {
-      if (error.response) {
-        toast.error(error.response.data.error, {
-          position: "top-center",
-          autoClose: 2000,
+      if (error instanceof Yup.ValidationError) {
+        const validationErrors = {};
+        error.inner.forEach((err) => {
+          validationErrors[err.path] = err.message;
         });
+
+        setValidationErrors(validationErrors);
+        console.error(validationErrors);
       } else {
-        toast.error("Error uploading content. Please try again later.", {
-          position: "top-center",
-          autoClose: 2000,
-        });
+        if (error.response) {
+          toast.error(error.response.data.error, {
+            position: "top-center",
+            autoClose: 2000,
+          });
+        } else {
+          toast.error("Error uploading content. Please try again later.", {
+            position: "top-center",
+            autoClose: 2000,
+          });
+        }
       }
       setShow(false);
     }
@@ -62,8 +86,6 @@ export default function ScreenContentForm() {
     reader.onloadend = () => {
       setSelectedImage(reader.result);
     };
-
-    console.log(selectedImage);
   };
 
   const styl = {
@@ -86,29 +108,35 @@ export default function ScreenContentForm() {
           onSubmit={handleSubmit}
           style={styl}
         >
-          <h2>Adding new Slide</h2>
+          <Typography variant="h5" color="primary" sx={{ mb: 3 }}>
+            Add a new slide
+          </Typography>
           <TextField
             className="TextField"
             label="Slide Title"
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => handleInputChange("slideTitle", e.target.value)}
             variant="outlined"
-            color="secondary"
+            color="primary"
+            fullWidth
             type="text"
             sx={{ mb: 3 }}
             value={title}
-            InputLabelProps={{ style: { color: "blue" } }}
+            error={!!validationErrors.slideTitle}
+            helperText={validationErrors.slideTitle}
           />
           <TextField
             className="TextField"
             label="Post"
-            onChange={(e) => setText(e.target.value)}
+            onChange={(e) => handleInputChange("post", e.target.value)}
             variant="outlined"
-            color="secondary"
+            color="primary"
+            fullWidth
             multiline
             rows={4}
             value={text}
             sx={{ mb: 3 }}
-            InputLabelProps={{ style: { color: "blue" } }}
+            error={!!validationErrors.post}
+            helperText={validationErrors.post}
           />
           <div style={{ display: "flex", alignItems: "center" }}>
             <input
@@ -124,20 +152,13 @@ export default function ScreenContentForm() {
               />
             )}
           </div>
-
           <Button
-            variant="outlined"
-            color="secondary"
+            variant="contained"
+            color="primary"
             type="submit"
-            style={{
-              borderRadius: "5px",
-              width: "30%",
-              marginTop: "2vh",
-              color: "blue",
-              borderColor: "blue",
-            }}
+            sx={{ mt: 3 }}
           >
-            Add
+            Add Slide
           </Button>
         </form>
       </Paper>

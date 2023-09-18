@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 import Axios from "axios";
 import "./FormPopup.css";
 import "react-toastify/dist/ReactToastify.css";
-import { screenValidation } from "../Validations/screenValidation";
+import { screenValidation } from "../Validations/validations";
 import * as Yup from "yup";
 
 export default function CreateScreenForm({
