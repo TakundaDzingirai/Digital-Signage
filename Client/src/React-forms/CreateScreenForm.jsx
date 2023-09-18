@@ -1,9 +1,24 @@
 import { useState } from "react";
-import "./FormPopup.css";
-import Button from "../Button_btn";
-import Axios from "axios";
+import {
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControl,
+  Select,
+  InputLabel,
+  MenuItem,
+  FormHelperText,
+} from "@mui/material";
 import { toast } from "react-toastify";
+import Axios from "axios";
+import "./FormPopup.css";
 import "react-toastify/dist/ReactToastify.css";
+import { screenValidation } from "../Validations/screenValidation";
+import * as Yup from "yup";
 
 export default function CreateScreenForm({
   listOfScreen,
@@ -13,6 +28,7 @@ export default function CreateScreenForm({
 }) {
   const [screenName, setScreenName] = useState("");
   const [department, setDepartment] = useState("");
+  const [errors, setErrors] = useState({});
 
   const createScreen = async (e) => {
     e.preventDefault();
@@ -28,6 +44,11 @@ export default function CreateScreenForm({
     };
 
     try {
+      await screenValidation.validate(
+        { screenName, department },
+        { abortEarly: false }
+      );
+
       const response = await Axios.post(
         "http://localhost:3000/screens",
         {
@@ -38,50 +59,89 @@ export default function CreateScreenForm({
       );
       setListOfScreen([...listOfScreen, { screenName, department }]);
       toast.success(response.data);
+
+      setScreenName("");
+      setDepartment("");
+      setErrors({});
+      onToggleForm();
     } catch (error) {
-      if (error.response) {
-        toast.error(error.response.data.error);
+      if (error instanceof Yup.ValidationError) {
+        const validationErrors = {};
+        error.inner.forEach((err) => {
+          validationErrors[err.path] = err.message;
+        });
+        setErrors(validationErrors);
       } else {
-        toast.error("An error occurred while creating the screen.");
+        if (error.response) {
+          toast.error(error.response.data.error);
+        } else {
+          toast.error("An error occurred while creating the screen.");
+        }
       }
     }
+  };
 
-    setScreenName("");
-    setDepartment("");
-    onToggleForm();
+  const handleDepartmentChange = (e) => {
+    setDepartment(e.target.value);
+    setErrors({ ...errors, department: "" });
+  };
+
+  const handleNameChange = (e) => {
+    setScreenName(e.target.value);
+    setErrors({ ...errors, screenName: "" });
   };
 
   const handleCancel = () => {
     setScreenName("");
     setDepartment("");
+    setErrors({});
     onToggleForm();
   };
 
   return (
-    <form style={{ marginTop: "2vh" }} onSubmit={createScreen}>
-      <label>Name</label>
-      <input
-        value={screenName}
-        onChange={(e) => setScreenName(e.target.value)}
-        type="text"
-      />
-
-      <label>Department</label>
-      <input
-        value={department}
-        onChange={(e) => setDepartment(e.target.value)}
-        type="text"
-      />
-
-      <Button onClick={createScreen}>Create screen</Button>
-
-      {showForm && (
-        <>
-          <Button type="button" onClick={handleCancel}>
-            Cancel
-          </Button>
-        </>
-      )}
-    </form>
+    <Dialog open={showForm} onClose={handleCancel}>
+      <DialogTitle>Create Screen</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          Please enter the name and select the department for the screen.
+        </DialogContentText>
+        <TextField
+          autoFocus
+          margin="dense"
+          label="Name"
+          fullWidth
+          variant="outlined"
+          value={screenName}
+          onChange={handleNameChange}
+          error={!!errors.screenName}
+          helperText={errors.screenName}
+          sx={{ mb: 3 }}
+        />
+        <FormControl fullWidth variant="outlined" error={!!errors.department}>
+          <InputLabel>Department</InputLabel>
+          <Select
+            label="Department"
+            value={department}
+            onChange={handleDepartmentChange}
+          >
+            <MenuItem value="Computer Science">Computer Science</MenuItem>
+            <MenuItem value="Information Systems">Information Systems</MenuItem>
+            <MenuItem value="Applied Statistics">Applied Statistics</MenuItem>
+            <MenuItem value="Accounting">Accounting</MenuItem>
+            <MenuItem value="Economics">Economics</MenuItem>
+            <MenuItem value="Law">Law</MenuItem>
+          </Select>
+          <FormHelperText error={true}>{errors.department}</FormHelperText>
+        </FormControl>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleCancel} color="primary">
+          Cancel
+        </Button>
+        <Button onClick={createScreen} color="primary">
+          Create
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
