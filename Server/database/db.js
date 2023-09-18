@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 
 const connectToDatabase = async () => {
   try {
-    const dbURL = process.env.DB_URL;
+    const dbURL = process.env.DB_URL || "mongodb://127.0.0.1:27017/DigiSign";
     await mongoose.connect(dbURL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
