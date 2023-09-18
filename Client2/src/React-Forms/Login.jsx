@@ -48,6 +48,13 @@ export default function Login() {
       console.log("ScreenData:", screenData)
       console.log(screenId)
       if (selected) {
+        {
+          screenId,
+            screenData.fadeEnter
+            ,
+            screenData.fadeEnterActive
+
+        }
 
         navigate("/content", { state: { screenId } });
 

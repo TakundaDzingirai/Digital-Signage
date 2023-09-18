@@ -17,8 +17,8 @@ export default function AutoSlider() {
     const [slideDuration, setSlideDuration] = useState(2);
     const [slideInterval, setSlideInterval] = useState(25);
     const location = useLocation(); // Use useLocation to access location state
-    const { SlideData } = location.state || {}; // Extract SlideData from location state
-    console.log(SlideData);
+    const { screenId } = location.state || {}; // Extract SlideData from location state
+    console.log(screenId);
 
 
     // Function to handle slider value change
@@ -45,7 +45,7 @@ export default function AutoSlider() {
                     interval={slideInterval * 1000} // Convert seconds to milliseconds
 
                 >
-                    {SlideData.map((item) => <Item key={item._id} item={item} />)}
+                    {/* {SlideData.map((item) => <Item key={item._id} item={item} />)} */}
                 </Carousel>
 
 
