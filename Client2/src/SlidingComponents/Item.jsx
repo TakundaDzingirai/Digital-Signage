@@ -18,7 +18,7 @@ export default function Item({ item }) {
             style={{
                 backgroundColor: randomColor,
                 width: "100%",
-                height: "60vh",
+                height: "100vh",
                 margin: "0",
                 display: 'flex',
                 flexDirection: 'column',

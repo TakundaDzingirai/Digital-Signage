@@ -69,7 +69,9 @@ export default function AutoSlider() {
                     animation={fadeEnter && fadeEnterActive ? "fade" : "slide"} // Set the animation based on state
                     duration={slideDuration * 1000}
                     interval={slideInterval * 1000} // Convert seconds to milliseconds
-
+                    stopAutoPlayOnHover={false}
+                    indicators={false}
+                    navButtonsAlwaysVisible={false}
                 >
                     {SlideData.map((item) => <Item key={item._id} item={item} />)}
                 </Carousel>

@@ -26,8 +26,7 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import CircularIndeterminate from "../Components/CircularIndeterminate";
 import { useEffect, useState } from "react";
-import { MenuItems } from "../Components/MenuItems";
-
+import "./Form.css"
 export default function Login() {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
@@ -48,22 +47,28 @@ export default function Login() {
       console.log("ScreenData:", screenData)
       console.log(screenId)
       if (selected) {
-        {
-          screenId,
-            screenData.fadeEnter
-            ,
-            screenData.fadeEnterActive
+
+        const screenObj = {
+          screenId: screenId,
+          fadeEnter: screenData.fadeEnter,
+          fadeEnterActive: screenData.fadeEnterActive
 
         }
 
-        navigate("/content", { state: { screenId } });
+        navigate(`/content/${screenId}`, { state: { screenId } });
 
       }
 
     }
   }, [show, loginSuccess, selected, screenId, navigate]);
 
+  const styl = {
 
+
+    opacity: showDropdown ? "0.4" : "1", // Conditionally set opacity
+    pointerEvents: showDropdown ? "none" : "auto", // Conditionally set pointerEvents
+
+  }
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -197,6 +202,7 @@ export default function Login() {
                     label="Username"
                     name="username"
                     autoComplete="username"
+                    style={styl}
                   />
                   <TextField
                     variant="outlined"
@@ -208,12 +214,14 @@ export default function Login() {
                     type="password"
                     id="password"
                     autoComplete="current-password"
+                    style={styl}
                   />
 
                   {showDropdown && (<Grid item xs={12}>
                     <FormControl variant="outlined" fullWidth margin="normal" required>
-                      <InputLabel htmlFor="_id">Select an option</InputLabel>
+                      <InputLabel style={{ color: "purple" }} htmlFor="_id">Select an option</InputLabel>
                       <Select
+                        className="custom-select"
                         label="Select an option"
                         value={screenId}
                         onChange={handleSelectChange}
@@ -221,6 +229,7 @@ export default function Login() {
                           name: "_id",
                           id: "_id",
                         }}
+
                       >
                         {screenData.map((item) => (
                           <MenuItem key={item._id} value={item._id}>
@@ -237,15 +246,12 @@ export default function Login() {
                     fullWidth
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
+                    style={styl}
                   >
                     Sign In
                   </Button>
                   <Grid container>
-                    <Grid item>
-                      <Link component={RouterLink} to="/register" variant="body2">
-                        {"Don't have an account? Sign Up"}
-                      </Link>
-                    </Grid>
+
                   </Grid>
                 </Box>
               </Box>
