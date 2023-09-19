@@ -1,14 +1,13 @@
 require("dotenv").config();
 const Content = require("../models/Content");
 const Screen = require("../models/Screen");
-const { cloudinary } = require('../cloudinary/index');
+const { cloudinary } = require("../cloudinary/index");
 const { Console } = require("console");
-const { storage } = require('../cloudinary/index'); // Import the 'storage' object
+const { storage } = require("../cloudinary/index"); // Import the 'storage' object
 // const multer = require('multer');
 // const upload = multer({ storage });
 class contentController {
   static async addContentToScreen(screenId, contentData) {
-
     //Create a new Content instance with the content data
     const content = new Content(contentData);
     // Save the new content to the database
@@ -18,7 +17,7 @@ class contentController {
       $push: { content: savedContent._id },
     });
 
-    res.json(savedContent);
+    // res.json(savedContent);
   }
 
   static async deleteContent(req, res) {
