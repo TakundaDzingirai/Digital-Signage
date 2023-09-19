@@ -9,6 +9,8 @@ const { storage } = require("../cloudinary/index"); // Import the 'storage' obje
 class contentController {
   static async addContentToScreen(screenId, contentData) {
     //Create a new Content instance with the content data
+    console.log(contentData);
+
     const content = new Content(contentData);
     // Save the new content to the database
     const savedContent = await content.save();
