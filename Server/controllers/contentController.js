@@ -44,7 +44,7 @@ class contentController {
     await Screen.findByIdAndUpdate(screenId, {
       $pull: { content: contentId },
     });
-    res.json({ message: "Content deleted successfully" });
+    res.json("Content deleted successfully");
   }
 
   static async editContent(req, res) {

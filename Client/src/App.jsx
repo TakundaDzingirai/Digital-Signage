@@ -8,6 +8,8 @@ import RegisterForm from "./React-forms/RegisterForm"; // Import the RegisterFor
 import ScreenContentForm from "./React-forms/ScreenContentForm";
 import AutoSlider from "./SlidingComponents/AutoSlider";
 import SlideContent from "./ScreenComponents/SlideContent";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function App() {
   const [showForm, setShowForm] = useState(false);
@@ -53,6 +55,7 @@ export default function App() {
           <Route path="/content/more/:contentId" element={<SlideContent />} />
         </Routes>
       </Router>
+      <ToastContainer />
     </div>
   );
 }
