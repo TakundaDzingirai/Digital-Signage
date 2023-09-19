@@ -7,63 +7,18 @@ const { storage } = require('../cloudinary/index'); // Import the 'storage' obje
 // const multer = require('multer');
 // const upload = multer({ storage });
 class contentController {
-  static async addContentToScreen(screenId, content) {
-    // Extract data from the request body
-    // const { slideTitle, post } = req.body; // Remove 'image' since it will be handled by multer
+  static async addContentToScreen(screenId, contentData) {
 
-    // Use the 'upload' middleware for file uploads
-    // upload.single('image')(req, res, async (error) => {
-    //   if (error) {
-    //     console.error(error);
-    //     return res.status(500).json({ error: 'Error uploading file to Cloudinary' });
-    //   }
-    //   else { }
+    //Create a new Content instance with the content data
+    const content = new Content(contentData);
+    // Save the new content to the database
+    const savedContent = await content.save();
+    // Update the Screen document to include the new content's ID
+    await Screen.findByIdAndUpdate(screenId, {
+      $push: { content: savedContent._id },
+    });
 
-    //   // The rest of your code for handling the uploaded file...
-    // });
-
-
-
-    // const result = await cloudinary.uploader.upload(image, {
-    //   folder: "digiSign",
-    //   // width: 300,
-    //   // crop: "scale"
-    // })
-
-    // The file has been successfully uploaded to Cloudinary,
-    // and you can access its details in 'req.file'.
-    // For example, you can get the public ID and secure URL like this:
-    // console.log(req.file)
-    // const imagePublicId = req.file.public_id;
-    // const imageUrl = req.file.secure_url;
-
-    // const screenId = req.params.screenId;
-    // console.log("imageId", imagePublicId);
-
-
-    // const contentData = {
-    //   slideTitle,
-    //   post,
-    //   screen: screenId,
-    //   image: {//added this
-    //     public_id: uploadedFile.public_id,
-    //     url: uploadedFile.secure_url
-    //   }
-    // }
-
-    // console.log(req.user);
-    // const contentData = {
-
-    // Create a new Content instance with the content data
-    // const content = new Content(contentData);
-    // // Save the new content to the database
-    // const savedContent = await content.save();
-    // // Update the Screen document to include the new content's ID
-    // await Screen.findByIdAndUpdate(screenId, {
-    //   $push: { content: savedContent._id },
-    // });
-
-    // res.json(savedContent);
+    res.json(savedContent);
   }
 
   static async deleteContent(req, res) {
