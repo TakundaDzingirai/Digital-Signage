@@ -4,12 +4,13 @@ const Screen = require("../models/Screen");
 const { cloudinary } = require('../cloudinary/index');
 const { Console } = require("console");
 const { storage } = require('../cloudinary/index'); // Import the 'storage' object
-// const multer = require('multer');
-// const upload = multer({ storage });
+
 class contentController {
-  static async addContentToScreen(screenId, contentData) {
+  static async addContentToScreen(screenId, contentData, res) {
 
     //Create a new Content instance with the content data
+    console.log(contentData);
+
     const content = new Content(contentData);
     // Save the new content to the database
     const savedContent = await content.save();
