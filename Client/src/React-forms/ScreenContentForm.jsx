@@ -16,7 +16,7 @@ export default function ScreenContentForm() {
   const { screenId } = useParams();
   const [show, setShow] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
-
+  const [file, setFile] = useState(null);
   const handleInputChange = (name, value) => {
     setValidationErrors({ ...validationErrors, [name]: "" });
     if (name === "slideTitle") {
@@ -29,20 +29,29 @@ export default function ScreenContentForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const data = {
-      slideTitle: title,
-      post: text,
-      imageUrl: selectedImage,
-    };
+    const formData = new FormData();
+    formData.append('slideTitle', title);
+    formData.append('post', text);
+    formData.append('image', file);
+
+
     setShow(true);
 
     try {
-      await contentValidation.validate(data, { abortEarly: false });
+      console.log("b4")
+      // await contentValidation.validate(formData, { abortEarly: false });
+      console.log("here")
 
       const response = await Axios.post(
         `http://localhost:3000/content/${screenId}`,
-        data
+        formData, // Use the FormData object for the request data
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data', // Set the content type header
+          },
+        }
       );
+
       toast.success("Content uploaded successfully.");
       setShow(false);
     } catch (error) {
@@ -75,6 +84,7 @@ export default function ScreenContentForm() {
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
+    setFile(file);
     previewFiles(file);
   };
 
@@ -107,6 +117,7 @@ export default function ScreenContentForm() {
           autoComplete="off"
           onSubmit={handleSubmit}
           style={styl}
+          encType="multipart/form-data"
         >
           <Typography variant="h5" color="primary" sx={{ mb: 3 }}>
             Add a new slide
