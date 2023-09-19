@@ -3,7 +3,7 @@ import { ToastContainer, toast } from "react-toastify";
 import jwt_decode from "jwt-decode";
 import Axios from "axios";
 import Header from "../Components/Header";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import {
   Avatar,
   Button,
@@ -26,7 +26,7 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import CircularIndeterminate from "../Components/CircularIndeterminate";
 import { useEffect, useState } from "react";
-import "./Form.css"
+import "./Form.css";
 export default function Login() {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
@@ -38,37 +38,28 @@ export default function Login() {
 
   const [selected, setSelected] = useState(false);
   useEffect(() => {
-
-
     if (loginSuccess && toastId) {
       // Check the status after a delay
       setShow(false);
       setShowDropdown(true);
-      console.log("ScreenData:", screenData)
-      console.log(screenId)
+      console.log("ScreenData:", screenData);
+      console.log(screenId);
       if (selected) {
-
         const screenObj = {
           screenId: screenId,
           fadeEnter: screenData.fadeEnter,
-          fadeEnterActive: screenData.fadeEnterActive
-
-        }
+          fadeEnterActive: screenData.fadeEnterActive,
+        };
 
         navigate(`/content/${screenId}`, { state: { screenId } });
-
       }
-
     }
   }, [show, loginSuccess, selected, screenId, navigate]);
 
   const styl = {
-
-
     opacity: showDropdown ? "0.4" : "1", // Conditionally set opacity
     pointerEvents: showDropdown ? "none" : "auto", // Conditionally set pointerEvents
-
-  }
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -84,15 +75,13 @@ export default function Login() {
 
       Axios.get("http://localhost:3000/screens", { headers })
         .then((response) => {
-          console.log(response.data)
+          console.log(response.data);
           setScreenData(response.data);
-
         })
         .catch((error) => {
           console.error("Error fetching screens:", error.message);
         });
-
-    }
+    };
 
     try {
       setShow(true);
@@ -100,7 +89,6 @@ export default function Login() {
         username: data.get("username"),
         password: data.get("password"),
       });
-
 
       if (response.status === 200) {
         // Successful login
@@ -111,11 +99,10 @@ export default function Login() {
 
         localStorage.setItem("token", token);
         const id = toast.success(`Welcome back, ${username}`);
-        fetchData()
+        fetchData();
 
         setToastId(id); // Store the toastId in state
         setLoginSuccess(true);
-
       } else {
         toast.error("Incorrect username or password");
 
@@ -124,11 +111,8 @@ export default function Login() {
     } catch (error) {
       toast.error("Incorrect username or password");
       setShow(false);
-
-    };
-
-
-  }
+    }
+  };
   const handleSelectChange = (event) => {
     setScreen(event.target.value);
     console.log("Selected value:", event.target.value);
@@ -137,11 +121,10 @@ export default function Login() {
 
   return (
     <>
-
       <Header />
       <ToastContainer />
       <div styles={{ position: "relative" }}>
-        {show && (<CircularIndeterminate info={"Verifying..."} />)}
+        {show && <CircularIndeterminate info={"Verifying..."} />}
         {/* <ToastContainer /> */}
         <ThemeProvider theme={createTheme()}>
           <Grid container component="main" sx={{ height: "100vh" }}>
@@ -217,29 +200,36 @@ export default function Login() {
                     style={styl}
                   />
 
-                  {showDropdown && (<Grid item xs={12}>
-                    <FormControl variant="outlined" fullWidth margin="normal" required>
-                      <InputLabel style={{ color: "purple" }} htmlFor="_id">Select an option</InputLabel>
-                      <Select
-                        className="custom-select"
-                        label="Select an option"
-                        value={screenId}
-                        onChange={handleSelectChange}
-                        inputProps={{
-                          name: "_id",
-                          id: "_id",
-                        }}
-
+                  {showDropdown && (
+                    <Grid item xs={12}>
+                      <FormControl
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        required
                       >
-                        {screenData.map((item) => (
-                          <MenuItem key={item._id} value={item._id}>
-                            {item.screenName}
-                          </MenuItem>
-                        ))}
-
-                      </Select>
-                    </FormControl>
-                  </Grid>)}
+                        <InputLabel style={{ color: "purple" }} htmlFor="_id">
+                          Select an option
+                        </InputLabel>
+                        <Select
+                          className="custom-select"
+                          label="Select an option"
+                          value={screenId}
+                          onChange={handleSelectChange}
+                          inputProps={{
+                            name: "_id",
+                            id: "_id",
+                          }}
+                        >
+                          {screenData.map((item) => (
+                            <MenuItem key={item._id} value={item._id}>
+                              {item.screenName}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                  )}
 
                   <Button
                     type="submit"
@@ -250,15 +240,13 @@ export default function Login() {
                   >
                     Sign In
                   </Button>
-                  <Grid container>
-
-                  </Grid>
+                  <Grid container></Grid>
                 </Box>
               </Box>
             </Grid>
           </Grid>
         </ThemeProvider>
-      </div >
+      </div>
     </>
   );
 }

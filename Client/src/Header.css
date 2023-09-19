@@ -1,9 +1,10 @@
 .Header {
   display: flex;
-  align-items: center; /* Vertically align the content */
+  align-items: center;
   background-color: #1e366a;
   margin: 0;
-  padding: 10px;
+  padding: 15px;
+  color: "white";
 }
 
 .Header img {

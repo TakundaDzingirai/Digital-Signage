@@ -1,24 +1,39 @@
-import "./Slide.css";
-import { Link } from 'react-router-dom';
-import { useNavigate, useParams } from "react-router-dom";
+import { Card, CardContent, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
+const Slide = ({ s, screenId }) => {
+  const navigate = useNavigate();
 
-export default function Slide({ s, screenId }) {
-    // const { id } = useParams();
-    console.log("inSlide", screenId)
-    const navigate = useNavigate();
-    function handleNavigation() {
-        navigate(`/content/more/${s._id}`, { state: { screenId } }); // Pass screenId in the state object
-        ; // s._id is the slide id
-    }
+  function handleNavigation() {
+    navigate(`/content/more/${s._id}`, { state: { screenId } });
+  }
 
-    //   console.log(`this:${screen._id}`);
-    return (
-        <div onClick={handleNavigation} className="slide">
+  return (
+    <Card
+      sx={{
+        cursor: "pointer",
+        marginBottom: 2,
+        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+        transition: "box-shadow 0.3s ease-in-out",
+        "&:hover": {
+          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+        },
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+      onClick={handleNavigation}
+    >
+      <CardContent>
+        <Typography variant="caption" color="textSecondary">
+          slide title
+        </Typography>
+        <Typography variant="h6" sx={{ textAlign: "center" }}>
+          {s.slideTitle}
+        </Typography>
+      </CardContent>
+    </Card>
+  );
+};
 
-
-            <h1>{s.slideTitle}</h1>
-
-        </div>
-    );
-}
+export default Slide;

@@ -1,36 +1,56 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Screen from "./Screen";
-import "./Screens.css";
 import Axios from "axios";
+import { Grid, Container, Skeleton } from "@mui/material";
 
 export default function Screens({ listOfScreen, setListOfScreen }) {
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+  const [loading, setLoading] = useState(true);
 
-    const headers = {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        };
+
+        const response = await Axios.get("http://localhost:3000/screens", {
+          headers,
+        });
+
+        setListOfScreen(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching screens:", error.message);
+        setLoading(false);
+      }
     };
 
-    Axios.get("http://localhost:3000/screens", { headers })
-      .then((response) => {
-        setListOfScreen(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching screens:", error.message);
-      });
-  }, []);
+    fetchData();
+  }, [setListOfScreen]);
 
   return (
-    <ul className="screen-list">
-      {listOfScreen.map((screen) => (
-        <Screen
-          key={screen._id}
-          screen={screen}
-          listOfScreen={listOfScreen}
-          setListOfScreen={setListOfScreen}
-        />
-      ))}
-    </ul>
+    <Container>
+      <Grid container spacing={2} sx={{ mt: 5 }}>
+        {loading
+          ? Array.from({ length: 12 }).map((_, index) => (
+              <Grid item key={index} xs={12} sm={6} lg={3}>
+                <Skeleton variant="rectangular" height="18vh" />
+              </Grid>
+            ))
+          : listOfScreen.map((screen) => (
+              <Grid item key={screen._id} xs={12} sm={6} lg={3}>
+                <Screen
+                  key={screen._id}
+                  screen={screen}
+                  listOfScreen={listOfScreen}
+                  setListOfScreen={setListOfScreen}
+                  style={{ height: "18vh" }}
+                />
+              </Grid>
+            ))}
+      </Grid>
+    </Container>
   );
 }
