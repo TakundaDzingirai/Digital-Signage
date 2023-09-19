@@ -1,28 +1,63 @@
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
 const express = require("express");
-const router = express.Router({ mergeParams: true });
-const { storage } = require("../cloudinary/index.js");
+const router = express.Router();
 const multer = require("multer");
-const upload = multer({
-  storage,
-  limits: {
-    fileSize: 1024 * 1024 * 5,
-    files: 10,
-  },
+const upload = multer().single('image'); // Single file upload
+const { validateContent } = require("../middleware/validation");
+const catchAsync = require("../utilities/catchAsync");
+const contentController = require("../controllers/contentController.js");
+const fs = require('fs');
+const util = require('util');
+const { cloudinary } = require('../cloudinary/index');
+
+const unlinkAsync = util.promisify(fs.unlink);
+
+router.post('/:screenId', async (req, res) => {
+  try {
+    upload(req, res, async (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'An error occurred' });
+      }
+
+      const { slideTitle, post } = req.body;
+      const screenId = req.params.screenId;
+
+      const tempFilePath = `/tmp/${Date.now()}_temp_file`;
+      fs.writeFileSync(tempFilePath, req.file.buffer);
+
+      try {
+        const result = await cloudinary.uploader.upload(tempFilePath, {
+          folder: 'DigiSign',
+        });
+
+        await unlinkAsync(tempFilePath);
+
+        const content = {
+          slideTitle,
+          post,
+          imageUrl: result.secure_url, // Here you obtain the Cloudinary URL
+        };
+
+        // Now you can use the Cloudinary URL in your contentController
+        await contentController.addContentToScreen(screenId, content);
+
+        res.status(200).json({ message: 'Content added successfully', imageUrl: result.secure_url }); // Include the URL in the response
+      } catch (uploadError) {
+        console.error(uploadError);
+        res.status(500).json({ error: 'Error uploading to Cloudinary' });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
 });
 
-const catchAsync = require("../utilities/catchAsync");
-const { validateContent } = require("../middleware/validation");
-const contentController = require("../controllers/contentController.js");
+// ...
 
-// This route will be used to add content to a screen
-router.post(
-  "/:screenId",
-  validateContent,
-  catchAsync(contentController.addContentToScreen)
-);
+
+
+
 
 // This route will be used to delete content from a screen
 router.delete("/:contentId", catchAsync(contentController.deleteContent));

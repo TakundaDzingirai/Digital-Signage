@@ -28,7 +28,7 @@ export default function AutoSlider() {
     useEffect(() => {
         Axios.get(`http://localhost:3000/content/${id}`).then((response) => {
             setsldData(response.data);
-            console.log("RESPONSE MHANI!!! ", response.data);
+            // console.log("RESPONSE MHANI!!! ", response.data);
         });
     }, [])
 

@@ -9,7 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import React, { useState, useEffect } from "react";
 import CreatescreenForm from "../React-forms/CreateScreenForm";
 
-import { useLocation } from "react-router-dom";
+
 export default function ScreenContainer({
   showForm,
   onToggleForm,
@@ -17,18 +17,12 @@ export default function ScreenContainer({
   setListOfScreen,
 }) {
 
-  const location = useLocation();
-  const { departmnt } = location.state || {};
-  console.log("i got the Department:", departmnt)
-  useEffect(() => {
-    // You can access departmnt here when it's updated
-    console.log("Department in useEffect:", departmnt);
-  }, [departmnt]);
+
 
   return (
     <div>
       <Header />
-      <Screens listOfScreen={listOfScreen} setListOfScreen={setListOfScreen} departmnt={departmnt} />
+      <Screens listOfScreen={listOfScreen} setListOfScreen={setListOfScreen} />
 
       {showForm && (
         <CreatescreenForm
