@@ -35,13 +35,16 @@ router.post('/:screenId', async (req, res) => {
         const contentData = {
           slideTitle,
           post,
-          imageUrl: result.secure_url, // Here you obtain the Cloudinary URL
+          image: {
+            public_id: result.public_id,
+            url: result.secure_url
+          }// Here you obtain the Cloudinary URL
         };
 
         // Now you can use the Cloudinary URL in your contentController
-        await contentController.addContentToScreen(screenId, contentData, res);
+        await contentController.addContentToScreen(screenId, contentData);
 
-        res.status(200).json({ message: 'Content added successfully', imageUrl: result.secure_url }); // Include the URL in the response
+        res.status(200).json({ message: 'Content added successfully' }); // Include the URL in the response
       } catch (uploadError) {
         console.error(uploadError);
         res.status(500).json({ error: 'Error uploading to Cloudinary' });
