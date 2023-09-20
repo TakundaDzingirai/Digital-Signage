@@ -1,6 +1,13 @@
 .screen p {
   color: red;
-  /* display: flex;
-  flex-direction: column; */
+}
 
+.screen {
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.screen:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Screen from "./Screen";
 import Axios from "axios";
-import { Grid, Container, Skeleton } from "@mui/material";
+import { Grid, Container, Skeleton, Typography } from "@mui/material";
 
 export default function Screens({ listOfScreen, setListOfScreen }) {
   const [loading, setLoading] = useState(true);
@@ -32,7 +32,10 @@ export default function Screens({ listOfScreen, setListOfScreen }) {
 
   return (
     <Container>
-      <Grid container spacing={2} sx={{ mt: 5 }}>
+      <Typography variant="h4" align="center" mt={3}>
+        <span style={{ borderBottom: "2px solid #ccc" }}>List of Screens</span>
+      </Typography>
+      <Grid container spacing={2} sx={{ mt: 3 }}>
         {loading
           ? Array.from({ length: 12 }).map((_, index) => (
               <Grid item key={index} xs={12} sm={6} lg={3}>

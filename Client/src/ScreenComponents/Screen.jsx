@@ -64,10 +64,21 @@ export default function Screen({ screen, listOfScreen, setListOfScreen }) {
   };
 
   return (
-    <Card elevation={3} className="screen">
+    <Card
+      elevation={3}
+      className="screen"
+      style={{
+        transition: "transform 0.3s, box-shadow 0.3s",
+        cursor: "pointer",
+        "&:hover": {
+          transform: "scale(1.05)",
+          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
+        },
+      }}
+    >
       <CardContent>
         <Link to={`/screens/${screen._id}`} style={{ textDecoration: "none" }}>
-          <Typography variant="h6">{screen.screenName}</Typography>
+          <Typography variant="h5">{screen.screenName}</Typography>
           <Typography variant="body2">{screen.department}</Typography>
         </Link>
       </CardContent>
