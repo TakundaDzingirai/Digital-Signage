@@ -1,48 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Carousel from 'react-material-ui-carousel';
 import Item from './Item';
 import "./Carousel.css";
 import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
-import Switch from '@mui/material/Switch';
+import RadioGroup from "@mui/material/RadioGroup";
+import Radio from "@mui/material/Radio";
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { Paper } from "@mui/material";
-// import Carousel from "./Carousel";
-import { useNavigate, useLocation } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 import ScreenPanel from '../ScreenComponents/ScreenPanel';
-
+import { Button } from "@mui/material";
+import Switch from '@mui/material/Switch';
+import Grid from '@mui/material/Grid';
 export default function AutoSlider() {
-    const [fadeEnter, setFadeEnter] = useState(false);
-    const [fadeEnterActive, setFadeEnterActive] = useState(true);
+    // const [fade, setFade] = useState(false);
+    // const [slide, setSlide] = useState(true);
+    const [typewriter, setTypewriter] = useState(false);
     const [slideDuration, setSlideDuration] = useState(2);
-    const [slideInterval, setSlideInterval] = useState(25);
-    const location = useLocation(); // Use useLocation to access location state
+    const [slideInterval, setSlideInterval] = useState(5);
+    const location = useLocation();
+    const [transitionType, setTransitionType] = useState("fade");
+    const [ischecked, setChecked] = useState(false);
     const { SlideData } = location.state || {}; // Extract SlideData from location state
-    console.log(SlideData);
-
-
-    const items = [
-        {
-            id: 1,
-            Title: "Slide 1",
-            Body: "So this is the information of Slide 1!!!",
-        },
-        {
-            id: 2,
-            Title: "Slide 2",
-            Body: "So this is the information of Slide 2!!!",
-        },
-        {
-            id: 3,
-            Title: "Slide 3",
-            Body: "So this is the information of Slide 3!!!",
-        },
-        {
-            id: 4,
-            Title: "Slide 4",
-            Body: "So this is the information of Slide 4!!!",
-        }
-    ];
+    const [background, setbackground] = useState(false);
+    const [size, setFontSize] = useState(12)
 
     // Function to handle slider value change
     const handleSlideDurationChange = (event, newValue) => {
@@ -51,57 +32,142 @@ export default function AutoSlider() {
     const handleSlideIntervalChange = (event, newValue) => {
         setSlideInterval(newValue);
     };
+    const handleFontSizeChange = (event, newValue) => {
+        setFontSize(newValue);
+    }
+
+
 
     return (
         <>
             <ScreenPanel h_vh={"0.01vh"} />
-            <div className="caroul" style={{
-                width: "80%",
-                marginLeft: "10%",
-                marginTop: "3vh",
-                justifyContent: "center",
-                position: "absolute",
-                top: '50 %',
-                left: "50 %",
-                transform: "translate(-50 %, -50 %)"
-            }}>
-                <Carousel
-                    animation={fadeEnter && fadeEnterActive ? "fade" : "slide"} // Set the animation based on state
-                    duration={slideDuration * 1000}
-                    interval={slideInterval * 1000} // Convert seconds to milliseconds
-                    stopAutoPlayOnHover={false}
-                    indicators={false}
-                    navButtonsAlwaysVisible={false}
-                >
-                    {SlideData.map((item) => <Item key={item._id} item={item} />)}
-                </Carousel>
+            <Grid container justifyContent="center" alignItems="center">
+                <Grid item xs={12} sm={10} md={8} lg={6}>
+                    <Carousel
+                        animation={transitionType} // Set the animation based on state
+                        duration={slideDuration * 1000}
+                        interval={slideInterval * 1000} // Convert seconds to milliseconds
+                        stopAutoPlayOnHover={true}
+                        indicators={true}
+                        navButtonsAlwaysVisible={true}
+                    >
+                        {SlideData.map((item) => <Item key={item._id} item={item} typewriter={typewriter} background={background} size={size} />)}
+                    </Carousel>
 
-                <br></br>
-                <Typography gutterBottom>Set transition duration (in seconds)</Typography>
-                <Slider
-                    aria-label="Custom marks"
-                    defaultValue={slideDuration}
-                    step={1}
-                    valueLabelDisplay="auto"
-                    onChange={handleSlideDurationChange}
-                />
-                <Typography gutterBottom>Set slide interval (in seconds)</Typography>
-                <Slider
-                    aria-label="Custom marks"
-                    defaultValue={slideInterval}
-                    step={1}
-                    valueLabelDisplay="auto"
-                    onChange={handleSlideIntervalChange}
-                />
-                <FormControlLabel
-                    control={<Switch defaultChecked={fadeEnter} onChange={() => setFadeEnter(!fadeEnter)} />}
-                    label="fade-enter"
-                />
-                <FormControlLabel
-                    control={<Switch defaultChecked={fadeEnterActive} onChange={() => setFadeEnterActive(!fadeEnterActive)} />}
-                    label="fade-enter-active"
-                />
-            </div>
+                    <br></br>
+                    <Typography gutterBottom>Adjust the time it takes for transitions to occur (in seconds)</Typography>
+                    <Slider
+                        aria-label="Custom marks"
+                        defaultValue={slideDuration}
+                        step={1}
+                        valueLabelDisplay="auto"
+                        min={2}
+                        max={5}
+                        marks={[
+                            {
+                                value: 2,
+                                label: '2s',
+                            },
+                            {
+                                value: slideDuration,
+                                label: `${slideDuration}s`,
+                            },
+                            {
+                                value: 5,
+                                label: '5s',
+                            },
+                        ]}
+                        onChange={handleSlideDurationChange}
+                    />
+                    <Typography gutterBottom>Specify the time between slides (in seconds)</Typography>
+                    <Slider
+                        aria-label="Custom marks"
+                        defaultValue={slideInterval}
+                        step={1}
+                        valueLabelDisplay="auto"
+                        min={1}
+                        max={120}
+                        marks={[
+                            {
+                                value: slideInterval,
+                                label: `${slideInterval}s`,
+                            },
+                        ]}
+                        onChange={handleSlideIntervalChange}
+                    />
+                    <Slider
+                        aria-label="Custom marks"
+                        defaultValue={size}
+                        step={1}
+                        valueLabelDisplay="auto"
+                        min={1}
+                        max={48}
+                        marks={[
+                            {
+                                value: 1,
+                                label: '1px',
+                            },
+                            {
+                                value: size,
+                                label: `${size}px`,
+                            },
+                            {
+                                value: 16,
+                                label: '48px',
+                            },
+                        ]}
+                        onChange={handleFontSizeChange}
+                    />
+
+                    <Typography gutterBottom>  set image as background</Typography>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={background}
+                                onChange={() => setbackground(!background)}
+                            />
+                        }
+                        label="Background"
+                    />
+                    <Typography gutterBottom> animation effects</Typography>
+
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                        <RadioGroup
+                            aria-label="Transition Type"
+                            name="transitionType"
+                            value={transitionType}
+                            onChange={(e) => setTransitionType(e.target.value)}
+                            row
+                        >
+                            <FormControlLabel
+                                value="fade"
+                                control={<Radio />}
+                                label="Fade"
+                            />
+                            <FormControlLabel
+                                value="slide"
+                                control={<Radio />}
+                                label="Slide"
+                            />
+                        </RadioGroup>
+
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={typewriter}
+                                    onChange={() => setTypewriter(!typewriter)}
+                                />
+                            }
+                            label="Typewriter"
+                        />
+
+                    </div>
+
+                    <br></br>
+                    <Button style={{ marginInline: "1em" }} variant="contained">Save</Button>
+                    <Button style={{ marginInline: "1em" }} variant="contained">Reset</Button>
+                </Grid>
+            </Grid>
         </>
     );
 }
