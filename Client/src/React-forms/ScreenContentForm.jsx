@@ -1,6 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Form.css";
-import { TextField, Button, Paper, Typography } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Paper,
+  Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import ScreenPanel from "../ScreenComponents/ScreenPanel";
 import { useParams } from "react-router-dom";
@@ -17,6 +26,25 @@ export default function ScreenContentForm() {
   const [show, setShow] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
   const [file, setFile] = useState(null);
+  const [selectedScreens, setSelectedScreens] = useState([]);
+  const [screens, setScreens] = useState([]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+
+    Axios.get("http://localhost:3000/screens", { headers })
+      .then((response) => {
+        setScreens(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching screens:", error);
+      });
+  }, []);
+
   const handleInputChange = (name, value) => {
     setValidationErrors({ ...validationErrors, [name]: "" });
     if (name === "slideTitle") {
@@ -30,29 +58,55 @@ export default function ScreenContentForm() {
     event.preventDefault();
 
     const formData = new FormData();
-    formData.append('slideTitle', title);
-    formData.append('post', text);
-    formData.append('image', file);
-
+    formData.append("slideTitle", title);
+    formData.append("post", text);
+    formData.append("image", file);
 
     setShow(true);
 
     try {
-      console.log("b4")
-      // await contentValidation.validate(formData, { abortEarly: false });
-      console.log("here")
-
       const response = await Axios.post(
         `http://localhost:3000/content/${screenId}`,
-        formData, // Use the FormData object for the request data
+        formData,
         {
           headers: {
-            'Content-Type': 'multipart/form-data', // Set the content type header
+            "Content-Type": "multipart/form-data",
           },
         }
       );
 
-      toast.success("Content uploaded successfully.");
+      toast.success("Content uploaded to the selected screen.", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+
+      setTitle("");
+      setText("");
+      setFile(null);
+      setSelectedImage(null);
+      setSelectedScreens([]);
+
+      if (selectedScreens.length > 0) {
+        for (const selectedScreenId of selectedScreens) {
+          const response = await Axios.post(
+            `http://localhost:3000/content/${selectedScreenId}`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+        }
+        toast.success(
+          "Content uploaded successfully to the selected screens from dropdown.",
+          {
+            position: "top-center",
+            autoClose: 2000,
+          }
+        );
+      }
+
       setShow(false);
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
@@ -60,7 +114,6 @@ export default function ScreenContentForm() {
         error.inner.forEach((err) => {
           validationErrors[err.path] = err.message;
         });
-
         setValidationErrors(validationErrors);
         console.error(validationErrors);
       } else {
@@ -80,15 +133,12 @@ export default function ScreenContentForm() {
     }
   };
 
-  // Function to handle image upload
-
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     setFile(file);
     previewFiles(file);
   };
 
-  // previewFile function
   const previewFiles = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -120,11 +170,11 @@ export default function ScreenContentForm() {
           encType="multipart/form-data"
         >
           <Typography variant="h5" color="primary" sx={{ mb: 3 }}>
-            Add a new slide
+            Add a post
           </Typography>
           <TextField
             className="TextField"
-            label="Slide Title"
+            label="Post title*"
             onChange={(e) => handleInputChange("slideTitle", e.target.value)}
             variant="outlined"
             color="primary"
@@ -134,10 +184,11 @@ export default function ScreenContentForm() {
             value={title}
             error={!!validationErrors.slideTitle}
             helperText={validationErrors.slideTitle}
+            placeholder="Enter your post title"
           />
           <TextField
             className="TextField"
-            label="Post"
+            label="Post*"
             onChange={(e) => handleInputChange("post", e.target.value)}
             variant="outlined"
             color="primary"
@@ -148,8 +199,15 @@ export default function ScreenContentForm() {
             sx={{ mb: 3 }}
             error={!!validationErrors.post}
             helperText={validationErrors.post}
+            placeholder="Enter the your post"
           />
-          <div style={{ display: "flex", alignItems: "center" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginBottom: "20px",
+            }}
+          >
             <input
               name="image"
               type="file"
@@ -163,13 +221,29 @@ export default function ScreenContentForm() {
               />
             )}
           </div>
+          <FormControl fullWidth sx={{ mb: 3, mt: 1 }}>
+            <InputLabel id="select-screens-label">Select Screens</InputLabel>
+            <Select
+              labelId="select-screens-label"
+              multiple
+              value={selectedScreens}
+              onChange={(e) => setSelectedScreens(e.target.value)}
+              fullWidth
+            >
+              {screens.map((screen) => (
+                <MenuItem key={screen._id} value={screen._id}>
+                  {screen.screenName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <Button
             variant="contained"
             color="primary"
             type="submit"
             sx={{ mt: 3 }}
           >
-            Add Slide
+            Upload post
           </Button>
         </form>
       </Paper>
