@@ -54,6 +54,14 @@ export default function ScreenContentForm() {
     }
   };
 
+  const uploadContent = async (formData, screenId) => {
+    await Axios.post(`http://localhost:3000/content/${screenId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -65,15 +73,7 @@ export default function ScreenContentForm() {
     setShow(true);
 
     try {
-      const response = await Axios.post(
-        `http://localhost:3000/content/${screenId}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      await uploadContent(formData, screenId);
 
       toast.success("Content uploaded to the selected screen.", {
         position: "top-center",
@@ -84,20 +84,14 @@ export default function ScreenContentForm() {
       setText("");
       setFile(null);
       setSelectedImage(null);
-      setSelectedScreens([]);
 
       if (selectedScreens.length > 0) {
-        for (const selectedScreenId of selectedScreens) {
-          const response = await Axios.post(
-            `http://localhost:3000/content/${selectedScreenId}`,
-            formData,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            }
-          );
-        }
+        const uploadPromises = selectedScreens.map((selectedScreenId) => {
+          return uploadContent(formData, selectedScreenId);
+        });
+
+        await Promise.all(uploadPromises);
+
         toast.success(
           "Content uploaded successfully to the selected screens from dropdown.",
           {
@@ -107,6 +101,7 @@ export default function ScreenContentForm() {
         );
       }
 
+      setSelectedScreens([]);
       setShow(false);
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
