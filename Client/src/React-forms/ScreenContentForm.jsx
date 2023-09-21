@@ -247,28 +247,7 @@ export default function ScreenContentForm() {
             )}
           </div>
 
-          {/* <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginBottom: "20px",
-            }}
-          >
-            <input
-              name="image"
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleImageUpload(e)}
-            />
-            {selectedImage && (
-              <img
-                src={selectedImage}
-                style={{ width: "40%", height: "15vh", marginLeft: "10px" }}
-              />
-            )}
-          </div> */}
-
-          <FormControl variant="outlined" fullWidth margin="normal" required>
+          <FormControl variant="outlined" fullWidth margin="normal">
             <InputLabel id="select-screens-label">
               Select other screens to add content to
             </InputLabel>

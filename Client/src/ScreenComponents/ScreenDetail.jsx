@@ -74,6 +74,19 @@ const ScreenDetail = () => {
 
           <Divider sx={{ mt: 2 }} />
 
+          <Typography
+            variant="h5"
+            component="h2"
+            style={{
+              marginTop: "20px",
+              textAlign: "center",
+              color: "#1e366a",
+              fontWeight: "bold",
+            }}
+          >
+            Screen Contents
+          </Typography>
+
           {/* Conditional rendering based on loading, error, and emptyData */}
           {loading && !error && !emptyData ? (
             <CircularProgress />
@@ -99,7 +112,7 @@ const ScreenDetail = () => {
             style={{ marginTop: "20px", textAlign: "center" }}
           >
             Created:{" "}
-            {moment(screenData.createdAt).format("MMMM D, YYYY, h:mm:ss A")}
+            {moment(screenData.createdAt).format("MMMM D, YYYY, HH:mm:ss ")}
           </Typography>
         </Paper>
       </Container>
