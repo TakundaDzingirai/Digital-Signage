@@ -9,7 +9,9 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Fab,
 } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import { ToastContainer, toast } from "react-toastify";
 import ScreenPanel from "../ScreenComponents/ScreenPanel";
 import { useParams } from "react-router-dom";
@@ -164,12 +166,20 @@ export default function ScreenContentForm() {
           style={styl}
           encType="multipart/form-data"
         >
-          <Typography variant="h5" color="primary" sx={{ mb: 3 }}>
-            Add a post
+          <Typography
+            variant="h5"
+            color="primary"
+            style={{
+              fontWeight: "bold",
+              marginBottom: "1rem",
+            }}
+          >
+            Add Content to Screen
           </Typography>
+
           <TextField
             className="TextField"
-            label="Post title*"
+            label="Title*"
             onChange={(e) => handleInputChange("slideTitle", e.target.value)}
             variant="outlined"
             color="primary"
@@ -179,11 +189,11 @@ export default function ScreenContentForm() {
             value={title}
             error={!!validationErrors.slideTitle}
             helperText={validationErrors.slideTitle}
-            placeholder="Enter your post title"
+            placeholder="Enter title of your content"
           />
           <TextField
             className="TextField"
-            label="Post*"
+            label="Text*"
             onChange={(e) => handleInputChange("post", e.target.value)}
             variant="outlined"
             color="primary"
@@ -194,9 +204,50 @@ export default function ScreenContentForm() {
             sx={{ mb: 3 }}
             error={!!validationErrors.post}
             helperText={validationErrors.post}
-            placeholder="Enter the your post"
+            placeholder="Enter text for your content"
           />
           <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginBottom: "20px",
+            }}
+          >
+            <label htmlFor="upload-photo" style={{ marginRight: "20px" }}>
+              <Fab
+                color="primary"
+                size="small"
+                component="span"
+                aria-label="add"
+                variant="extended"
+              >
+                <AddIcon /> {selectedImage ? "Change Photo" : "Upload Photo"}
+              </Fab>
+              <input
+                style={{ display: "none" }}
+                id="upload-photo"
+                name="upload-photo"
+                type="file"
+                onChange={(e) => handleImageUpload(e)}
+              />
+            </label>
+
+            {selectedImage && (
+              <div>
+                <img
+                  src={selectedImage}
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto",
+                    maxHeight: "15vh",
+                  }}
+                  alt="Preview"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* <div
             style={{
               display: "flex",
               alignItems: "center",
@@ -215,9 +266,12 @@ export default function ScreenContentForm() {
                 style={{ width: "40%", height: "15vh", marginLeft: "10px" }}
               />
             )}
-          </div>
-          <FormControl fullWidth sx={{ mb: 3, mt: 1 }}>
-            <InputLabel id="select-screens-label">Select Screens</InputLabel>
+          </div> */}
+
+          <FormControl variant="outlined" fullWidth margin="normal" required>
+            <InputLabel id="select-screens-label">
+              Select other screens to add content to
+            </InputLabel>
             <Select
               labelId="select-screens-label"
               multiple
@@ -238,7 +292,7 @@ export default function ScreenContentForm() {
             type="submit"
             sx={{ mt: 3 }}
           >
-            Upload post
+            Upload Content
           </Button>
         </form>
       </Paper>
