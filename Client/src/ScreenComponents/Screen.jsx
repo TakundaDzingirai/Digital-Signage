@@ -26,8 +26,11 @@ const customStyles = {
 
 export default function Screen({ screen, listOfScreen, setListOfScreen }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteClicked, setDeleteClicked] = useState(false);
 
-  const handleDelete = async () => {
+  const handleDelete = (e) => {
+    e.preventDefault();
+    setDeleteClicked(true);
     setIsModalOpen(true);
   };
 
@@ -60,56 +63,81 @@ export default function Screen({ screen, listOfScreen, setListOfScreen }) {
   };
 
   const handleCancelDelete = () => {
+    setDeleteClicked(false);
     setIsModalOpen(false);
   };
 
   return (
-    <Card
-      elevation={3}
-      className="screen"
-      style={{
-        transition: "transform 0.3s, box-shadow 0.3s",
-        cursor: "pointer",
-        "&:hover": {
-          transform: "scale(1.05)",
-          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
-        },
-      }}
-    >
-      <CardContent>
-        <Link to={`/screens/${screen._id}`} style={{ textDecoration: "none" }}>
-          <Typography variant="h5">{screen.screenName}</Typography>
-          <Typography variant="body2">{screen.department}</Typography>
-        </Link>
-      </CardContent>
-      <CardContent>
-        <div style={{ textAlign: "center", marginTop: "8px" }}>
-          <Button
-            variant="outlined"
-            color="error"
-            onClick={handleDelete}
-            aria-label={`Delete screen ${screen.screenName}`}
-          >
-            Delete
-          </Button>
-        </div>
-      </CardContent>
-      <ToastContainer position="top-center" />
+    <>
+      <Link to={`/screens/${screen._id}`} style={{ textDecoration: "none" }}>
+        <Card
+          elevation={3}
+          className="screen"
+          style={{
+            transition: "transform 0.3s, box-shadow 0.3s",
+            cursor: "pointer",
+            "&:hover": {
+              transform: "scale(1.05)",
+              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
+            },
+          }}
+        >
+          <CardContent style={{ color: "#333" }}>
+            <Typography
+              variant="h5"
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "bold",
+                color: "#1e366a", //#333
+                marginBottom: "0.5rem",
+              }}
+            >
+              {screen.screenName}
+            </Typography>
+            <Typography
+              variant="body2"
+              style={{
+                marginTop: "10px",
+                color: "#555",
+                fontStyle: "italic",
+              }}
+            >
+              Department of {screen.department}
+            </Typography>
+          </CardContent>
+          <CardContent>
+            <div
+              style={{ textAlign: "center", marginTop: "8px" }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDelete(e);
+              }}
+            >
+              <Button
+                variant="outlined"
+                color="error"
+                aria-label={`Delete screen ${screen.screenName}`}
+              >
+                Delete
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </Link>
+      <ToastContainer />
       <Modal
         style={customStyles}
-        isOpen={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
+        isOpen={isModalOpen && deleteClicked}
+        onRequestClose={handleCancelDelete}
         contentLabel="Confirm Delete Modal"
       >
         <div>
           <Typography variant="h6" sx={{ marginBottom: 2 }}>
             Confirm Deletion
           </Typography>
-
           <Typography variant="body1" sx={{ marginBottom: 2 }}>
             Are you sure you want to delete this screen?
           </Typography>
-
           <Button
             variant="outlined"
             sx={{ mb: 2 }}
@@ -128,6 +156,6 @@ export default function Screen({ screen, listOfScreen, setListOfScreen }) {
           </Button>
         </div>
       </Modal>
-    </Card>
+    </>
   );
 }

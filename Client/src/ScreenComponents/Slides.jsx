@@ -41,7 +41,7 @@ export default function Slides() {
             <CircularProgress />
           </Box>
         ) : (
-          <Grid container spacing={2}>
+          <Grid container spacing={3}>
             {sldData.map((s) => (
               <Grid item xs={12} sm={6} lg={3} key={s._id}>
                 <Slide s={s} screenId={id} />

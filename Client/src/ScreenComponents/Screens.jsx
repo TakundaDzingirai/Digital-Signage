@@ -32,10 +32,19 @@ export default function Screens({ listOfScreen, setListOfScreen }) {
 
   return (
     <Container>
-      <Typography variant="h4" align="center" mt={3}>
-        <span style={{ borderBottom: "2px solid #ccc" }}>List of Screens</span>
+      <Typography
+        variant="h3"
+        align="center"
+        style={{
+          color: "#1e366a", // #333
+          fontWeight: "bold",
+          marginTop: "2rem",
+        }}
+      >
+        List of Screens
       </Typography>
-      <Grid container spacing={2} sx={{ mt: 3 }}>
+
+      <Grid container spacing={3} sx={{ mt: 1 }}>
         {loading
           ? Array.from({ length: 12 }).map((_, index) => (
               <Grid item key={index} xs={12} sm={6} lg={3}>

@@ -26,6 +26,7 @@ export default function ScreenContainer({
         showForm={showForm}
         onToggleForm={onToggleForm}
       />
+
       <Footer />
     </div>
   );
