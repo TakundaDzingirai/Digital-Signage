@@ -2,9 +2,8 @@ import { Paper } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import "./Item.css"
 import Typewriter from 'typewriter-effect';
-import Grow from '@mui/material/Grow';
-export default function Item({ item, typewriter, background, size }) {
-    // const randomColor = '#' + (Math.random().toString(16) + '000000').slice(2, 8);
+
+export default function Item({ item, typewriter, background, size, textColor, backgroundColor, fontWeight, textAlign }) {
 
     const [ismage, setIsimage] = useState(false);
     const [lines, setLines] = useState([]);
@@ -41,7 +40,7 @@ export default function Item({ item, typewriter, background, size }) {
     return (
 
         <Paper className="paper" style={(background && item.image) ? backgroundImageStyle : {
-            // backgroundColor: randomColor,
+            backgroundColor: backgroundColor,
             width: "100%",
             height: "60vh",
             margin: "0",
@@ -52,8 +51,24 @@ export default function Item({ item, typewriter, background, size }) {
             textAlign: "center"
         }}>
 
-            <h2 style={{ paddingBottom: "2em", margin: 0, fontSize: `${size}px` }}>{item.Title}</h2>
-            <p style={{ margin: 0, fontSize: `${size}px` }}>
+            <h2 style={{
+                paddingBottom: "2em",
+                margin: 0,
+                fontSize: `${size}px`,
+                color: textColor,
+                fontStyle: fontWeight.italic ? "italic" : "normal",
+                textAlign: textAlign.left ? "left" : textAlign.right ? "right" : textAlign.center ? "center" : ""
+
+            }}>{item.Title}
+            </h2>
+            <p style={{
+                margin: 0,
+                fontSize: `${size}px`,
+                color: textColor,
+                fontWeight: fontWeight.bold ? "bold" : "normal",
+                fontStyle: fontWeight.italic ? "italic" : "normal",
+                textAlign: textAlign.left ? "left" : textAlign.right ? "right" : textAlign.center ? "center" : ""
+            }}>
                 {item.slideTitle}
                 <br />
                 {typewriter ? (

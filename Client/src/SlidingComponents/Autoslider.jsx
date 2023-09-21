@@ -12,6 +12,8 @@ import ScreenPanel from '../ScreenComponents/ScreenPanel';
 import { Button } from "@mui/material";
 import Switch from '@mui/material/Switch';
 import Grid from '@mui/material/Grid';
+import AutosliderBar from '../ScreenComponents/DesignComponents/AutosliderBar';
+import Footer from '../Footer';
 export default function AutoSlider() {
     // const [fade, setFade] = useState(false);
     // const [slide, setSlide] = useState(true);
@@ -20,12 +22,24 @@ export default function AutoSlider() {
     const [slideInterval, setSlideInterval] = useState(5);
     const location = useLocation();
     const [transitionType, setTransitionType] = useState("fade");
-    const [ischecked, setChecked] = useState(false);
+
     const { SlideData } = location.state || {}; // Extract SlideData from location state
     const [background, setbackground] = useState(false);
     const [size, setFontSize] = useState(12)
 
-    // Function to handle slider value change
+    const [textColor, setTextColor] = useState('#000000'); // Initial text color
+    const [backgroundColor, setBackgroundColor] = useState('#FFFFFF');
+    const [textAlign, setTextAlign] = useState({
+        left: false,
+        center: false,
+        right: false
+    })
+    const [fontWeight, setFontWeight] = useState({
+        normal: false,
+        bold: false,
+        italic: false
+    })
+
     const handleSlideDurationChange = (event, newValue) => {
         setSlideDuration(newValue);
     };
@@ -39,9 +53,9 @@ export default function AutoSlider() {
 
 
     return (
-        <>
-            <ScreenPanel h_vh={"0.01vh"} />
-            <Grid container justifyContent="center" alignItems="center">
+        < >
+            <AutosliderBar setTextColor={setTextColor} textColor={textColor} setBackgroundColor={setBackgroundColor} backgroundColor={backgroundColor} setTextAlign={setTextAlign} textAlign={textAlign} setFontWeight={setFontWeight} fontWeight={fontWeight} />
+            <Grid container justifyContent="center" alignItems="center" style={{ position: 'relative', zIndex: 1 }}>
                 <Grid item xs={12} sm={10} md={8} lg={6}>
                     <Carousel
                         animation={transitionType} // Set the animation based on state
@@ -51,7 +65,7 @@ export default function AutoSlider() {
                         indicators={true}
                         navButtonsAlwaysVisible={true}
                     >
-                        {SlideData.map((item) => <Item key={item._id} item={item} typewriter={typewriter} background={background} size={size} />)}
+                        {SlideData.map((item) => <Item key={item._id} item={item} typewriter={typewriter} background={background} size={size} textColor={textColor} backgroundColor={backgroundColor} fontWeight={fontWeight} textAlign={textAlign} />)}
                     </Carousel>
 
                     <br></br>
@@ -166,8 +180,10 @@ export default function AutoSlider() {
                     <br></br>
                     <Button style={{ marginInline: "1em" }} variant="contained">Save</Button>
                     <Button style={{ marginInline: "1em" }} variant="contained">Reset</Button>
+
                 </Grid>
             </Grid>
+            <Footer />
         </>
     );
 }

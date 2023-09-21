@@ -6,7 +6,7 @@ import Login from "./React-forms/Login";
 import ScreenDetail from "./ScreenComponents/ScreenDetail";
 import RegisterForm from "./React-forms/RegisterForm"; // Import the RegisterForm component
 import ScreenContentForm from "./React-forms/ScreenContentForm";
-import AutoSlider from "./SlidingComponents/AutoSlider";
+import AutoSlider from "./SlidingComponents/Autoslider"
 import SlideContent from "./ScreenComponents/SlideContent";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
