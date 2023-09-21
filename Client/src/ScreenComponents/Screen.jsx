@@ -30,6 +30,7 @@ export default function Screen({ screen, listOfScreen, setListOfScreen }) {
 
   const handleDelete = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     setDeleteClicked(true);
     setIsModalOpen(true);
   };
@@ -106,17 +107,12 @@ export default function Screen({ screen, listOfScreen, setListOfScreen }) {
             </Typography>
           </CardContent>
           <CardContent>
-            <div
-              style={{ textAlign: "center", marginTop: "8px" }}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDelete(e);
-              }}
-            >
+            <div style={{ textAlign: "center", marginTop: "8px" }}>
               <Button
                 variant="outlined"
                 color="error"
                 aria-label={`Delete screen ${screen.screenName}`}
+                onClick={handleDelete}
               >
                 Delete
               </Button>
