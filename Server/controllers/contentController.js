@@ -74,6 +74,16 @@ class contentController {
     }
     res.json(content);
   }
+
+  static async getScreenContent(req, res) {
+    const { screenId } = req.query;
+    // Find the screen by its ID and populate its content field
+    const screen = await Screen.findById(screenId).populate("content");
+    if (!screen) {
+      return res.status(404).json({ Error: "Screen not found" });
+    }
+    res.json(screen.content);
+  }
 }
 
 module.exports = contentController;
