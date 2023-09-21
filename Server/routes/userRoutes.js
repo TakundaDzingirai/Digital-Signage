@@ -1,11 +1,6 @@
-// Check if the environment is not "production" and load environment variables
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
-
 const express = require("express");
-
 const router = express.Router({ mergeParams: true });
+
 const { blacklist, authenticateJwt } = require("../middleware/auth");
 const catchAsync = require("../utilities/catchAsync");
 const { validateUser } = require("../middleware/validation");
