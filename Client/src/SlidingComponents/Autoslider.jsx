@@ -40,6 +40,10 @@ export default function AutoSlider() {
         italic: false
     })
 
+    const [pSize, setParagraph] = useState("5px");
+    const [hSize, setHeader] = useState("18px");
+    const [myfont, setFont] = useState("Times New Roman, serif")
+
     const handleSlideDurationChange = (event, newValue) => {
         setSlideDuration(newValue);
     };
@@ -54,7 +58,17 @@ export default function AutoSlider() {
 
     return (
         < >
-            <AutosliderBar setTextColor={setTextColor} textColor={textColor} setBackgroundColor={setBackgroundColor} backgroundColor={backgroundColor} setTextAlign={setTextAlign} textAlign={textAlign} setFontWeight={setFontWeight} fontWeight={fontWeight} />
+            <AutosliderBar setTextColor={setTextColor}
+                textColor={textColor}
+                setBackgroundColor={setBackgroundColor}
+                backgroundColor={backgroundColor}
+                setTextAlign={setTextAlign}
+                textAlign={textAlign}
+                setFontWeight={setFontWeight}
+                fontWeight={fontWeight}
+                setHeader={setHeader}
+                setParagraph={setParagraph}
+                setFont={setFont} />
             <Grid container justifyContent="center" alignItems="center" style={{ position: 'relative', zIndex: 1 }}>
                 <Grid item xs={12} sm={10} md={8} lg={6}>
                     <Carousel
@@ -65,7 +79,11 @@ export default function AutoSlider() {
                         indicators={true}
                         navButtonsAlwaysVisible={true}
                     >
-                        {SlideData.map((item) => <Item key={item._id} item={item} typewriter={typewriter} background={background} size={size} textColor={textColor} backgroundColor={backgroundColor} fontWeight={fontWeight} textAlign={textAlign} />)}
+                        {SlideData.map((item) => <Item key={item._id}
+                            item={item} typewriter={typewriter} background={background}
+                            size={size} textColor={textColor} backgroundColor={backgroundColor}
+                            fontWeight={fontWeight} textAlign={textAlign} hSize={hSize}
+                            pSize={pSize} myfont={myfont} />)}
                     </Carousel>
 
                     <br></br>

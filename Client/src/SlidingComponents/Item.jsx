@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import "./Item.css"
 import Typewriter from 'typewriter-effect';
 
-export default function Item({ item, typewriter, background, size, textColor, backgroundColor, fontWeight, textAlign }) {
+export default function Item({ item, typewriter, background, size, textColor, backgroundColor, fontWeight, textAlign, hSize, pSize, myfont }) {
 
     const [ismage, setIsimage] = useState(false);
     const [lines, setLines] = useState([]);
@@ -54,20 +54,21 @@ export default function Item({ item, typewriter, background, size, textColor, ba
             <h2 style={{
                 paddingBottom: "2em",
                 margin: 0,
-                fontSize: `${size}px`,
+                fontSize: `${hSize}`,
                 color: textColor,
                 fontStyle: fontWeight.italic ? "italic" : "normal",
-                textAlign: textAlign.left ? "left" : textAlign.right ? "right" : textAlign.center ? "center" : ""
-
+                textAlign: textAlign.left ? "left" : textAlign.right ? "right" : textAlign.center ? "center" : "",
+                fontFamily: myfont
             }}>{item.Title}
             </h2>
             <p style={{
                 margin: 0,
-                fontSize: `${size}px`,
+                fontSize: `${pSize}`,
                 color: textColor,
                 fontWeight: fontWeight.bold ? "bold" : "normal",
                 fontStyle: fontWeight.italic ? "italic" : "normal",
-                textAlign: textAlign.left ? "left" : textAlign.right ? "right" : textAlign.center ? "center" : ""
+                textAlign: textAlign.left ? "left" : textAlign.right ? "right" : textAlign.center ? "center" : "",
+                fontFamily: myfont
             }}>
                 {item.slideTitle}
                 <br />

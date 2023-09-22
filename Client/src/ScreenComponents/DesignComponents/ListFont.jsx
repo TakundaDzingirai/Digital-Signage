@@ -1,9 +1,9 @@
 // import
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MenuItem, Select, InputLabel } from "@mui/material"
 // sample use case
-export default function ListFont() {
+export default function ListFont({ setFont }) {
     const fontOptions = [
         { label: 'Arial', value: 'Arial, sans-serif' },
         { label: 'Times New Roman', value: 'Times New Roman, serif' },
@@ -30,6 +30,10 @@ export default function ListFont() {
 
 
     const [selectedFont, setSelectedFont] = useState("");
+    useEffect(() => {
+        setFont(selectedFont);
+
+    }, [selectedFont])
 
     const handleFontChange = (event) => {
         setSelectedFont(event.target.value);

@@ -27,6 +27,9 @@ export default function AutosliderBar({
     textAlign,
     setFontWeight,
     fontWeight,
+    setHeader,
+    setParagraph,
+    setFont
 }) {
     const [isBold, setIsBold] = useState(false);
     const [isItalic, setIsItalic] = useState(false);
@@ -163,13 +166,13 @@ export default function AutosliderBar({
                     </Grid>
                     <Grid item xs={12} sm={4} md={3} lg={2}>
                         <div>
-                            <ListFont />
+                            <ListFont setFont={setFont} />
                             <Divider orientation="vertical" flexItem />
                         </div>
                     </Grid>
                     <Grid item xs={12} sm={4} md={3} lg={4}>
 
-                        <FontSize />
+                        <FontSize setHeader={setHeader} setParagraph={setParagraph} />
 
                     </Grid>
                 </Grid>
