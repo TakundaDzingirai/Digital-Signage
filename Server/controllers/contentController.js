@@ -80,7 +80,22 @@ class contentController {
     if (!screen) {
       return res.status(404).json({ Error: "Screen not found" });
     }
-    res.json(screen.content);
+    const settings = {
+      slideDuration: screen.slideDuration,
+      slideInterval: screen.slideInterval,
+      typeWriter: screen.typeWriter,
+      background: screen.background,
+      textColor: screen.textColor,
+      backgroundColor: screen.backgroundColor,
+      textAlign: screen.textAlign,
+      fontWeight: screen.fontWeight,
+      pSize: screen.pSize,
+      hSize: screen.hSize,
+      myFont: screen.myFont,
+      transitionType: screen.transitionType,
+    };
+
+    res.json(screen.content, settings);
   }
 }
 

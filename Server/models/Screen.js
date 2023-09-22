@@ -46,6 +46,16 @@ const screenSchema = new Schema(
       default: false,
     },
 
+    backgroundColor: {
+      type: String,
+      default: "#FFFFFF",
+    },
+
+    transitionType: {
+      type: String,
+      default: "fade",
+    },
+
     textColor: {
       type: String,
       default: "#000000",

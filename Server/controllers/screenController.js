@@ -78,7 +78,8 @@ class screenController {
       fontWeight,
       pSize,
       hSize,
-      myfont,
+      myFont,
+      transitionType,
     } = req.body;
 
     screen.slideDuration = slideDuration;
@@ -91,7 +92,8 @@ class screenController {
     screen.fontWeight = fontWeight;
     screen.pSize = pSize;
     screen.hSize = hSize;
-    screen.myfont = myfont;
+    screen.myFont = myFont;
+    screen.transitionType = transitionType;
 
     const updatedScreen = await Screen.save();
     return res.json(updatedScreen);
