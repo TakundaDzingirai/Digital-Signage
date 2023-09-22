@@ -67,12 +67,31 @@ class screenController {
       return res.status(404).json({ Error: "Screen not found" });
     }
 
-    const { duration, interval, fadeEnter, fadeEnterActive } = req.body;
+    const {
+      slideDuration,
+      slideInterval,
+      typeWriter,
+      background,
+      textColor,
+      backgroundColor,
+      textAlign,
+      fontWeight,
+      pSize,
+      hSize,
+      myfont,
+    } = req.body;
 
-    screen.duration = duration;
-    screen.interval = interval;
-    screen.fadeEnter = fadeEnter;
-    screen.fadeEnterActive = fadeEnterActive;
+    screen.slideDuration = slideDuration;
+    screen.slideInterval = slideInterval;
+    screen.typeWriter = typeWriter;
+    screen.background = background;
+    screen.textColor = textColor;
+    screen.backgroundColor = backgroundColor;
+    screen.textAlign = textAlign;
+    screen.fontWeight = fontWeight;
+    screen.pSize = pSize;
+    screen.hSize = hSize;
+    screen.myfont = myfont;
 
     const updatedScreen = await Screen.save();
     return res.json(updatedScreen);
