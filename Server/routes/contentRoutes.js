@@ -19,7 +19,7 @@ router.post("/:screenId", async (req, res) => {
         return res.status(500).json({ error: "An error occurred" });
       }
 
-      const { slideTitle, post } = req.body;
+      const { slideTitle, post, startDate, endDate } = req.body;
       const screenId = req.params.screenId;
 
       const tempFilePath = `/tmp/${Date.now()}_temp_file`;
@@ -35,10 +35,12 @@ router.post("/:screenId", async (req, res) => {
         const contentData = {
           slideTitle,
           post,
+          startDate,
+          endDate,
           image: {
             public_id: result.public_id,
             url: result.secure_url,
-          }, // Here you obtain the Cloudinary URL
+          },
         };
 
         // Now you can use the Cloudinary URL in your contentController

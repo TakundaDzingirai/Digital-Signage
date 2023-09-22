@@ -19,6 +19,11 @@ import Axios from "axios";
 import CircularIndeterminate from "../CircularIndeterminate";
 import { contentValidation } from "../Validations/validations.js";
 import * as Yup from "yup";
+import dayjs from "dayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 export default function ScreenContentForm() {
   const [title, setTitle] = useState("");
@@ -30,6 +35,8 @@ export default function ScreenContentForm() {
   const [file, setFile] = useState(null);
   const [selectedScreens, setSelectedScreens] = useState([]);
   const [screens, setScreens] = useState([]);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -71,6 +78,10 @@ export default function ScreenContentForm() {
     formData.append("slideTitle", title);
     formData.append("post", text);
     formData.append("image", file);
+    if (startDate && endDate) {
+      formData.append("startDate", startDate);
+      formData.append("endDate", endDate);
+    }
 
     setShow(true);
 
@@ -86,6 +97,8 @@ export default function ScreenContentForm() {
       setText("");
       setFile(null);
       setSelectedImage(null);
+      setStartDate(null);
+      setEndDate(null);
 
       if (selectedScreens.length > 0) {
         const uploadPromises = selectedScreens.map((selectedScreenId) => {
@@ -247,6 +260,21 @@ export default function ScreenContentForm() {
             )}
           </div>
 
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={["DatePicker", "DatePicker"]}>
+              <DatePicker
+                label="Start date"
+                value={startDate}
+                onChange={(date) => setStartDate(date)}
+              />
+              <DatePicker
+                label="End date"
+                value={endDate}
+                onChange={(date) => setEndDate(date)}
+              />
+            </DemoContainer>
+          </LocalizationProvider>
+
           <FormControl variant="outlined" fullWidth margin="normal">
             <InputLabel id="select-screens-label">
               Select other screens to add content to
@@ -265,6 +293,7 @@ export default function ScreenContentForm() {
               ))}
             </Select>
           </FormControl>
+
           <Button
             variant="contained"
             color="primary"

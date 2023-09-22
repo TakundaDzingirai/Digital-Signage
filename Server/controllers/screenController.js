@@ -95,7 +95,8 @@ class screenController {
     screen.myFont = myFont;
     screen.transitionType = transitionType;
 
-    const updatedScreen = await Screen.save();
+    const updatedScreen = await screen.save();
+
     return res.json(updatedScreen);
   }
 }
