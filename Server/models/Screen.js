@@ -26,24 +26,59 @@ const screenSchema = new Schema(
       },
     ],
 
-    duration: {
+    slideDuration: {
       type: Number,
       default: 2,
     },
 
-    interval: {
+    slideInterval: {
       type: Number,
-      default: 10,
+      default: 5,
     },
 
-    fadeEnter: {
+    typeWriter: {
       type: Boolean,
       default: false,
     },
 
-    fadeEnterActive: {
+    background: {
       type: Boolean,
       default: false,
+    },
+
+    textColor: {
+      type: String,
+      default: "#000000",
+    },
+
+    textAlign: {
+      type: String,
+      default: {
+        left: false,
+        center: false,
+        right: false,
+      },
+    },
+
+    fontWeight: {
+      type: String,
+      default: {
+        normal: false,
+        bold: false,
+        italic: false,
+      },
+    },
+    pSize: {
+      type: Number,
+      default: 5,
+    },
+    hSize: {
+      type: Number,
+      default: 18,
+    },
+    myFont: {
+      type: String,
+      default: "Times New Roman, serif",
     },
   },
   { timestamps: true }
