@@ -4,7 +4,7 @@ import "./Item.css"
 
 export default function Item({ item }) {
     const randomColor = '#' + (Math.random().toString(16) + '000000').slice(2, 8);
-    // console.log(item.image)
+   
     const [ismage, setIsimage] = useState(false);
     useEffect(() => {
         if (item.image.url && item.image.url.includes("cloudinary")) {
