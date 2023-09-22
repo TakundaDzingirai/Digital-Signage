@@ -44,7 +44,7 @@ class contentController {
     if (!content) {
       return res.status(404).json({ error: "Content not found" });
     }
-    // Update the content's properties with the provided data
+    // Update content's properties with the provided data
     content.slideTitle = slideTitle;
     content.post = post;
     content.imageUrl = imageUrl;
@@ -55,31 +55,47 @@ class contentController {
 
   static async showAScreenScontent(req, res) {
     const { screenId } = req.params;
-    // Find the screen by its ID and populate its content field
-    const screen = await Screen.findById(screenId).populate("content");
-    if (!screen) {
-      return res.status(404).json({ Error: "Screen not found***" });
-    }
-    res.json(screen.content);
-  }
-
-  static async showDetailedContent(req, res) {
-    const { contentId } = req.params;
-    // Find the content by its ID
-    const content = await Content.findById(contentId);
-    if (!content) {
-      res.status(404).json({ error: "Content not found" });
-    }
-    res.json(content);
-  }
-
-  static async getScreenContent(req, res) {
-    const { screenId } = req.query;
-    // Find the screen by its ID and populate its content field
+    // Find screen by its ID and populate its content field
     const screen = await Screen.findById(screenId).populate("content");
     if (!screen) {
       return res.status(404).json({ Error: "Screen not found" });
     }
+
+    const currentDate = new Date();
+
+    // Filter content to include only valid content
+    const validContent = screen.content.filter((content) => {
+      return (
+        !content.endDate ||
+        (currentDate >= content.startDate && currentDate <= content.endDate)
+      );
+    });
+
+    console.log(validContent);
+
+    res.json(validContent);
+  }
+
+  static async getScreenContent(req, res) {
+    const { screenId } = req.query;
+
+    // Find screen by its ID and populate its content field
+    const screen = await Screen.findById(screenId).populate("content");
+    if (!screen) {
+      return res.status(404).json({ Error: "Screen not found" });
+    }
+
+    // Get the current date
+    const currentDate = new Date();
+
+    // Filter content to include only valid content
+    const validContent = screen.content.filter((content) => {
+      return (
+        !content.endDate ||
+        (currentDate >= content.startDate && currentDate <= content.endDate)
+      );
+    });
+
     const settings = {
       slideDuration: screen.slideDuration,
       slideInterval: screen.slideInterval,
@@ -95,7 +111,7 @@ class contentController {
       transitionType: screen.transitionType,
     };
 
-    res.json(screen.content, settings);
+    res.json({ content: validContent, settings });
   }
 }
 
