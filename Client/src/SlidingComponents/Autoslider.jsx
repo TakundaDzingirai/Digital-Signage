@@ -49,9 +49,7 @@ export default function AutoSlider() {
     const handleSlideIntervalChange = (event, newValue) => {
         setSlideInterval(newValue);
     };
-    const handleFontSizeChange = (event, newValue) => {
-        setFontSize(newValue);
-    }
+   
     const saveData = () => {
         settings = {
             slideDuration: slideDuration,
@@ -64,7 +62,8 @@ export default function AutoSlider() {
             fontWeight: fontWeight,
             pSize: pSize,
             hSize: hSize,
-            myfont: myfont
+            myfont: myfont,
+            transitionType: transitionType
         }
 
     }
