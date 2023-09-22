@@ -43,6 +43,25 @@ function RegisterForm() {
   const [registered, setRegister] = useState(false);
   const [show, setShow] = useState(false);
   const [errors, setErrors] = useState({});
+  const [departments, setDepartments] = useState([]);
+
+  useEffect(() => {
+    const getDepartments = async () => {
+      let response;
+      try {
+        response = await Axios.get("http://localhost:3000/departments/");
+        if (response.status === 200) {
+          setDepartments(response.data);
+        } else {
+          console.log("Error retrieving department data", response);
+        }
+      } catch (error) {
+        console.log("Error:", response.error.message);
+      }
+    };
+
+    getDepartments();
+  }, []);
 
   useEffect(() => {
     if (registered) {
@@ -126,7 +145,7 @@ function RegisterForm() {
       {show && <CircularIndeterminate info={"Registering..."} />}
 
       <ThemeProvider theme={theme}>
-        <Container component="main" maxWidth="xs" style={styl}>
+        <Container component="main" maxWidth="sm" style={styl}>
           <CssBaseline />
           <Paper
             elevation={3}
@@ -159,6 +178,7 @@ function RegisterForm() {
                     fullWidth
                     id="firstname"
                     label="First Name"
+                    placeholder="John"
                     autoFocus
                     value={registrationData.firstname}
                     onChange={handleChange}
@@ -178,6 +198,7 @@ function RegisterForm() {
                     id="lastname"
                     label="Last Name"
                     name="lastname"
+                    placeholder="Doe"
                     value={registrationData.lastname}
                     onChange={handleChange}
                     error={!!errors.lastname}
@@ -196,6 +217,7 @@ function RegisterForm() {
                     id="email"
                     label="Email Address"
                     name="email"
+                    placeholder="example@gmail.com"
                     autoComplete="email"
                     value={registrationData.email}
                     onChange={handleChange}
@@ -215,6 +237,7 @@ function RegisterForm() {
                     id="username"
                     label="Username"
                     name="username"
+                    placeholder="johndoe123"
                     value={registrationData.username}
                     onChange={handleChange}
                     error={!!errors.username}
@@ -234,6 +257,7 @@ function RegisterForm() {
                     label="Password"
                     type="password"
                     id="password"
+                    placeholder="••••••••"
                     value={registrationData.password}
                     onChange={handleChange}
                     error={!!errors.password}
@@ -258,6 +282,7 @@ function RegisterForm() {
                       labelId="department-label"
                       id="department"
                       name="department"
+                      placeholder="Computer science"
                       value={registrationData.department}
                       onChange={handleChange}
                       label="Department"
@@ -267,18 +292,17 @@ function RegisterForm() {
                         },
                       }}
                     >
-                      <MenuItem value="Computer Science">
-                        Computer Science
-                      </MenuItem>
-                      <MenuItem value="Information Systems">
-                        Information Systems
-                      </MenuItem>
-                      <MenuItem value="Accounting">Accounting</MenuItem>
-                      <MenuItem value="Economics">Economics</MenuItem>
-                      <MenuItem value="Applied Statistics">
-                        Applied Statistics
-                      </MenuItem>
-                      <MenuItem value="Law">Law</MenuItem>
+                      {departments
+                        .slice()
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map((department) => (
+                          <MenuItem
+                            key={department._id}
+                            value={department.name}
+                          >
+                            {department.name}
+                          </MenuItem>
+                        ))}
                     </Select>
                   </FormControl>
                   {errors.department && (
@@ -301,6 +325,7 @@ function RegisterForm() {
                       value={registrationData.role}
                       onChange={handleChange}
                       label="Role"
+                      placeholder="user"
                       inputProps={{
                         style: {
                           borderColor: errors.role ? "red" : "green",
@@ -324,7 +349,7 @@ function RegisterForm() {
               >
                 Sign Up
               </Button>
-              <Grid container justifyContent="flex-end">
+              <Grid container justifyContent="center">
                 <Grid item>
                   <MUILink component={Link} to="/" variant="body2">
                     Already have an account? Sign in

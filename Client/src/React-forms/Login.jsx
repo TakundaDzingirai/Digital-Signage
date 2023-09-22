@@ -172,6 +172,7 @@ export default function Login() {
                     label="Username"
                     name="username"
                     autoComplete="username"
+                    placeholder="johndoe123"
                     value={formData.username}
                     onChange={handleChange}
                     error={!!errors.username}
@@ -184,6 +185,7 @@ export default function Login() {
                     fullWidth
                     name="password"
                     label="Password"
+                    placeholder="Password"
                     type="password"
                     id="password"
                     autoComplete="current-password"
@@ -201,7 +203,7 @@ export default function Login() {
                   >
                     Sign In
                   </Button>
-                  <Grid container>
+                  <Grid container justifyContent="center">
                     <Grid item>
                       <Link
                         component={RouterLink}

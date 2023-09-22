@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
+
 import { ToastContainer, toast } from "react-toastify";
 import moment from "moment";
 import Header from "../Header";
@@ -151,20 +152,32 @@ export default function SlideContent() {
             elevation={3}
             style={{
               padding: theme.spacing(3),
-              marginBottom: theme.spacing(2),
+              marginBottom: theme.spacing(5),
             }}
           >
-            <Typography variant="h4" gutterBottom>
+            <Typography
+              variant="h3"
+              style={{
+                fontSize: "2rem",
+                fontWeight: "bold",
+                color: "#1e366a",
+                marginBottom: "0.5rem",
+              }}
+            >
               {c.slideTitle}
             </Typography>
-            <Divider sx={{ mb: 2 }} />
-            <Typography variant="body1" paragraph>
+            <Divider sx={{ my: 2 }} />
+            <Typography
+              variant="body1"
+              paragraph
+              style={{
+                color: "#333",
+                lineHeight: "1.5",
+              }}
+            >
               {c.post}
             </Typography>
 
-            <Typography variant="subtitle2">
-              Created on: {moment(c.createdAt).format("DD/MM/YYYY HH:mm:ss a")}
-            </Typography>
             <Grid
               container
               spacing={2}
@@ -194,6 +207,13 @@ export default function SlideContent() {
                 </Button>
               </Grid>
             </Grid>
+            <Typography
+              variant="subtitle2"
+              color="textSecondary"
+              style={{ marginTop: "20px", textAlign: "center" }}
+            >
+              Created: {moment(c.createdAt).format("MMMM D, YYYY, h:mm:ss A")}
+            </Typography>
           </Paper>
         ))}
       </Container>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Button,
   TextField,
@@ -30,12 +30,35 @@ export default function CreateScreenForm({
   const [department, setDepartment] = useState("");
   const [errors, setErrors] = useState({});
 
+  const [departments, setDepartments] = useState([]);
+
+  useEffect(() => {
+    const getDepartments = async () => {
+      let response;
+      try {
+        response = await Axios.get("http://localhost:3000/departments/");
+        if (response.status === 200) {
+          setDepartments(response.data);
+        } else {
+          console.log("Error retrieving department data", response);
+        }
+      } catch (error) {
+        console.log("Error:", response.error.message);
+      }
+    };
+
+    getDepartments();
+  }, []);
+
   const createScreen = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
 
     if (!token) {
-      toast.error("You must be logged in to create a screen.");
+      toast.error("You must be logged in to create a screen.", {
+        position: "top-center",
+        autoClose: 2000,
+      });
       return;
     }
     const headers = {
@@ -73,9 +96,15 @@ export default function CreateScreenForm({
         setErrors(validationErrors);
       } else {
         if (error.response) {
-          toast.error(error.response.data.error);
+          toast.error(error.response.data.error, {
+            position: "top-center",
+            autoClose: 2000,
+          });
         } else {
-          toast.error("An error occurred while creating the screen.");
+          toast.error("An error occurred while creating the screen.", {
+            position: "top-center",
+            autoClose: 2000,
+          });
         }
       }
     }
@@ -100,7 +129,16 @@ export default function CreateScreenForm({
 
   return (
     <Dialog open={showForm} onClose={handleCancel}>
-      <DialogTitle>Create Screen</DialogTitle>
+      <DialogTitle
+        style={{
+          fontSize: "1.2rem",
+          fontWeight: "bold",
+          color: "#1e366a",
+        }}
+      >
+        Create Screen
+      </DialogTitle>
+
       <DialogContent>
         <DialogContentText>
           Please enter the name and select the department for the screen.
@@ -109,6 +147,7 @@ export default function CreateScreenForm({
           autoFocus
           margin="dense"
           label="Name"
+          placeholder="Eter the name of the screen"
           fullWidth
           variant="outlined"
           value={screenName}
@@ -121,15 +160,18 @@ export default function CreateScreenForm({
           <InputLabel>Department</InputLabel>
           <Select
             label="Department"
+            placeholder="Computer Science"
             value={department}
             onChange={handleDepartmentChange}
           >
-            <MenuItem value="Computer Science">Computer Science</MenuItem>
-            <MenuItem value="Information Systems">Information Systems</MenuItem>
-            <MenuItem value="Applied Statistics">Applied Statistics</MenuItem>
-            <MenuItem value="Accounting">Accounting</MenuItem>
-            <MenuItem value="Economics">Economics</MenuItem>
-            <MenuItem value="Law">Law</MenuItem>
+            {departments
+              .slice()
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((department) => (
+                <MenuItem key={department._id} value={department.name}>
+                  {department.name}
+                </MenuItem>
+              ))}
           </Select>
           <FormHelperText error={true}>{errors.department}</FormHelperText>
         </FormControl>

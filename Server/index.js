@@ -12,6 +12,7 @@ const axios = require("axios");
 const userRoutes = require("./routes/userRoutes.js");
 const screenRoutes = require("./routes/screenRoutes.js");
 const contentRoutes = require("./routes/contentRoutes.js");
+const departmentRoutes = require("./routes/departmentRoutes.js");
 const uploadDir = path.join(__dirname, "uploads");
 
 const port = process.env.PORT || 3000;
@@ -95,6 +96,7 @@ app.post("/upload", (req, res) => {
 app.use("/", userRoutes);
 app.use("/screens", screenRoutes);
 app.use("/content", contentRoutes);
+app.use("/departments", departmentRoutes);
 
 app.listen(port, () => {
   console.log(`Listening for requests on port ${port}`);
