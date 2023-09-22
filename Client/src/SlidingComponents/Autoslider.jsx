@@ -17,16 +17,15 @@ import Footer from '../Footer';
 export default function AutoSlider() {
     // const [fade, setFade] = useState(false);
     // const [slide, setSlide] = useState(true);
+    const { SlideData } = location.state || {}; // Extract SlideData from location state
+
     const [typewriter, setTypewriter] = useState(false);
     const [slideDuration, setSlideDuration] = useState(2);
     const [slideInterval, setSlideInterval] = useState(5);
     const location = useLocation();
     const [transitionType, setTransitionType] = useState("fade");
-
-    const { SlideData } = location.state || {}; // Extract SlideData from location state
     const [background, setbackground] = useState(false);
     const [size, setFontSize] = useState(12)
-
     const [textColor, setTextColor] = useState('#000000'); // Initial text color
     const [backgroundColor, setBackgroundColor] = useState('#FFFFFF');
     const [textAlign, setTextAlign] = useState({
@@ -53,7 +52,22 @@ export default function AutoSlider() {
     const handleFontSizeChange = (event, newValue) => {
         setFontSize(newValue);
     }
+    const saveData = () => {
+        settings = {
+            slideDuration: slideDuration,
+            slideInterval: slideInterval,
+            typewriter: typewriter,
+            background: background,
+            textColor: textColor,
+            backgroundColor: backgroundColor,
+            textAlign: textAlign,
+            fontWeight: fontWeight,
+            pSize: pSize,
+            hSize: hSize,
+            myfont: myfont
+        }
 
+    }
 
 
     return (
@@ -127,29 +141,6 @@ export default function AutoSlider() {
                         ]}
                         onChange={handleSlideIntervalChange}
                     />
-                    <Slider
-                        aria-label="Custom marks"
-                        defaultValue={size}
-                        step={1}
-                        valueLabelDisplay="auto"
-                        min={1}
-                        max={48}
-                        marks={[
-                            {
-                                value: 1,
-                                label: '1px',
-                            },
-                            {
-                                value: size,
-                                label: `${size}px`,
-                            },
-                            {
-                                value: 16,
-                                label: '48px',
-                            },
-                        ]}
-                        onChange={handleFontSizeChange}
-                    />
 
                     <Typography gutterBottom>  set image as background</Typography>
                     <FormControlLabel
@@ -196,7 +187,11 @@ export default function AutoSlider() {
                     </div>
 
                     <br></br>
-                    <Button style={{ marginInline: "1em" }} variant="contained">Save</Button>
+                    <Button
+                        style={{ marginInline: "1em" }}
+                        variant="contained"
+                        onClick={saveData}
+                    >Save</Button>
                     <Button style={{ marginInline: "1em" }} variant="contained">Reset</Button>
 
                 </Grid>

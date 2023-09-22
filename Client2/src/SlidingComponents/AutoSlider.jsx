@@ -9,7 +9,28 @@ export default function AutoSlider() {
   const [fadeEnter, setFadeEnter] = useState(false);
   const [fadeEnterActive, setFadeEnterActive] = useState(true);
   const [slideDuration, setSlideDuration] = useState(2);
-  const [slideInterval, setSlideInterval] = useState(25);
+  const [slideInterval, setSlideInterval] = useState(5);
+  const [transitionType, setTransitionType] = useState("fade");
+  const [background, setbackground] = useState(false);
+  const [size, setFontSize] = useState(12)
+  const [textColor, setTextColor] = useState('#000000'); // Initial text color
+  const [backgroundColor, setBackgroundColor] = useState('#FFFFFF');
+  const [textAlign, setTextAlign] = useState({
+    left: false,
+    center: false,
+    right: false
+  })
+  const [fontWeight, setFontWeight] = useState({
+    normal: false,
+    bold: false,
+    italic: false
+  })
+
+  const [pSize, setParagraph] = useState("5px");
+  const [hSize, setHeader] = useState("18px");
+  const [myfont, setFont] = useState("Times New Roman, serif")
+
+
   const location = useLocation();
   const screenId = new URLSearchParams(location.search).get("screenId"); // Get screenId from query string
 
@@ -26,7 +47,30 @@ export default function AutoSlider() {
           console.error(error);
         });
     }
+
+
   }, [screenId]);
+
+
+  //   settings = {
+  //     slideDuration: slideDuration,
+  //     slideInterval: slideInterval,
+  //     typewriter: typewriter,
+  //     background: background,
+  //     textColor: textColor,
+  //     backgroundColor: backgroundColor,
+  //     textAlign: textAlign,
+  //     fontWeight: fontWeight,
+  //     pSize: pSize,
+  //     hSize: hSize,
+  //     myfont: myfont
+  // }
+
+
+  if (slideData.length > 0) {
+    setBackgroundColor(slideData.settings.backgroundColor);
+    setFont(slideData.settings.myfont);
+  }
 
   return (
     <>
@@ -55,9 +99,11 @@ export default function AutoSlider() {
               },
             }}
           >
-            {slideData.map((item) => (
-              <Item key={item._id} item={item} />
-            ))}
+            {slideData.map((item) => <Item key={item._id}
+              item={item} typewriter={typewriter} background={background}
+              size={size} textColor={textColor} backgroundColor={backgroundColor}
+              fontWeight={fontWeight} textAlign={textAlign} hSize={hSize}
+              pSize={pSize} myfont={myfont} />)}
           </Carousel>
         </div>
       </div>
