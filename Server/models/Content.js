@@ -15,9 +15,6 @@ const contentSchema = new Schema(
       required: [true, "post must be provided"],
     },
 
-    // imageUrl: {
-    //   type: String,
-    // },
 
     screen: {
       type: mongoose.Schema.Types.ObjectId,

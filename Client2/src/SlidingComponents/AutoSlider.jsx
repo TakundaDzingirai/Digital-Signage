@@ -70,12 +70,23 @@ export default function AutoSlider() {
   if (slideData.length > 0) {
     setBackgroundColor(slideData.settings.backgroundColor);
     setFont(slideData.settings.myfont);
+    setTextColor(slideData.settings.textColor);
+    setTextAlign(slideData.settings.textAlign);
+    setFontWeight(slideData.settings.fontWeight);
+    setParagraph(slideData.settings.pSize);
+    setHeader(slideData.settings.hSize);
+    setSlideDuration(slideData.settings.slideDuration);
+    setSlideInterval(slideData.settings.slideInterval);
+    setTransitionType(slideData.settings.typewriter);
+    setbackground(slideData.settings.background);
+
   }
+
 
   return (
     <>
       <div className="caroul-wrapper">
-        {/* Wrapping div */}
+
         <div
           className="caroul"
           style={{
