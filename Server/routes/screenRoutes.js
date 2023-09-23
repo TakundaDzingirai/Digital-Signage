@@ -35,8 +35,9 @@ router.put(
 // screen settings
 
 // POST route to update screen settings
+// post(`http://localhost:3000/screens/carousel/${id}
 router.post(
-  "/carousel/:screenId",
+  "/carousel/:id",
   catchAsync(screenController.updateScreenSettings)
 );
 

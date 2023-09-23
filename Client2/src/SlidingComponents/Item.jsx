@@ -1,9 +1,9 @@
 import { Paper } from "@mui/material";
 import React, { useEffect, useState } from "react";
-// import "./Item.css"
+
 import Typewriter from 'typewriter-effect';
 
-export default function Item({ item, typewriter, background, textColor, backgroundColor, fontWeight, textAlign, hSize, pSize, myfont }) {
+export default function Item({ item, typeWriter, background, textColor, backgroundColor, fontWeight, textAlign, hSize, pSize, myfont }) {
 
     const [ismage, setIsimage] = useState(false);
     const [lines, setLines] = useState([]);
@@ -72,7 +72,7 @@ export default function Item({ item, typewriter, background, textColor, backgrou
             }}>
                 {item.slideTitle}
                 <br />
-                {typewriter ? (
+                {typeWriter ? (
                     <Typewriter
                         options={{
                             strings: lines, // Use the lines array as strings

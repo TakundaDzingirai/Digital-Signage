@@ -8,21 +8,24 @@ import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useLocation } from "react-router-dom"
-import ScreenPanel from '../ScreenComponents/ScreenPanel';
+import { useParams } from "react-router-dom";
 import { Button } from "@mui/material";
 import Switch from '@mui/material/Switch';
 import Grid from '@mui/material/Grid';
 import AutosliderBar from '../ScreenComponents/DesignComponents/AutosliderBar';
 import Footer from '../Footer';
+import Axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 export default function AutoSlider() {
     // const [fade, setFade] = useState(false);
     // const [slide, setSlide] = useState(true);
+    const location = useLocation();
     const { SlideData } = location.state || {}; // Extract SlideData from location state
-
+    const { id } = useParams()
     const [typewriter, setTypewriter] = useState(false);
     const [slideDuration, setSlideDuration] = useState(2);
     const [slideInterval, setSlideInterval] = useState(5);
-    const location = useLocation();
+
     const [transitionType, setTransitionType] = useState("fade");
     const [background, setbackground] = useState(false);
     const [size, setFontSize] = useState(12)
@@ -49,12 +52,13 @@ export default function AutoSlider() {
     const handleSlideIntervalChange = (event, newValue) => {
         setSlideInterval(newValue);
     };
-   
-    const saveData = () => {
-        settings = {
+
+    const saveData = async () => {
+        console.log(typewriter)
+        const settings = {
             slideDuration: slideDuration,
             slideInterval: slideInterval,
-            typewriter: typewriter,
+            typeWriter: typewriter,
             background: background,
             textColor: textColor,
             backgroundColor: backgroundColor,
@@ -65,12 +69,27 @@ export default function AutoSlider() {
             myfont: myfont,
             transitionType: transitionType
         }
+        try {
+            const response = await Axios.post(`http://localhost:3000/screens/carousel/${id}`, settings);
+            if (response.status === 200) {
+                console.log("status")
+                toast.success(response.data)
+            } else {
+                toast.error(response)
+            }
 
+
+        } catch (error) {
+            console.log(error)
+        }
     }
+
+
 
 
     return (
         < >
+            <ToastContainer />
             <AutosliderBar setTextColor={setTextColor}
                 textColor={textColor}
                 setBackgroundColor={setBackgroundColor}

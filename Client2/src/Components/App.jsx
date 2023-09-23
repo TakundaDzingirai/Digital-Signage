@@ -5,20 +5,24 @@ import './App.css'
 import Login from '../React-Forms/Login'
 import AutoSlider from '../SlidingComponents/AutoSlider'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import MyCarousel from '../SlidingComponents/MyCarousel'
+
 
 function App() {
-  const [count, setCount] = useState(0)
+
 
   return (
     < div className='App'>
       <Router>
         <Routes>
-          <Route path="/" element={<Login />} />
+
           <Route
-            path="/content/:id"
-            element={<AutoSlider />} />
+            path="/carousel/:screenId"
+            element={<MyCarousel />} />
         </Routes>
       </Router>
+
+
     </div>
 
   )

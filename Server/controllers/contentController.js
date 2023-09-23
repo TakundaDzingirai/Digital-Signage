@@ -95,7 +95,10 @@ class contentController {
       transitionType: screen.transitionType,
     };
 
-    res.json(screen.content, settings);
+    res.json({
+      content: screen.content,
+      settings: settings
+    });
   }
 }
 

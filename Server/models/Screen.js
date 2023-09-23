@@ -62,29 +62,33 @@ const screenSchema = new Schema(
     },
 
     textAlign: {
-      type: String,
-      default: {
-        left: false,
-        center: false,
-        right: false,
+      type: Object,
+      default: () => {
+        return {
+          left: false,
+          center: false,
+          right: false,
+        }
       },
     },
 
     fontWeight: {
-      type: String,
-      default: {
-        normal: false,
-        bold: false,
-        italic: false,
+      type: Object,
+      default: () => {
+        return {
+          normal: false,
+          bold: false,
+          italic: false,
+        }
       },
     },
     pSize: {
-      type: Number,
-      default: 5,
+      type: String,
+      default: '16px',
     },
     hSize: {
-      type: Number,
-      default: 18,
+      type: String,
+      default: '18px',
     },
     myFont: {
       type: String,

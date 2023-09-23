@@ -62,7 +62,7 @@ class screenController {
   }
 
   static async updateScreenSettings(req, res) {
-    const screen = await Screen.findById(req.params.screenId);
+    const screen = await Screen.findById(req.params.id);
     if (!screen) {
       return res.status(404).json({ Error: "Screen not found" });
     }
@@ -95,8 +95,8 @@ class screenController {
     screen.myFont = myFont;
     screen.transitionType = transitionType;
 
-    const updatedScreen = await Screen.save();
-    return res.json(updatedScreen);
+    const updatedScreen = await screen.save();
+    return res.json("Saved Successfully");
   }
 }
 
