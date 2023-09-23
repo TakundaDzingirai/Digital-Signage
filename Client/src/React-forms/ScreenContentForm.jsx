@@ -10,6 +10,8 @@ import {
   FormControl,
   InputLabel,
   Fab,
+  Switch,
+  FormControlLabel,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { ToastContainer, toast } from "react-toastify";
@@ -17,9 +19,8 @@ import ScreenPanel from "../ScreenComponents/ScreenPanel";
 import { useParams } from "react-router-dom";
 import Axios from "axios";
 import CircularIndeterminate from "../CircularIndeterminate";
-import { contentValidation } from "../Validations/validations.js";
 import * as Yup from "yup";
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -37,6 +38,7 @@ export default function ScreenContentForm() {
   const [screens, setScreens] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [schedulePost, setSchedulePost] = useState(false); // Add a state for scheduling
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -260,20 +262,59 @@ export default function ScreenContentForm() {
             )}
           </div>
 
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={["DatePicker", "DatePicker"]}>
-              <DatePicker
-                label="Start date"
-                value={startDate}
-                onChange={(date) => setStartDate(date)}
-              />
-              <DatePicker
-                label="End date"
-                value={endDate}
-                onChange={(date) => setEndDate(date)}
-              />
-            </DemoContainer>
-          </LocalizationProvider>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginBottom: "20px",
+            }}
+          >
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={schedulePost}
+                  onChange={() => setSchedulePost(!schedulePost)}
+                  color="primary"
+                />
+              }
+              label={schedulePost ? "Cancel schedule" : "Schedule "}
+            />
+          </div>
+
+          {schedulePost && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <div style={{ flex: 1, marginRight: "1rem" }}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={["DatePicker", "DatePicker"]}>
+                    <DatePicker
+                      label="Start date"
+                      value={startDate}
+                      onChange={(date) => setStartDate(date)}
+                      slotProps={{ textField: { fullWidth: true } }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+              </div>
+              <div style={{ flex: 1 }}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={["DatePicker", "DatePicker"]}>
+                    <DatePicker
+                      label="End date"
+                      value={endDate}
+                      onChange={(date) => setEndDate(date)}
+                      slotProps={{ textField: { fullWidth: true } }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+              </div>
+            </div>
+          )}
 
           <FormControl variant="outlined" fullWidth margin="normal">
             <InputLabel id="select-screens-label">
