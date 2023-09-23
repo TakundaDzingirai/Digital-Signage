@@ -86,7 +86,6 @@ export default function AutoSlider() {
 
 
 
-
     return (
         < >
             <ToastContainer />

@@ -31,10 +31,16 @@ export default function Item({ item, typeWriter, background, textColor, backgrou
     if (item.image) {
         backgroundImageStyle = {
             backgroundImage: `url(${item.image.url})`,
-            backgroundSize: 'cover',
+            backgroundSize: '100% 100%',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
-            height: '60vh', // Adjust the height as needed to cover the whole item
+            height: '100vh', // Adjust the height as needed to cover the whole item
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: "center",
+            borderRadius: 0
         };
     }
     return (
@@ -42,13 +48,14 @@ export default function Item({ item, typeWriter, background, textColor, backgrou
         <Paper className="paper" style={(background && item.image) ? backgroundImageStyle : {
             backgroundColor: backgroundColor,
             width: "100%",
-            height: "60vh",
+            height: "100vh",
             margin: "0",
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            textAlign: "center"
+            textAlign: "center",
+            borderRadius: 0
         }}>
 
             <h2 style={{
@@ -91,7 +98,7 @@ export default function Item({ item, typeWriter, background, textColor, backgrou
             </p>
             {
                 !background && ismage && (
-                    <img className="Image" src={item.image.url} />)
+                    <img style={{ width: "100%", height: "100vh" }} className="Image" src={item.image.url} />)
             }
         </Paper >
 

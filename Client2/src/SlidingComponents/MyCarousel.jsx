@@ -4,6 +4,7 @@ import Item from "./Item"
 import "./Carousel.css";
 import Axios from "axios";
 import { useLocation } from "react-router-dom";
+import { Grid } from "@mui/material";
 
 export default function MyCarousel() {
     const location = useLocation();
@@ -92,46 +93,44 @@ export default function MyCarousel() {
 
 
     console.log(typeWriter)
-    return (<>
-        <div className="caroul-wrapper">
 
-            <div
-                className="caroul"
-                style={{
-                    width: "100%",
-                    height: "100vh",
-                    justifyContent: "center",
-                    position: "absolute",
+
+    console.log("Interval", slideInterval)
+    console.log("duration", slideDuration)
+    return (
+        <div className="caroul-wrapper" style={{ width: "100%", height: "100vh", overflow: "hidden" }}>
+            <Carousel
+                animation={transitionType}
+                duration={slideDuration * 1000}
+                interval={slideInterval * 1000}
+                stopAutoPlayOnHover={false}
+                indicators={false}
+                navButtonsAlwaysVisible={false}
+                autoPlay={true}
+                navButtonsProps={{
+                    style: {
+                        display: "none",
+                    },
                 }}
             >
-                <Carousel
-                    animation={transitionType}
-                    duration={slideDuration * 1000}
-                    interval={slideInterval * 1000}
-                    stopAutoPlayOnHover={false}
-                    indicators={false}
-                    navButtonsAlwaysVisible={false}
-                    autoPlay={true} // Enable auto-play
-                    navButtonsProps={{
-                        style: {
-                            display: "none", // Hide the navigation buttons
-                        },
-                    }}
-                >
-                    {slideData.map((item) => <Item key={item._id}
-                        item={item} typeWriter={typeWriter} background={background}
-                        size={size} textColor={textColor} backgroundColor={backgroundColor}
-                        fontWeight={fontWeight} textAlign={textAlign} hSize={hSize}
-                        pSize={pSize} myfont={myfont} />)}
-                </Carousel>
-            </div>
+                {slideData.map((item) => (
+                    // <Grid container key={item._id} alignItems="center" justify="center" style={{ width: "1360px", height: "980px" }}>
+                    <Item
+                        item={item}
+                        typeWriter={typeWriter}
+                        background={background}
+                        size={size}
+                        textColor={textColor}
+                        backgroundColor={backgroundColor}
+                        fontWeight={fontWeight}
+                        textAlign={textAlign}
+                        hSize={hSize}
+                        pSize={pSize}
+                        myfont={myfont}
+                    />
+                    // </Grid>
+                ))}
+            </Carousel>
         </div>
-
-
-
-
-
-    </>
-
     );
 }
