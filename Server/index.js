@@ -14,8 +14,8 @@ const screenRoutes = require("./routes/screenRoutes.js");
 const contentRoutes = require("./routes/contentRoutes.js");
 const departmentRoutes = require("./routes/departmentRoutes.js");
 const uploadDir = path.join(__dirname, "uploads");
-
-const port = process.env.PORT || 3000;
+const ErrorResponse = require("./utilities/ErrorResponse.js");
+const extractJwt = require("passport-jwt").ExtractJwt;
 
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(express.json({ limit: "100mb" }));
@@ -32,6 +32,17 @@ app.use(
 );
 
 connectToDatabase();
+
+// JWT Secret key for token validation
+const secret =
+  process.env.SECRET ||
+  "eyJhbGciOiJIUzM4NCJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY5NDcwOTg2MSwiaWF0IjoxNjk0NzA5ODYxfQ.XCMXxrh12xDS6Kum5d3E_n_VntWvjQv0e7JrM_I2eBkrSKTNnfdd45B5yImjCT6D";
+
+// Passport JWT strategy setup
+const jwtOptions = {
+  jwtFromRequest: extractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: secret,
+};
 
 app.post("/upload", (req, res) => {
   try {
@@ -97,6 +108,21 @@ app.use("/", userRoutes);
 app.use("/screens", screenRoutes);
 app.use("/content", contentRoutes);
 app.use("/departments", departmentRoutes);
+
+// Catch-all route for handling 404 errors
+app.all("*", (req, res, next) => {
+  next(new ErrorResponse("Page Not found", 404));
+});
+
+// Error handling middleware to send appropriate error responses
+app.use((err, req, res, next) => {
+  const { statusCode = 500 } = err;
+  console.log(err);
+  if (!err.message) err.message = "Oh No, Something Went Wrong!";
+  res.status(statusCode).json({ error: err.message });
+});
+
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
   console.log(`Listening for requests on port ${port}`);
