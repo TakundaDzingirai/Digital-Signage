@@ -113,8 +113,18 @@ class contentController {
 
     res.json({
       content: screen.content,
-      settings: settings
+      settings: settings,
     });
+  }
+
+  static async showDetailedContent(req, res) {
+    const { contentId } = req.params;
+    // Find the content by its ID
+    const content = await Content.findById(contentId);
+    if (!content) {
+      res.status(404).json({ error: "Content not found" });
+    }
+    res.json(content);
   }
 }
 
