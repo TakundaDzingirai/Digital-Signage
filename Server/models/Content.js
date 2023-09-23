@@ -15,6 +15,14 @@ const contentSchema = new Schema(
       required: [true, "post must be provided"],
     },
 
+    startDate: {
+      type: Date,
+      default: Date.now,
+    },
+
+    endDate: {
+      type: Date,
+    },
 
     screen: {
       type: mongoose.Schema.Types.ObjectId,
@@ -25,15 +33,15 @@ const contentSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+
     image: {
       public_id: {
-        type: String
+        type: String,
       },
       url: {
-        type: String
-
-      }
-    }
+        type: String,
+      },
+    },
   },
   { timestamps: true }
 );
