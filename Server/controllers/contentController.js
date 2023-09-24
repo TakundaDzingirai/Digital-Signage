@@ -4,6 +4,7 @@ const Screen = require("../models/Screen");
 const { cloudinary } = require("../cloudinary/index");
 const { Console } = require("console");
 const { storage } = require("../cloudinary/index");
+const filterValidContent = require("../utilities/filterContent");
 
 class contentController {
   static async addContentToScreen(screenId, contentData) {
@@ -53,6 +54,7 @@ class contentController {
     res.json(updatedContent);
   }
 
+  // Modify your controller methods to use the filterValidContent function
   static async showAScreenScontent(req, res) {
     const { screenId } = req.params;
     // Find screen by its ID and populate its content field
@@ -61,17 +63,7 @@ class contentController {
       return res.status(404).json({ Error: "Screen not found" });
     }
 
-    const currentDate = new Date();
-
-    // Filter content to include only valid content
-    const validContent = screen.content.filter((content) => {
-      return (
-        !content.endDate ||
-        (currentDate >= content.startDate && currentDate <= content.endDate)
-      );
-    });
-
-    console.log(validContent);
+    const validContent = filterValidContent(screen.content);
 
     res.json(validContent);
   }
@@ -85,16 +77,7 @@ class contentController {
       return res.status(404).json({ Error: "Screen not found" });
     }
 
-    // Get the current date
-    const currentDate = new Date();
-
-    // Filter content to include only valid content
-    const validContent = screen.content.filter((content) => {
-      return (
-        !content.endDate ||
-        (currentDate >= content.startDate && currentDate <= content.endDate)
-      );
-    });
+    const validContent = filterValidContent(screen.content);
 
     const settings = {
       slideDuration: screen.slideDuration,
@@ -112,7 +95,7 @@ class contentController {
     };
 
     res.json({
-      content: screen.content,
+      content: validContent,
       settings: settings,
     });
   }

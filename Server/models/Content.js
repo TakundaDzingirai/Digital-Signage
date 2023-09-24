@@ -17,7 +17,6 @@ const contentSchema = new Schema(
 
     startDate: {
       type: Date,
-      default: Date.now,
     },
 
     endDate: {
