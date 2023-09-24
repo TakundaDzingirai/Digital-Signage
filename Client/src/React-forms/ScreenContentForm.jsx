@@ -30,15 +30,20 @@ export default function ScreenContentForm() {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedVideo, setSelectedVideo] = useState(null);
   const { screenId } = useParams();
   const [show, setShow] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
   const [file, setFile] = useState(null);
   const [selectedScreens, setSelectedScreens] = useState([]);
+
   const [screens, setScreens] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [schedulePost, setSchedulePost] = useState(false); // Add a state for scheduling
+  const [videoFile, setVideoFile] = useState(null);
+
+
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -79,10 +84,16 @@ export default function ScreenContentForm() {
     const formData = new FormData();
     formData.append("slideTitle", title);
     formData.append("post", text);
-    formData.append("image", file);
+    if (selectedImage) {
+      formData.append("media", file);
+    }
+
     if (startDate && endDate) {
       formData.append("startDate", startDate);
       formData.append("endDate", endDate);
+    }
+    if (selectedVideo) {
+      formData.append("media", videoFile);
     }
 
     setShow(true);
@@ -101,6 +112,7 @@ export default function ScreenContentForm() {
       setSelectedImage(null);
       setStartDate(null);
       setEndDate(null);
+      setSelectedVideo(null);
 
       if (selectedScreens.length > 0) {
         const uploadPromises = selectedScreens.map((selectedScreenId) => {
@@ -164,6 +176,12 @@ export default function ScreenContentForm() {
     marginTop: show ? "2vh" : "2vh",
     opacity: show ? "0.3" : "1",
     pointerEvents: show ? "none" : "auto",
+  };
+  const handleVideoUpload = (e) => {
+    const file = e.target.files[0];
+    setSelectedVideo(URL.createObjectURL(file)); // Store the video URL
+    setVideoFile(file); // Store the video file for later submission
+
   };
 
   return (
@@ -241,7 +259,7 @@ export default function ScreenContentForm() {
               <input
                 style={{ display: "none" }}
                 id="upload-photo"
-                name="upload-photo"
+                name="image"
                 type="file"
                 onChange={(e) => handleImageUpload(e)}
               />
@@ -261,6 +279,42 @@ export default function ScreenContentForm() {
               </div>
             )}
           </div>
+          <label htmlFor="upload-video" style={{ marginRight: "20px" }}>
+            <Fab
+              color="primary"
+              size="small"
+              component="span"
+              aria-label="add"
+              variant="extended"
+            >
+              <AddIcon /> {selectedVideo ? "Change Video" : "Upload Video"}
+            </Fab>
+            <input
+              style={{ display: "none" }}
+              id="upload-video"
+              name="video"
+              type="file"
+              accept="video/*"
+              onChange={(e) => handleVideoUpload(e)}
+            />
+          </label>
+
+          {selectedVideo && (
+            <div>
+              <video
+                controls
+                style={{
+                  maxWidth: "100%",
+                  height: "auto",
+                  maxHeight: "15vh",
+                }}
+              >
+                <source src={selectedVideo} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          )}
+
 
           <div
             style={{
