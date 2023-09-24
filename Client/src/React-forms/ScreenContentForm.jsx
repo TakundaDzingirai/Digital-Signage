@@ -81,13 +81,11 @@ export default function ScreenContentForm() {
     const formData = new FormData();
     formData.append("slideTitle", title);
     formData.append("post", text);
+    formData.append("startDate", startDate !== null ? startDate : "");
+    formData.append("endDate", endDate !== null ? endDate : "");
+
     if (selectedImage) {
       formData.append("media", file);
-    }
-
-    if (startDate && endDate) {
-      formData.append("startDate", startDate);
-      formData.append("endDate", endDate);
     }
     if (selectedVideo) {
       formData.append("media", videoFile);

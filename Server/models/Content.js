@@ -12,7 +12,7 @@ const contentSchema = new Schema(
 
     post: {
       type: String,
-      required: [true, "post must be provided"],
+      // required: [true, "post must be provided"],
     },
 
     startDate: {
@@ -34,6 +34,14 @@ const contentSchema = new Schema(
     },
 
     image: {
+      public_id: {
+        type: String,
+      },
+      url: {
+        type: String,
+      },
+    },
+    video: {
       public_id: {
         type: String,
       },
