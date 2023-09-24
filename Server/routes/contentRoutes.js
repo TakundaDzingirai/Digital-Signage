@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const upload = multer().single("media"); // Single file upload, use a field named "media"
+const upload = multer().single("media");
 const { validateContent } = require("../middleware/validation");
 const catchAsync = require("../utilities/catchAsync");
 const contentController = require("../controllers/contentController.js");
@@ -9,6 +9,7 @@ const fs = require("fs");
 const util = require("util");
 const { cloudinary } = require("../cloudinary/index");
 const Content = require("../models/Content");
+const qr = require("qrcode");
 
 const unlinkAsync = util.promisify(fs.unlink);
 
@@ -20,9 +21,9 @@ router.post("/:screenId", async (req, res) => {
         return res.status(500).json({ error: "An error occurred" });
       }
 
-      const { slideTitle, post, startDate, endDate } = req.body;
+      const { slideTitle, post, startDate, endDate, qrCodeContent } = req.body;
       const screenId = req.params.screenId;
-     
+
       const tempFilePath = `/tmp/${Date.now()}_temp_file`;
 
       try {
@@ -31,12 +32,19 @@ router.post("/:screenId", async (req, res) => {
           post,
           startDate,
           endDate,
+          qrCodeContent,
         };
+
+        // Generate the QR code
+        if (qrCodeContent) {
+          const qrCodeImage = await qr.toDataURL(qrCodeContent);
+          contentData.qrCodeImage = qrCodeImage;
+        }
 
         if (req.file) {
           const isImage = req.file.mimetype.startsWith("image/");
           const isVideo = req.file.mimetype.startsWith("video/");
-          console.log("Video:", isVideo)
+          console.log("Video:", isVideo);
 
           fs.writeFileSync(tempFilePath, req.file.buffer);
 
@@ -74,7 +82,7 @@ router.post("/:screenId", async (req, res) => {
             };
           }
         }
-        console.log(contentData)
+        console.log(contentData);
         // Now you can use the Cloudinary URL in your contentController
         await contentController.addContentToScreen(screenId, contentData);
 
@@ -91,7 +99,6 @@ router.post("/:screenId", async (req, res) => {
 });
 
 // ... rest of your routes remain unchanged
-
 
 // This route will be used to delete content from a screen
 router.delete("/:contentId", catchAsync(contentController.deleteContent));

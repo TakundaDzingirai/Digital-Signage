@@ -13,9 +13,9 @@ import {
   Switch,
   FormControlLabel,
 } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+
 import AddIcon from "@mui/icons-material/Add";
-import ClearIcon from '@mui/icons-material/Clear';
+import ClearIcon from "@mui/icons-material/Clear";
 import { ToastContainer, toast } from "react-toastify";
 import ScreenPanel from "../ScreenComponents/ScreenPanel";
 import { useParams } from "react-router-dom";
@@ -43,6 +43,8 @@ export default function ScreenContentForm() {
   const [endDate, setEndDate] = useState(null);
   const [schedulePost, setSchedulePost] = useState(false); // Add a state for scheduling
   const [videoFile, setVideoFile] = useState(null);
+  const [qrCodeContent, setQrCodeContent] = useState("");
+  const [isQrCodeEnabled, setIsQrCodeEnabled] = useState(false); // State to control QR code content link input visibility
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -66,6 +68,16 @@ export default function ScreenContentForm() {
       setTitle(value);
     } else if (name === "post") {
       setText(value);
+    } else if (name === "qrCodeContent") {
+      setQrCodeContent(value);
+    }
+  };
+
+  const toggleQrCodeInput = () => {
+    setIsQrCodeEnabled(!isQrCodeEnabled);
+    // Clear the QR code content when disabling the input
+    if (!isQrCodeEnabled) {
+      setQrCodeContent("");
     }
   };
 
@@ -79,7 +91,7 @@ export default function ScreenContentForm() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // REga tingochinja something
+
     const formData = new FormData();
     formData.append("slideTitle", title);
     formData.append("post", text);
@@ -91,6 +103,10 @@ export default function ScreenContentForm() {
     }
     if (selectedVideo) {
       formData.append("media", videoFile);
+    }
+
+    if (isQrCodeEnabled && qrCodeContent) {
+      formData.append("qrCodeContent", qrCodeContent);
     }
 
     setShow(true);
@@ -235,6 +251,43 @@ export default function ScreenContentForm() {
             helperText={validationErrors.post}
             placeholder="Enter text for your content"
           />
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginBottom: "20px",
+            }}
+          >
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={isQrCodeEnabled}
+                  onChange={toggleQrCodeInput}
+                  color="primary"
+                />
+              }
+              label="Enable QR Code Content Link"
+            />
+          </div>
+
+          {isQrCodeEnabled && (
+            <TextField
+              className="TextField"
+              label="QR Code Content Link"
+              onChange={(e) =>
+                handleInputChange("qrCodeContent", e.target.value)
+              }
+              variant="outlined"
+              color="primary"
+              fullWidth
+              type="text"
+              sx={{ mb: 3 }}
+              value={qrCodeContent}
+              placeholder="Enter the QR code content link"
+            />
+          )}
+
           <div
             style={{
               display: "flex",
@@ -311,93 +364,93 @@ export default function ScreenContentForm() {
                 </video>
               </div>
             )}
+          </div>
 
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginBottom: "20px",
+            }}
+          >
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={schedulePost}
+                  onChange={() => setSchedulePost(!schedulePost)}
+                  color="primary"
+                />
+              }
+              label={schedulePost ? "Cancel schedule" : "Schedule "}
+            />
+          </div>
 
+          {schedulePost && (
             <div
               style={{
                 display: "flex",
-                alignItems: "center",
-                marginBottom: "20px",
+                justifyContent: "space-between",
+                width: "100%",
               }}
             >
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={schedulePost}
-                    onChange={() => setSchedulePost(!schedulePost)}
-                    color="primary"
-                  />
-                }
-                label={schedulePost ? "Cancel schedule" : "Schedule "}
-              />
-            </div>
-
-            {schedulePost && (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  width: "100%",
-                }}
-              >
-                <div style={{ flex: 1, marginRight: "1rem" }}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer
-                      components={["DateTimePicker", "DateTimePicker"]}
-                    >
-                      <DateTimePicker
-                        label="Start date"
-                        value={startDate}
-                        onChange={(date) => setStartDate(date)}
-                        slotProps={{ textField: { fullWidth: true } }}
-                      />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                </div>
-                <div style={{ flex: 1 }}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer
-                      components={["DateTimePicker", "DateTimePicker"]}
-                    >
-                      <DateTimePicker
-                        label="End date"
-                        value={endDate}
-                        onChange={(date) => setEndDate(date)}
-                        slotProps={{ textField: { fullWidth: true } }}
-                      />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                </div>
+              <div style={{ flex: 1, marginRight: "1rem" }}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer
+                    components={["DateTimePicker", "DateTimePicker"]}
+                  >
+                    <DateTimePicker
+                      label="Start date"
+                      value={startDate}
+                      onChange={(date) => setStartDate(date)}
+                      slotProps={{ textField: { fullWidth: true } }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
               </div>
-            )}
+              <div style={{ flex: 1 }}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer
+                    components={["DateTimePicker", "DateTimePicker"]}
+                  >
+                    <DateTimePicker
+                      label="End date"
+                      value={endDate}
+                      onChange={(date) => setEndDate(date)}
+                      slotProps={{ textField: { fullWidth: true } }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+              </div>
+            </div>
+          )}
 
-            <FormControl variant="outlined" fullWidth margin="normal">
-              <InputLabel id="select-screens-label">
-                Select other screens to add content to
-              </InputLabel>
-              <Select
-                labelId="select-screens-label"
-                multiple
-                value={selectedScreens}
-                onChange={(e) => setSelectedScreens(e.target.value)}
-                fullWidth
-              >
-                {screens.map((screen) => (
-                  <MenuItem key={screen._id} value={screen._id}>
-                    {screen.screenName}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              sx={{ mt: 3 }}
+          <FormControl variant="outlined" fullWidth margin="normal">
+            <InputLabel id="select-screens-label">
+              Select other screens to add content to
+            </InputLabel>
+            <Select
+              labelId="select-screens-label"
+              multiple
+              value={selectedScreens}
+              onChange={(e) => setSelectedScreens(e.target.value)}
+              fullWidth
             >
-              Upload Content
-            </Button>
+              {screens.map((screen) => (
+                <MenuItem key={screen._id} value={screen._id}>
+                  {screen.screenName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            sx={{ mt: 3 }}
+          >
+            Upload Content
+          </Button>
         </form>
       </Paper>
     </>
