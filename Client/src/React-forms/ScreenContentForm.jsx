@@ -37,7 +37,7 @@ export default function ScreenContentForm() {
   const [screens, setScreens] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [schedulePost, setSchedulePost] = useState(false); // Add a state for scheduling
+  const [schedulePost, setSchedulePost] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
