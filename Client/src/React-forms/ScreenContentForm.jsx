@@ -24,8 +24,7 @@ import * as Yup from "yup";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 export default function ScreenContentForm() {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
@@ -345,8 +344,10 @@ export default function ScreenContentForm() {
             >
               <div style={{ flex: 1, marginRight: "1rem" }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={["DatePicker", "DatePicker"]}>
-                    <DatePicker
+                  <DemoContainer
+                    components={["DateTimePicker", "DateTimePicker"]}
+                  >
+                    <DateTimePicker
                       label="Start date"
                       value={startDate}
                       onChange={(date) => setStartDate(date)}
@@ -357,8 +358,10 @@ export default function ScreenContentForm() {
               </div>
               <div style={{ flex: 1 }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={["DatePicker", "DatePicker"]}>
-                    <DatePicker
+                  <DemoContainer
+                    components={["DateTimePicker", "DateTimePicker"]}
+                  >
+                    <DateTimePicker
                       label="End date"
                       value={endDate}
                       onChange={(date) => setEndDate(date)}
