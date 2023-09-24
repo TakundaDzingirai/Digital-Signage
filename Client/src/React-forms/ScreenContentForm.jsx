@@ -15,18 +15,17 @@ import {
 } from "@mui/material";
 
 import AddIcon from "@mui/icons-material/Add";
-import ClearIcon from "@mui/icons-material/Clear";
 import { ToastContainer, toast } from "react-toastify";
-import ScreenPanel from "../ScreenComponents/ScreenPanel";
 import { useParams } from "react-router-dom";
 import Axios from "axios";
 import CircularIndeterminate from "../CircularIndeterminate";
 import * as Yup from "yup";
-// import dayjs from "dayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import Header from "../Header";
+import Footer from "../Footer";
 export default function ScreenContentForm() {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
@@ -37,14 +36,14 @@ export default function ScreenContentForm() {
   const [validationErrors, setValidationErrors] = useState({});
   const [file, setFile] = useState(null);
   const [selectedScreens, setSelectedScreens] = useState([]);
-
   const [screens, setScreens] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [schedulePost, setSchedulePost] = useState(false); // Add a state for scheduling
+  const [schedulePost, setSchedulePost] = useState(false);
   const [videoFile, setVideoFile] = useState(null);
   const [qrCodeContent, setQrCodeContent] = useState("");
-  const [isQrCodeEnabled, setIsQrCodeEnabled] = useState(false); // State to control QR code content link input visibility
+  const [isQrCodeEnabled, setIsQrCodeEnabled] = useState(false);
+  const [mediaType, setMediaType] = useState("none");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -75,7 +74,6 @@ export default function ScreenContentForm() {
 
   const toggleQrCodeInput = () => {
     setIsQrCodeEnabled(!isQrCodeEnabled);
-    // Clear the QR code content when disabling the input
     if (!isQrCodeEnabled) {
       setQrCodeContent("");
     }
@@ -89,6 +87,13 @@ export default function ScreenContentForm() {
     });
   };
 
+  const handleMediaTypeChange = (mediaType) => {
+    setMediaType(mediaType);
+    // Clear previously selected media
+    setSelectedImage(null);
+    setSelectedVideo(null);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -98,10 +103,9 @@ export default function ScreenContentForm() {
     formData.append("startDate", startDate !== null ? startDate : "");
     formData.append("endDate", endDate !== null ? endDate : "");
 
-    if (selectedImage) {
+    if (mediaType === "image" && selectedImage) {
       formData.append("media", file);
-    }
-    if (selectedVideo) {
+    } else if (mediaType === "video" && selectedVideo) {
       formData.append("media", videoFile);
     }
 
@@ -125,6 +129,7 @@ export default function ScreenContentForm() {
       setSelectedImage(null);
       setStartDate(null);
       setEndDate(null);
+      setVideoFile(null);
       setSelectedVideo(null);
 
       if (selectedScreens.length > 0) {
@@ -185,20 +190,15 @@ export default function ScreenContentForm() {
     };
   };
 
-  const styl = {
-    marginTop: show ? "2vh" : "2vh",
-    opacity: show ? "0.3" : "1",
-    pointerEvents: show ? "none" : "auto",
-  };
   const handleVideoUpload = (e) => {
     const file = e.target.files[0];
-    setSelectedVideo(URL.createObjectURL(file)); // Store the video URL
-    setVideoFile(file); // Store the video file for later submission
+    setSelectedVideo(URL.createObjectURL(file));
+    setVideoFile(file);
   };
 
   return (
     <>
-      <ScreenPanel />
+      <Header />
 
       <Paper elevation={3}>
         <ToastContainer />
@@ -208,7 +208,6 @@ export default function ScreenContentForm() {
           className="form"
           autoComplete="off"
           onSubmit={handleSubmit}
-          style={styl}
           encType="multipart/form-data"
         >
           <Typography
@@ -295,84 +294,6 @@ export default function ScreenContentForm() {
               marginBottom: "20px",
             }}
           >
-            <label htmlFor="upload-photo" style={{ marginRight: "20px" }}>
-              <Fab
-                color="primary"
-                size="small"
-                component="span"
-                aria-label="add"
-                variant="extended"
-              >
-                <AddIcon /> {selectedImage ? "Change Photo" : "Upload Photo"}
-              </Fab>
-              <input
-                style={{ display: "none" }}
-                id="upload-photo"
-                name="image"
-                type="file"
-                onChange={(e) => handleImageUpload(e)}
-              />
-            </label>
-
-            {selectedImage && (
-              <div>
-                <img
-                  src={selectedImage}
-                  style={{
-                    maxWidth: "100%",
-                    height: "auto",
-                    maxHeight: "15vh",
-                  }}
-                  alt="Preview"
-                />
-              </div>
-            )}
-
-            <br />
-            <label htmlFor="upload-video" style={{ marginRight: "20px" }}>
-              <Fab
-                color="primary"
-                size="small"
-                component="span"
-                aria-label="add"
-                variant="extended"
-              >
-                <AddIcon /> {selectedVideo ? "Change Video" : "Upload Video"}
-              </Fab>
-              <input
-                style={{ display: "none" }}
-                id="upload-video"
-                name="video"
-                type="file"
-                accept="video/*"
-                onChange={(e) => handleVideoUpload(e)}
-              />
-            </label>
-
-            {selectedVideo && (
-              <div>
-                <video
-                  controls
-                  style={{
-                    maxWidth: "100%",
-                    height: "auto",
-                    maxHeight: "15vh",
-                  }}
-                >
-                  <source src={selectedVideo} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-            )}
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginBottom: "20px",
-            }}
-          >
             <FormControlLabel
               control={
                 <Switch
@@ -422,6 +343,97 @@ export default function ScreenContentForm() {
                 </LocalizationProvider>
               </div>
             </div>
+          )}
+
+          <FormControl variant="outlined" fullWidth margin="normal">
+            <InputLabel id="select-media-label">Select Media Type</InputLabel>
+            <Select
+              labelId="select-media-label"
+              value={mediaType}
+              onChange={(e) => handleMediaTypeChange(e.target.value)}
+              fullWidth
+            >
+              <MenuItem value="none">None</MenuItem>
+              <MenuItem value="image">Image</MenuItem>
+              <MenuItem value="video">Video</MenuItem>
+            </Select>
+          </FormControl>
+
+          {mediaType === "image" && (
+            <>
+              <label htmlFor="upload-photo" style={{ marginRight: "20px" }}>
+                <Fab
+                  color="primary"
+                  size="small"
+                  component="span"
+                  aria-label="add"
+                  variant="extended"
+                >
+                  <AddIcon /> {selectedImage ? "Change Photo" : "Upload Photo"}
+                </Fab>
+                <input
+                  style={{ display: "none" }}
+                  id="upload-photo"
+                  name="image"
+                  type="file"
+                  onChange={(e) => handleImageUpload(e)}
+                />
+              </label>
+
+              {selectedImage && (
+                <div>
+                  <img
+                    src={selectedImage}
+                    style={{
+                      maxWidth: "100%",
+                      height: "auto",
+                      maxHeight: "15vh",
+                    }}
+                    alt="Preview"
+                  />
+                </div>
+              )}
+            </>
+          )}
+
+          {mediaType === "video" && (
+            <>
+              <label htmlFor="upload-video" style={{ marginRight: "20px" }}>
+                <Fab
+                  color="primary"
+                  size="small"
+                  component="span"
+                  aria-label="add"
+                  variant="extended"
+                >
+                  <AddIcon /> {selectedVideo ? "Change Video" : "Upload Video"}
+                </Fab>
+                <input
+                  style={{ display: "none" }}
+                  id="upload-video"
+                  name="video"
+                  type="file"
+                  accept="video/*"
+                  onChange={(e) => handleVideoUpload(e)}
+                />
+              </label>
+
+              {selectedVideo && (
+                <div>
+                  <video
+                    controls
+                    style={{
+                      maxWidth: "100%",
+                      height: "auto",
+                      maxHeight: "15vh",
+                    }}
+                  >
+                    <source src={selectedVideo} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              )}
+            </>
           )}
 
           <FormControl variant="outlined" fullWidth margin="normal">
