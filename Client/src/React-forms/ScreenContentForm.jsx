@@ -79,7 +79,7 @@ export default function ScreenContentForm() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    // REga tingochinja something
     const formData = new FormData();
     formData.append("slideTitle", title);
     formData.append("post", text);
