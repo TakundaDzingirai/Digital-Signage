@@ -13,7 +13,9 @@ import {
   Switch,
   FormControlLabel,
 } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import AddIcon from "@mui/icons-material/Add";
+import ClearIcon from '@mui/icons-material/Clear';
 import { ToastContainer, toast } from "react-toastify";
 import ScreenPanel from "../ScreenComponents/ScreenPanel";
 import { useParams } from "react-router-dom";
@@ -277,44 +279,63 @@ export default function ScreenContentForm() {
                 />
               </div>
             )}
+
+            <br />
+            <label htmlFor="upload-video" style={{ marginRight: "20px" }}>
+              <Fab
+                color="primary"
+                size="small"
+                component="span"
+                aria-label="add"
+                variant="extended"
+              >
+                <AddIcon /> {selectedVideo ? "Change Video" : "Upload Video"}
+              </Fab>
+              <input
+                style={{ display: "none" }}
+                id="upload-video"
+                name="video"
+                type="file"
+                accept="video/*"
+                onChange={(e) => handleVideoUpload(e)}
+              />
+            </label>
+
+            {selectedVideo && (
+              <div>
+                <video
+                  controls
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto",
+                    maxHeight: "15vh",
+                  }}
+                >
+                  <source src={selectedVideo} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            )}
+
           </div>
-          <label htmlFor="upload-video" style={{ marginRight: "20px" }}>
+          <label htmlFor="cancel-upload" style={{ marginRight: "20px" }}>
             <Fab
               color="primary"
               size="small"
               component="span"
-              aria-label="add"
+              aria-label="cancel"
               variant="extended"
             >
-              <AddIcon /> {selectedVideo ? "Change Video" : "Upload Video"}
+              <ClearIcon /> {"Cancel Upload"}
             </Fab>
-            <input
-              style={{ display: "none" }}
-              id="upload-video"
-              name="video"
-              type="file"
-              accept="video/*"
-              onChange={(e) => handleVideoUpload(e)}
-            />
+            {/* <input
+                style={{ display: "none" }}
+                id="cancel-upload"
+                name="image"
+                type="file"
+                onChange={(e) => handleImageUpload(e)}
+              /> */}
           </label>
-
-          {selectedVideo && (
-            <div>
-              <video
-                controls
-                style={{
-                  maxWidth: "100%",
-                  height: "auto",
-                  maxHeight: "15vh",
-                }}
-              >
-                <source src={selectedVideo} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            </div>
-          )}
-
-
           <div
             style={{
               display: "flex",
