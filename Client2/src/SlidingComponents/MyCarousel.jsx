@@ -44,12 +44,23 @@ export default function MyCarousel() {
       Axios.get(`http://localhost:3000/content/allContent?screenId=${screenId}`)
         .then((response) => {
           setSlideData(response.data.content);
-          setSettings(response.data.settings);
+
           setLastUpdated(Date.now());
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
         });
+
+      Axios.get(`http://localhost:3000/screens/carousel/settings/${screenId}`)
+        .then((response) => {
+          console.log(response)
+
+          setSettings(response.data);
+          setDone(false);
+        }).catch((error) => {
+          console.error("Error fetching data:", error)
+        })
+
     };
 
     if (screenId && slideData.length === 0) {
