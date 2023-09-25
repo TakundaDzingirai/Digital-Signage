@@ -26,21 +26,6 @@ class userController {
     const newUser = new User(user);
     await newUser.save();
 
-    // Generate a JSON Web Token for user authentication
-    const token = jwt.sign(
-      {
-        id: user.id,
-        username: user.username,
-        department: user.department,
-        email: user.email,
-        role: user.role,
-      },
-      process.env.SECRET,
-      {
-        expiresIn: "7d",
-      }
-    );
-    console.log(token);
 
     // Respond with a success message, the new user, and the JWT
     res

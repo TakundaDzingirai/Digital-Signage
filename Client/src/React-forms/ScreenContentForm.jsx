@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
-import "./Form.css";
+import { useState, useEffect, useRef } from "react";
+// import "./Form.css";
 import {
+  Grid,
   TextField,
   Button,
   Paper,
@@ -11,7 +12,6 @@ import {
   InputLabel,
   Fab,
   Switch,
-  Grid,
   FormControlLabel,
 } from "@mui/material";
 
@@ -26,7 +26,14 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 // import Header from "../Header";
+import { useUser } from "../UserContext";
+import ResponsiveAppBar from "../ResponsiveAppBar";
 export default function ScreenContentForm() {
+
+
+  // Create ref objects for the file input elements
+  const imageInputRef = useRef(null);
+  const videoInputRef = useRef(null);
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
@@ -44,7 +51,11 @@ export default function ScreenContentForm() {
   const [qrCodeContent, setQrCodeContent] = useState("");
   const [isQrCodeEnabled, setIsQrCodeEnabled] = useState(false);
   const [mediaType, setMediaType] = useState("");
+  const { setUser, user } = useUser();
+  user.user.show = true;
 
+  const newC = user;
+  setUser(newC)
   useEffect(() => {
     const token = localStorage.getItem("token");
     const headers = {
@@ -177,12 +188,14 @@ export default function ScreenContentForm() {
   };
 
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
+    console.log("in HandleImage")
+    let file = e.target.files[0];
     setFile(file);
     previewFiles(file);
   };
 
   const previewFiles = (file) => {
+    console.log("Handle Preview")
     const reader = new FileReader();
     reader.readAsDataURL(file);
 
@@ -192,6 +205,7 @@ export default function ScreenContentForm() {
   };
 
   const handleVideoUpload = (e) => {
+    console.log("Handle video")
     const file = e.target.files[0];
     setSelectedVideo(URL.createObjectURL(file));
     setVideoFile(file);
@@ -199,6 +213,8 @@ export default function ScreenContentForm() {
 
   return (
     <>
+      <ResponsiveAppBar />
+
       <Paper elevation={3}>
         <ToastContainer />
         {show && <CircularIndeterminate />}
@@ -477,14 +493,20 @@ export default function ScreenContentForm() {
                 variant="contained"
                 color="primary"
                 type="submit"
-                // sx={{ mt: 3 }}
+              // sx={{ mt: 3 }}
               >
                 Upload Content
               </Button>
             </Grid>
           </Grid>
         </form>
-      </Paper>
+      </Paper >
     </>
   );
 }
+
+
+
+
+
+

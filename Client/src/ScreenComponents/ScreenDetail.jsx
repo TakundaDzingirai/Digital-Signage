@@ -12,10 +12,11 @@ import {
   Grid,
 } from "@mui/material";
 import Slides from "./Slides";
-import Header from "../Header";
 import Footer from "../Footer";
 import EmptyDataAlert from "../EmptyDataAlert";
 import ErrorAlert from "./ErrorAlert";
+import ResponsiveAppBar from "../ResponsiveAppBar";
+import { useUser } from "../UserContext";
 
 const ScreenDetail = () => {
   const { id } = useParams();
@@ -24,6 +25,12 @@ const ScreenDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [emptyData, setEmptyData] = useState(false);
+  const { user, setUser } = useUser();
+
+  user.other.screenId = id;
+  const neww = user;
+  setUser(neww);
+  console.log(user);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,8 +59,8 @@ const ScreenDetail = () => {
 
   return (
     <div>
-      <Header />
-      <Container maxWidth="lg" style={{ paddingTop: "20px" }}>
+      <ResponsiveAppBar show={false} />
+      <Container maxWidth="md" style={{ paddingTop: "20px" }}>
         <Paper
           elevation={3}
           style={{ padding: "20px", marginTop: "25px", marginBottom: "30px" }}
