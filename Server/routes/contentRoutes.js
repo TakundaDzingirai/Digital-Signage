@@ -98,8 +98,6 @@ router.post("/:screenId", async (req, res) => {
   }
 });
 
-// ... rest of your routes remain unchanged
-
 // This route will be used to delete content from a screen
 router.delete("/:contentId", catchAsync(contentController.deleteContent));
 

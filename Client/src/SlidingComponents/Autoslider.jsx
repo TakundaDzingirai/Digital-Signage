@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Carousel from "react-material-ui-carousel";
 import Item from "./Item";
 import "./Carousel.css";
@@ -23,9 +23,8 @@ export default function AutoSlider() {
   const [typewriter, setTypewriter] = useState(false);
   const [slideDuration, setSlideDuration] = useState(2);
   const [slideInterval, setSlideInterval] = useState(5);
-
   const [transitionType, setTransitionType] = useState("fade");
-  const [background, setbackground] = useState(false);
+  const [background, setbackground] = useState(true);
   const [size, setFontSize] = useState(12);
   const [textColor, setTextColor] = useState("#000000");
   const [backgroundColor, setBackgroundColor] = useState("#FFFFFF");
@@ -39,10 +38,11 @@ export default function AutoSlider() {
     bold: false,
     italic: false,
   });
-
   const [pSize, setParagraph] = useState("5px");
   const [hSize, setHeader] = useState("18px");
   const [myfont, setFont] = useState("Times New Roman, serif");
+  const [screenSettings, setScreenSettings] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleSlideDurationChange = (event, newValue) => {
     setSlideDuration(newValue);
@@ -51,37 +51,74 @@ export default function AutoSlider() {
     setSlideInterval(newValue);
   };
 
-  const saveData = async () => {
-    console.log(typewriter);
-    const settings = {
-      slideDuration: slideDuration,
-      slideInterval: slideInterval,
-      typeWriter: typewriter,
-      background: background,
-      textColor: textColor,
-      backgroundColor: backgroundColor,
-      textAlign: textAlign,
-      fontWeight: fontWeight,
-      pSize: pSize,
-      hSize: hSize,
-      myfont: myfont,
-      transitionType: transitionType,
+  useEffect(() => {
+    const fetchScreenSettings = async () => {
+      try {
+        const response = await Axios.get(
+          //carousel/settings/:id
+          `http://localhost:3000/screens/carousel/settings/${id}`
+        );
+        if (response.status === 200) {
+          const settings = response.data;
+          setScreenSettings(settings);
+          setSlideDuration(settings.slideDuration);
+          setSlideInterval(settings.slideInterval);
+          setTypewriter(settings.typeWriter);
+          setbackground(settings.background);
+          setTextColor(settings.textColor);
+          setBackgroundColor(settings.backgroundColor);
+          setTextAlign(settings.textAlign);
+          setFontWeight(settings.fontWeight);
+          setParagraph(settings.pSize);
+          setHeader(settings.hSize);
+          setFont(settings.myFont);
+          setTransitionType(settings.transitionType);
+          setIsLoading(false);
+          console.log("SLIDE DURATION.....", settings.slideDuration);
+        } else {
+          toast.error("Error fetching screen settings");
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error("Failed to fetch screen settings");
+      }
     };
+    fetchScreenSettings();
+  }, [id]);
+
+  const saveSettings = async () => {
+    const settings = {
+      slideDuration,
+      slideInterval,
+      typeWriter: typewriter,
+      background,
+      textColor,
+      backgroundColor,
+      textAlign,
+      fontWeight,
+      pSize,
+      hSize,
+      myFont: myfont,
+      transitionType,
+    };
+
     try {
-      const response = await Axios.post(
+      const response = await Axios.put(
         `http://localhost:3000/screens/carousel/${id}`,
         settings
       );
       if (response.status === 200) {
-        console.log("status");
-        toast.success(response.data);
+        console.log("Saved Successfully");
+        toast.success("Settings saved successfully");
       } else {
-        toast.error(response);
+        toast.error("Error saving settings");
       }
     } catch (error) {
       console.log(error);
+      toast.error("Failed to save settings");
     }
   };
+
   return (
     <>
       <ToastContainer />
@@ -138,9 +175,10 @@ export default function AutoSlider() {
                 <Typography sx={{ mb: 1, mt: 1 }}>
                   Adjust the time it takes for transitions to occur (in seconds)
                 </Typography>
+
                 <Slider
                   aria-label="Custom marks"
-                  defaultValue={slideDuration}
+                  value={slideDuration}
                   step={1}
                   valueLabelDisplay="auto"
                   min={2}
@@ -166,7 +204,7 @@ export default function AutoSlider() {
                 </Typography>
                 <Slider
                   aria-label="Custom marks"
-                  defaultValue={slideInterval}
+                  value={slideInterval}
                   step={1}
                   valueLabelDisplay="auto"
                   min={1}
@@ -235,7 +273,7 @@ export default function AutoSlider() {
             <Button
               style={{ marginRight: "1em" }}
               variant="contained"
-              onClick={saveData}
+              onClick={saveSettings}
             >
               Save
             </Button>
