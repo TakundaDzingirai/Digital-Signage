@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 // import "./Form.css";
 import {
   Grid,
@@ -12,7 +12,6 @@ import {
   InputLabel,
   Fab,
   Switch,
-  Grid,
   FormControlLabel,
 } from "@mui/material";
 
@@ -27,6 +26,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 // import Header from "../Header";
+import { useUser } from "../UserContext";
+import ResponsiveAppBar from "../ResponsiveAppBar";
 export default function ScreenContentForm() {
 
 
@@ -50,7 +51,10 @@ export default function ScreenContentForm() {
   const [qrCodeContent, setQrCodeContent] = useState("");
   const [isQrCodeEnabled, setIsQrCodeEnabled] = useState(false);
   const [mediaType, setMediaType] = useState("");
+  const { setUser, user } = useUser();
+  user.user.show = true;
 
+  const newC = user;
   setUser(newC)
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -209,6 +213,8 @@ export default function ScreenContentForm() {
 
   return (
     <>
+      <ResponsiveAppBar />
+
       <Paper elevation={3}>
         <ToastContainer />
         {show && <CircularIndeterminate />}

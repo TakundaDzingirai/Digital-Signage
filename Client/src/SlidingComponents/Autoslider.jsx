@@ -15,6 +15,8 @@ import AutosliderBar from "../ScreenComponents/DesignComponents/AutosliderBar";
 import Footer from "../Footer";
 import Axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import ResponsiveAppBar from "../ResponsiveAppBar";
+import { useUser } from "../UserContext";
 
 export default function AutoSlider() {
     const location = useLocation();
@@ -43,7 +45,13 @@ export default function AutoSlider() {
     const [myfont, setFont] = useState("Times New Roman, serif");
     const [screenSettings, setScreenSettings] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const { setUser, user } = useUser();
+    user.user.show = true;
 
+
+    const newC = user;
+
+    setUser(newC)
     const handleSlideDurationChange = (event, newValue) => {
         setSlideDuration(newValue);
     };
@@ -121,6 +129,7 @@ export default function AutoSlider() {
 
     return (
         <>
+            <ResponsiveAppBar />
             <ToastContainer />
             <AutosliderBar
                 setTextColor={setTextColor}
