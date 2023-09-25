@@ -29,8 +29,6 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { useUser } from "../UserContext";
 import ResponsiveAppBar from "../ResponsiveAppBar";
 export default function ScreenContentForm() {
-
-
   // Create ref objects for the file input elements
   const imageInputRef = useRef(null);
   const videoInputRef = useRef(null);
@@ -55,7 +53,7 @@ export default function ScreenContentForm() {
   user.user.show = true;
 
   const newC = user;
-  setUser(newC)
+  setUser(newC);
   useEffect(() => {
     const token = localStorage.getItem("token");
     const headers = {
@@ -188,14 +186,14 @@ export default function ScreenContentForm() {
   };
 
   const handleImageUpload = (e) => {
-    console.log("in HandleImage")
+    console.log("in HandleImage");
     let file = e.target.files[0];
     setFile(file);
     previewFiles(file);
   };
 
   const previewFiles = (file) => {
-    console.log("Handle Preview")
+    console.log("Handle Preview");
     const reader = new FileReader();
     reader.readAsDataURL(file);
 
@@ -205,17 +203,22 @@ export default function ScreenContentForm() {
   };
 
   const handleVideoUpload = (e) => {
-    console.log("Handle video")
+    console.log("Handle video");
     const file = e.target.files[0];
     setSelectedVideo(URL.createObjectURL(file));
     setVideoFile(file);
   };
 
+  const MAX_FORM_HEIGHT = "80vh";
+
   return (
     <>
       <ResponsiveAppBar />
 
-      <Paper elevation={3}>
+      <Paper
+        elevation={3}
+        style={{ maxHeight: MAX_FORM_HEIGHT, overflowY: "auto" }}
+      >
         <ToastContainer />
         {show && <CircularIndeterminate />}
 
@@ -227,7 +230,7 @@ export default function ScreenContentForm() {
         >
           <Typography
             variant="h5"
-            color="primary"
+            color="#1e366a"
             style={{
               fontWeight: "bold",
               marginBottom: "1rem",
@@ -493,20 +496,14 @@ export default function ScreenContentForm() {
                 variant="contained"
                 color="primary"
                 type="submit"
-              // sx={{ mt: 3 }}
+                // sx={{ mt: 3 }}
               >
                 Upload Content
               </Button>
             </Grid>
           </Grid>
         </form>
-      </Paper >
+      </Paper>
     </>
   );
 }
-
-
-
-
-
-

@@ -79,10 +79,10 @@ export default function Screen({ screen, listOfScreen, setListOfScreen }) {
   return (
     <Paper elevation={3} className="screen" style={{ position: "relative" }}>
       <Link to={`/screens/${screen._id}`} style={{ textDecoration: "none" }}>
-        <CardContent>
+        <CardContent style={{ height: "80px" }}>
           <Typography
             variant="h5"
-            color="primary"
+            color="#1e366a"
             style={{ fontWeight: "bold" }}
           >
             {screen.screenName}
@@ -91,7 +91,7 @@ export default function Screen({ screen, listOfScreen, setListOfScreen }) {
             style={{ display: "flex", alignItems: "center", marginTop: "8px" }}
           >
             <AppsIcon sx={{ marginRight: 1 }} />
-            <Typography color="textSecondary" variant="body2">
+            <Typography color="#444" variant="body2">
               Department: {screen.department}
             </Typography>
           </div>
