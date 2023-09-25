@@ -13,11 +13,17 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Card,
+  CardMedia,
+  Box,
+  IconButton,
 } from "@mui/material";
-
 import { ToastContainer, toast } from "react-toastify";
-import moment from "moment";
-
+import dayjs from "dayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import Footer from "../Footer";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -25,6 +31,8 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import ResponsiveAppBar from "../ResponsiveAppBar";
 import { useUser } from "../UserContext";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import CreateIcon from "@mui/icons-material/Create";
 const theme = createTheme();
 
 export default function SlideContent() {
@@ -43,11 +51,9 @@ export default function SlideContent() {
 
   const newC = user;
 
-  setUser(newC)
+  setUser(newC);
 
-
-
-  console.log("this", newC)
+  console.log("this", newC);
 
   const fetchData = async () => {
     try {
@@ -157,7 +163,7 @@ export default function SlideContent() {
       <ResponsiveAppBar show={true} />
       <ToastContainer />
 
-      <Container maxWidth="md" style={{ marginTop: theme.spacing(2) }}>
+      <Container maxWidth="lg" style={{ marginTop: theme.spacing(12) }}>
         {content.map((c) => (
           <Paper
             key={c._id}
@@ -168,64 +174,80 @@ export default function SlideContent() {
             }}
           >
             <Typography
-              variant="h3"
-              style={{
-                fontSize: "2rem",
-                fontWeight: "bold",
-                color: "#1e366a",
-                marginBottom: "0.5rem",
-              }}
+              variant="h4"
+              component="h2"
+              color="primary"
+              sx={{ fontWeight: "bold", marginBottom: "1rem" }}
             >
               {c.slideTitle}
             </Typography>
             <Divider sx={{ my: 2 }} />
-            <Typography
-              variant="body1"
-              paragraph
-              style={{
-                color: "#333",
-                lineHeight: "1.5",
-              }}
-            >
-              {c.post}
-            </Typography>
-
-            <Grid
-              container
-              spacing={2}
-              justifyContent="center"
-              style={{ marginTop: theme.spacing(2) }}
-            >
-              <Grid item>
-                <Button
-                  variant="outlined"
+            <Grid container spacing={2} justifyContent="center">
+              <Grid item xs={12} sm={6} md={6} lg={4}>
+                {/* Conditionally render CardMedia for image */}
+                {c.image && (
+                  <Card>
+                    <CardMedia
+                      component="img"
+                      alt="Slide Image"
+                      src={c.image.url}
+                      style={{ width: "100%", height: "auto" }}
+                    />
+                  </Card>
+                )}
+                {/* Conditionally render CardMedia for video */}
+                {c.video && (
+                  <Card>
+                    <CardMedia component="video" controls>
+                      <source src={c.video.url} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </CardMedia>
+                  </Card>
+                )}
+              </Grid>
+              <Grid item xs={12} sm={6} md={6} lg={8}>
+                <Typography
+                  variant="body1"
+                  paragraph
+                  color="textPrimary"
+                  sx={{ lineHeight: "1.5" }}
+                >
+                  {c.post}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid container justifyContent="center" alignItems="flex-end">
+              <Box>
+                <IconButton
                   color="error"
-                  startIcon={<DeleteIcon />}
+                  aria-label="Delete"
                   onClick={handleDelete}
                   disabled={isLoading}
                 >
+                  <DeleteForeverIcon />
+                </IconButton>
+                <Typography variant="subtitle2" color="textSecondary">
                   Delete
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="outlined"
+                </Typography>
+              </Box>
+              <Box sx={{ marginLeft: "20px" }}>
+                {" "}
+                {/* Added margin here */}
+                <IconButton
                   color="primary"
-                  startIcon={<EditIcon />}
+                  aria-label="Edit"
                   onClick={handleEdit}
                   disabled={isLoading}
                 >
+                  <EditIcon />
+                </IconButton>
+                <Typography variant="subtitle2" color="textSecondary">
                   Edit
-                </Button>
-              </Grid>
+                </Typography>
+              </Box>
+              {/* Conditionally render Play Video button */}
+              {c.video && <Box></Box>}
             </Grid>
-            <Typography
-              variant="subtitle2"
-              color="textSecondary"
-              style={{ marginTop: "20px", textAlign: "center" }}
-            >
-              Created: {moment(c.createdAt).format("MMMM D, YYYY, h:mm:ss A")}
-            </Typography>
           </Paper>
         ))}
       </Container>
@@ -245,7 +267,7 @@ export default function SlideContent() {
             label="Slide Title"
             fullWidth
             margin="normal"
-            value={editedContent.slideTitle}
+            value={editedContent.slideTitle || ""}
             onChange={(e) =>
               setEditedContent({ ...editedContent, slideTitle: e.target.value })
             }
@@ -256,17 +278,48 @@ export default function SlideContent() {
             rows={4}
             fullWidth
             margin="normal"
-            value={editedContent.post}
+            value={editedContent.post || ""}
             onChange={(e) =>
               setEditedContent({ ...editedContent, post: e.target.value })
             }
           />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={["DateTimePicker", "DateTimePicker"]}>
+              <DateTimePicker
+                label="Start date"
+                value={dayjs(editedContent.startDate)}
+                onChange={(e) =>
+                  setEditedContent({
+                    ...editedContent,
+                    startDate: dayjs(e).toISOString(),
+                  })
+                }
+                slotProps={{ textField: { fullWidth: true } }}
+              />
+            </DemoContainer>
+          </LocalizationProvider>
+
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={["DateTimePicker", "DateTimePicker"]}>
+              <DateTimePicker
+                label="End date"
+                value={dayjs(editedContent.endDate)}
+                onChange={(e) =>
+                  setEditedContent({
+                    ...editedContent,
+                    endDate: dayjs(e).toISOString(),
+                  })
+                }
+                slotProps={{ textField: { fullWidth: true } }}
+              />
+            </DemoContainer>
+          </LocalizationProvider>
         </DialogContent>
         <DialogActions>
           <Button
             variant="outlined"
             color="primary"
-            startIcon={<EditIcon />}
+            startIcon={<CreateIcon />}
             onClick={handleSaveEdit}
             disabled={isLoading}
           >
@@ -299,7 +352,7 @@ export default function SlideContent() {
           <Button
             variant="outlined"
             color="error"
-            // startIcon={<DeleteIcon />}
+            startIcon={<DeleteIcon />}
             onClick={handleConfirmDelete}
             disabled={isLoading}
           >
@@ -308,7 +361,7 @@ export default function SlideContent() {
           <Button
             variant="outlined"
             color="primary"
-            // startIcon={<CancelIcon />}
+            startIcon={<CancelIcon />}
             onClick={handleCancelDelete}
           >
             No

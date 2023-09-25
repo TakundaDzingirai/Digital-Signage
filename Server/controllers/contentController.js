@@ -30,16 +30,22 @@ class contentController {
     // Get the screen ID associated with the content
     const screenId = content.screen;
     // Remove the content ID from the associated screen
+
+    console.log("Content ID:", contentId);
+    console.log("Screen ID:", screenId);
+
     await Screen.findByIdAndUpdate(screenId, {
       $pull: { content: contentId },
     });
+    // Delete the content document itself
+    await Content.findByIdAndDelete(contentId);
     res.json("Content deleted successfully");
   }
 
   static async editContent(req, res) {
     const { contentId } = req.params;
     // Extract content data from the re.body
-    const { slideTitle, post, imageUrl } = req.body;
+    const { slideTitle, post, imageUrl, startDate, endDate } = req.body;
     // Find the content by its ID
     const content = await Content.findById(contentId);
     if (!content) {
@@ -49,6 +55,8 @@ class contentController {
     content.slideTitle = slideTitle;
     content.post = post;
     content.imageUrl = imageUrl;
+    content.startDate = startDate || null;
+    content.endDate = endDate || null;
     // Save the updated content
     const updatedContent = await content.save();
     res.json(updatedContent);
