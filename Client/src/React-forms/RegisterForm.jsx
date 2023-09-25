@@ -163,7 +163,7 @@ function RegisterForm() {
       {show && <CircularIndeterminate info={"Registering..."} />}
 
       <ThemeProvider theme={theme}>
-        <ResponsiveAppBar show={false} />
+
 
         <Container component="main" maxWidth="sm" style={styl}>
           <CssBaseline />

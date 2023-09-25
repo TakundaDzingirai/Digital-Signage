@@ -122,7 +122,10 @@ export default function Item({ item, typewriter, background, size, textColor, ba
                         playsInline
                     />
                 </div>
+
+
             ) : null}
+            {item.qrCodeImage ? (<img className="Qr" src={item.qrCodeImage} />) : null}
         </Paper>
     );
 }

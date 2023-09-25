@@ -119,6 +119,7 @@ export default function Item({ item, typeWriter, background, textColor, backgrou
                     />
                 </div>
             ) : null}
+            {item.qrCodeImage ? (<img className="Qr" src={item.qrCodeImage} />) : null}
         </Paper >
 
     );
