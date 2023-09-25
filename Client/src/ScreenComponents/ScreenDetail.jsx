@@ -105,7 +105,7 @@ const ScreenDetail = () => {
             color="primary"
             sx={{ marginTop: "20px", alignSelf: "center" }}
           >
-            Add Slide
+            Add Content
           </Button>
         </Paper>
       </Container>

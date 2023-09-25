@@ -261,7 +261,7 @@ export default function SlideContent() {
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle>Edit Slide</DialogTitle>
+        <DialogTitle>Edit Content</DialogTitle>
         <DialogContent>
           <TextField
             label="Slide Title"
@@ -342,10 +342,10 @@ export default function SlideContent() {
         onClose={handleCancelDelete}
         maxWidth="sm"
       >
-        <DialogTitle>Delete Slide</DialogTitle>
+        <DialogTitle>Delete content</DialogTitle>
         <DialogContent>
           <Typography variant="body1">
-            Are you sure you want to delete this slide?
+            Are you sure you want to delete this content?
           </Typography>
         </DialogContent>
         <DialogActions>
