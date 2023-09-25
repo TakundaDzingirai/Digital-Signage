@@ -87,7 +87,7 @@ export default function Login() {
         const usr = user.username;
         const role = user.role;
         setUserName(usr);
-        setUser({ user: { username: usr, show: false }, role: role })
+        setUser({ user: { username: usr, show: false }, other: { role: role, screenId: "" } })
         localStorage.setItem("token", token);
         const id = toast.success(`Welcome back, ${usr}`);
 

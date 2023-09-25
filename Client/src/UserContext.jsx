@@ -3,11 +3,11 @@ import { createContext, useContext, useState } from "react";
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-    const [user, setUser] = useState({ user: { username: null, show: false }, role: null });
+    const [user, setUser] = useState({ user: { username: null, show: false }, other: { role: null, screenId: "" } });
 
     const clearUser = () => {
         // Perform any necessary cleanup when the user logs out
-        setUser({ user: { username: null, show: false }, role: null });
+        setUser({ user: { username: null, show: false }, other: { role: null, screenId: "" } });
     }
 
     return (

@@ -40,8 +40,11 @@ function ResponsiveAppBar({ }) {
         if (page === "Screens") {
             navigate("/screens")
         }
-        if (page === "Register") {
+        else if (page === "Register") {
             navigate("/register")
+        }
+        else if (page === "Content") {
+            navigate(`/screens/${user.other.screenId}`)
         }
     }
 
@@ -49,7 +52,7 @@ function ResponsiveAppBar({ }) {
         setAnchorElUser(null);
     };
     const handleLogout = () => {
-        setUser({ user: { username: null, show: false }, role: null });
+        setUser({ user: { username: null, show: false }, other: { role: null, screenId: "" } });
 
         // Navigate to the root ("/") after logout
         navigate("/");
@@ -109,7 +112,7 @@ function ResponsiveAppBar({ }) {
                         >
                             {pages.map((page) => (
                                 <MenuItem key={page} onClick={() => handleNavItems(page)}>
-                                    {(user.user.username && user.role === "admin") || (user.user.username && (page !== "Register" && page !== "Content")) || (user.user.username && page === "Content" && user.user.show) ? (<Typography textAlign="center">{page}</Typography>) : null}
+                                    {(user.user.username && user.other.role === "admin" && page !== "Content") || (user.user.username && (page !== "Register" && page !== "Content")) || (user.user.username && page === "Content" && user.user.show) ? (<Typography textAlign="center">{page}</Typography>) : null}
                                 </MenuItem>
                             ))}
                         </Menu>
@@ -135,7 +138,7 @@ function ResponsiveAppBar({ }) {
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {pages.map((page) => (
-                            (user.user.username && user.role === "admin") || (user.user.username && (page !== "Register" && page !== "Content")) || (user.user.username && page === "Content" && user.user.show) ? (
+                            (user.user.username && user.other.role === "admin" && page !== "Content") || (user.user.username && (page !== "Register" && page !== "Content")) || (user.user.username && page === "Content" && user.user.show) ? (
                                 <Button
                                     key={page}
                                     onClick={() => handleNavItems(page)}
