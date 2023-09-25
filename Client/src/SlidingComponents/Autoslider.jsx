@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import Carousel from "react-material-ui-carousel";
 import Item from "./Item";
 import "./Carousel.css";
@@ -9,18 +9,16 @@ import Radio from "@mui/material/Radio";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { Button } from "@mui/material";
+import { Button, Card, CardContent, Grid, Box } from "@mui/material";
 import Switch from "@mui/material/Switch";
-import Grid from "@mui/material/Grid";
 import AutosliderBar from "../ScreenComponents/DesignComponents/AutosliderBar";
 import Footer from "../Footer";
 import Axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+
 export default function AutoSlider() {
-  // const [fade, setFade] = useState(false);
-  // const [slide, setSlide] = useState(true);
   const location = useLocation();
-  const { SlideData } = location.state || {}; // Extract SlideData from location state
+  const { SlideData } = location.state || {};
   const { id } = useParams();
   const [typewriter, setTypewriter] = useState(false);
   const [slideDuration, setSlideDuration] = useState(2);
@@ -84,7 +82,6 @@ export default function AutoSlider() {
       console.log(error);
     }
   };
-
   return (
     <>
       <ToastContainer />
@@ -106,12 +103,13 @@ export default function AutoSlider() {
         justifyContent="center"
         alignItems="center"
         style={{ position: "relative", zIndex: 1 }}
+        sx={{ p: 5 }}
       >
-        <Grid item xs={12} sm={10} md={8} lg={6}>
+        <Grid item xs={12} sm={10} md={10} lg={8}>
           <Carousel
-            animation={transitionType} // Set the animation based on state
+            animation={transitionType}
             duration={slideDuration * 1000}
-            interval={slideInterval * 1000} // Convert seconds to milliseconds
+            interval={slideInterval * 1000}
             stopAutoPlayOnHover={true}
             indicators={true}
             navButtonsAlwaysVisible={true}
@@ -134,102 +132,115 @@ export default function AutoSlider() {
             ))}
           </Carousel>
 
-          <br></br>
-          <Typography gutterBottom>
-            Adjust the time it takes for transitions to occur (in seconds)
-          </Typography>
-          <Slider
-            aria-label="Custom marks"
-            defaultValue={slideDuration}
-            step={1}
-            valueLabelDisplay="auto"
-            min={2}
-            max={5}
-            marks={[
-              {
-                value: 2,
-                label: "2s",
-              },
-              {
-                value: slideDuration,
-                label: `${slideDuration}s`,
-              },
-              {
-                value: 5,
-                label: "5s",
-              },
-            ]}
-            onChange={handleSlideDurationChange}
-          />
-          <Typography gutterBottom>
-            Specify the time between slides (in seconds)
-          </Typography>
-          <Slider
-            aria-label="Custom marks"
-            defaultValue={slideInterval}
-            step={1}
-            valueLabelDisplay="auto"
-            min={1}
-            max={120}
-            marks={[
-              {
-                value: slideInterval,
-                label: `${slideInterval}s`,
-              },
-            ]}
-            onChange={handleSlideIntervalChange}
-          />
-
-          <Typography gutterBottom> set image as background</Typography>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={background}
-                onChange={() => setbackground(!background)}
-              />
-            }
-            label="Background"
-          />
-          <Typography gutterBottom> animation effects</Typography>
-
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <RadioGroup
-              aria-label="Transition Type"
-              name="transitionType"
-              value={transitionType}
-              onChange={(e) => setTransitionType(e.target.value)}
-              row
-            >
-              <FormControlLabel value="fade" control={<Radio />} label="Fade" />
-              <FormControlLabel
-                value="slide"
-                control={<Radio />}
-                label="Slide"
-              />
-            </RadioGroup>
-
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={typewriter}
-                  onChange={() => setTypewriter(!typewriter)}
+          <Box mt={3}>
+            <Card variant="outlined">
+              <CardContent>
+                <Typography sx={{ mb: 1, mt: 1 }}>
+                  Adjust the time it takes for transitions to occur (in seconds)
+                </Typography>
+                <Slider
+                  aria-label="Custom marks"
+                  defaultValue={slideDuration}
+                  step={1}
+                  valueLabelDisplay="auto"
+                  min={2}
+                  max={5}
+                  marks={[
+                    {
+                      value: 2,
+                      label: "2s",
+                    },
+                    {
+                      value: slideDuration,
+                      label: `${slideDuration}s`,
+                    },
+                    {
+                      value: 5,
+                      label: "5s",
+                    },
+                  ]}
+                  onChange={handleSlideDurationChange}
                 />
-              }
-              label="Typewriter"
-            />
-          </div>
+                <Typography gutterBottom sx={{ mb: 1, mt: 1 }}>
+                  Specify the time between slides (in seconds)
+                </Typography>
+                <Slider
+                  aria-label="Custom marks"
+                  defaultValue={slideInterval}
+                  step={1}
+                  valueLabelDisplay="auto"
+                  min={1}
+                  max={120}
+                  marks={[
+                    {
+                      value: slideInterval,
+                      label: `${slideInterval}s`,
+                    },
+                  ]}
+                  onChange={handleSlideIntervalChange}
+                />
 
-          <br></br>
-          <Button
-            style={{ marginInline: "1em" }}
-            variant="contained"
-            onClick={saveData}
-          >
-            Save
-          </Button>
-          <Button style={{ marginInline: "1em" }} variant="contained">
-            Reset
-          </Button>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={background}
+                      onChange={() => setbackground(!background)}
+                    />
+                  }
+                  label={
+                    background
+                      ? "Remove image as background"
+                      : "Set image as background"
+                  }
+                />
+
+                <Typography sx={{ mt: 1, mb: 1 }} variant="h5">
+                  Animation Effects
+                </Typography>
+                <Box display="flex" justifyContent="center">
+                  <RadioGroup
+                    aria-label="Transition Type"
+                    name="transitionType"
+                    value={transitionType}
+                    onChange={(e) => setTransitionType(e.target.value)}
+                    row
+                  >
+                    <FormControlLabel
+                      value="fade"
+                      control={<Radio />}
+                      label="Fade"
+                    />
+                    <FormControlLabel
+                      value="slide"
+                      control={<Radio />}
+                      label="Slide"
+                    />
+                  </RadioGroup>
+
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={typewriter}
+                        onChange={() => setTypewriter(!typewriter)}
+                      />
+                    }
+                    label="Typewriter"
+                  />
+                </Box>
+              </CardContent>
+            </Card>
+          </Box>
+
+          <Box mt={3}>
+            <Button
+              style={{ marginRight: "1em" }}
+              variant="contained"
+              onClick={saveData}
+            >
+              Save
+            </Button>
+            <Button variant="contained">Reset</Button>
+          </Box>
         </Grid>
       </Grid>
       <Footer />
