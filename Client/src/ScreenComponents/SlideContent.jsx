@@ -176,7 +176,7 @@ export default function SlideContent() {
             <Typography
               variant="h4"
               component="h2"
-              color="primary"
+              color="#1e366a"
               sx={{ fontWeight: "bold", marginBottom: "1rem" }}
             >
               {c.slideTitle}

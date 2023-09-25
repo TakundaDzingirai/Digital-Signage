@@ -78,11 +78,11 @@ const ScreenDetail = () => {
           <Divider sx={{ my: 2 }} />
 
           <Typography
-            variant="h5"
-            component="h2"
+            variant="h4"
+            component="h3"
             align="center"
-            color="primary"
-            sx={{ fontWeight: "bold" }}
+            color="#1e366a"
+            sx={{ fontWeight: "bold", marginBottom: "1em", marginTop: "0.5em" }}
           >
             Screen Contents
           </Typography>

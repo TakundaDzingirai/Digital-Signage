@@ -81,7 +81,7 @@ const Slide = ({ s, screenId }) => {
         }}
       >
         <Button variant="outlined" onClick={handleNavigation}>
-          More
+          More Details
         </Button>
       </Box>
     </Card>
