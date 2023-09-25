@@ -80,7 +80,7 @@ export default function AutosliderBar({
     return (
         <>
 
-            <Container maxWidth="lg">
+            <Container maxWidth="lg" style={{ marginTop: "2vh" }}>
                 <div
                     style={{
                         height: '2vh',
@@ -176,7 +176,7 @@ export default function AutosliderBar({
 
                     </Grid>
                 </Grid>
-            </Container>
+            </Container >
         </>
     );
 }

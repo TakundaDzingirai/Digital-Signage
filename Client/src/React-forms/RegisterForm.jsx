@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 import "./Form.css";
 import Axios from "axios";
 import {
@@ -26,6 +27,8 @@ import Header from "../Header";
 import CircularIndeterminate from "../CircularIndeterminate";
 import { registrationValidation } from "../Validations/validations";
 import * as Yup from "yup";
+import ResponsiveAppBar from "../ResponsiveAppBar";
+
 
 const theme = createTheme();
 function RegisterForm() {
@@ -66,11 +69,23 @@ function RegisterForm() {
   useEffect(() => {
     if (registered) {
       setShow(false);
-      setTimeout(() => {
-        navigate("/screens");
-      }, 2000);
+
+      setRegistrationData({
+        firstname: "",
+        lastname: "",
+        department: "",
+        email: "",
+        username: "",
+        password: "",
+        role: "",
+      })
+      setRegister(false)
+      toast.success("Registered successfully")
+
+
+
     }
-  }, [show, registered, navigate]);
+  }, [registered]);
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
@@ -110,10 +125,12 @@ function RegisterForm() {
       if (response.status === 201) {
         const data = response.data;
 
-        const token = data.token;
-        localStorage.setItem("token", token);
+        // const token = data.token;
+        // localStorage.setItem("token", token);
 
         setRegister(true);
+
+
       } else {
         console.error("Registration failed");
       }
@@ -140,11 +157,14 @@ function RegisterForm() {
 
   return (
     <>
-      <Header />
+      <ResponsiveAppBar />
+      <ToastContainer />
 
       {show && <CircularIndeterminate info={"Registering..."} />}
 
       <ThemeProvider theme={theme}>
+        <ResponsiveAppBar show={false} />
+
         <Container component="main" maxWidth="sm" style={styl}>
           <CssBaseline />
           <Paper

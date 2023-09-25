@@ -2,7 +2,7 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import jwt_decode from "jwt-decode";
 import Axios from "axios";
-import Header from "../Header.jsx";
+
 import "react-toastify/dist/ReactToastify.css";
 import {
   Avatar,
@@ -22,10 +22,12 @@ import CircularIndeterminate from "../CircularIndeterminate";
 import { useEffect, useState } from "react";
 import { validationSchema } from "../Validations/validations.js";
 import * as Yup from "yup";
-
+import { useUser } from "../UserContext";
+import ResponsiveAppBar from "../ResponsiveAppBar.jsx";
 const theme = createTheme();
 
 export default function Login() {
+  const { setUser } = useUser();
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
@@ -35,6 +37,7 @@ export default function Login() {
     password: "",
   });
   const [errors, setErrors] = useState({});
+  const [username, setUserName] = useState("");
 
   useEffect(() => {
     if (loginSuccess && toastId) {
@@ -44,7 +47,7 @@ export default function Login() {
         const isActive = toast.isActive(toastId);
         if (isActive) {
           toast.done();
-          navigate("/screens");
+          navigate("/screens", { state: { username } });
         }
       }, 2000);
     }
@@ -81,10 +84,12 @@ export default function Login() {
         const responseData = response.data;
         const token = responseData.token;
         const user = jwt_decode(token);
-        const username = user.username;
-
+        const usr = user.username;
+        const role = user.role;
+        setUserName(usr);
+        setUser({ user: { username: usr, show: false }, role: role })
         localStorage.setItem("token", token);
-        const id = toast.success(`Welcome back, ${username}`);
+        const id = toast.success(`Welcome back, ${usr}`);
 
         setToastId(id);
         setLoginSuccess(true);
@@ -109,7 +114,7 @@ export default function Login() {
 
   return (
     <>
-      <Header />
+      <ResponsiveAppBar />
       <ToastContainer />
       <div style={{ position: "relative" }}>
         {show && <CircularIndeterminate info={"Logging in..."} />}

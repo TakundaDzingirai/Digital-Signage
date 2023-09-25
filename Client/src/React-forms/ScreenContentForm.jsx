@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import "./Form.css";
+// import "./Form.css";
 import {
+  Grid,
   TextField,
   Button,
   Paper,
@@ -27,7 +28,17 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { useRef } from "react";
+import { useUser } from "../UserContext";
+import ResponsiveAppBar from "../ResponsiveAppBar";
+
+
 export default function ScreenContentForm() {
+
+
+  // Create ref objects for the file input elements
+  const imageInputRef = useRef(null);
+  const videoInputRef = useRef(null);
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
@@ -43,7 +54,12 @@ export default function ScreenContentForm() {
   const [endDate, setEndDate] = useState(null);
   const [schedulePost, setSchedulePost] = useState(false); // Add a state for scheduling
   const [videoFile, setVideoFile] = useState(null);
+  const { setUser, user } = useUser();
+  user.user.show = true;
 
+  const newC = user;
+
+  setUser(newC)
   useEffect(() => {
     const token = localStorage.getItem("token");
     const headers = {
@@ -155,12 +171,14 @@ export default function ScreenContentForm() {
   };
 
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
+    console.log("in HandleImage")
+    let file = e.target.files[0];
     setFile(file);
     previewFiles(file);
   };
 
   const previewFiles = (file) => {
+    console.log("Handle Preview")
     const reader = new FileReader();
     reader.readAsDataURL(file);
 
@@ -175,6 +193,7 @@ export default function ScreenContentForm() {
     pointerEvents: show ? "none" : "auto",
   };
   const handleVideoUpload = (e) => {
+    console.log("Handle video")
     const file = e.target.files[0];
     setSelectedVideo(URL.createObjectURL(file)); // Store the video URL
     setVideoFile(file); // Store the video file for later submission
@@ -182,9 +201,9 @@ export default function ScreenContentForm() {
 
   return (
     <>
-      <ScreenPanel />
+      <ResponsiveAppBar />
 
-      <Paper elevation={3}>
+      <Paper elevation={3} style={{ marginTop: "10vh" }}>
         <ToastContainer />
         {show && <CircularIndeterminate />}
 
@@ -206,200 +225,249 @@ export default function ScreenContentForm() {
             Add Content to Screen
           </Typography>
 
-          <TextField
-            className="TextField"
-            label="Title*"
-            onChange={(e) => handleInputChange("slideTitle", e.target.value)}
-            variant="outlined"
-            color="primary"
-            fullWidth
-            type="text"
-            sx={{ mb: 3 }}
-            value={title}
-            error={!!validationErrors.slideTitle}
-            helperText={validationErrors.slideTitle}
-            placeholder="Enter title of your content"
-          />
-          <TextField
-            className="TextField"
-            label="Text*"
-            onChange={(e) => handleInputChange("post", e.target.value)}
-            variant="outlined"
-            color="primary"
-            fullWidth
-            multiline
-            rows={4}
-            value={text}
-            sx={{ mb: 3 }}
-            error={!!validationErrors.post}
-            helperText={validationErrors.post}
-            placeholder="Enter text for your content"
-          />
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginBottom: "20px",
-            }}
-          >
-            <label htmlFor="upload-photo" style={{ marginRight: "20px" }}>
-              <Fab
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <TextField
+                className="TextField"
+                label="Title*"
+                onChange={(e) => handleInputChange("slideTitle", e.target.value)}
+                variant="outlined"
                 color="primary"
-                size="small"
-                component="span"
-                aria-label="add"
-                variant="extended"
-              >
-                <AddIcon /> {selectedImage ? "Change Photo" : "Upload Photo"}
-              </Fab>
-              <input
-                style={{ display: "none" }}
-                id="upload-photo"
-                name="image"
-                type="file"
-                onChange={(e) => handleImageUpload(e)}
+                fullWidth
+                type="text"
+                sx={{ mb: 3 }}
+                value={title}
+                error={!!validationErrors.slideTitle}
+                helperText={validationErrors.slideTitle}
+                placeholder="Enter title of your content"
               />
-            </label>
-
-            {selectedImage && (
-              <div>
-                <img
-                  src={selectedImage}
-                  style={{
-                    maxWidth: "100%",
-                    height: "auto",
-                    maxHeight: "15vh",
-                  }}
-                  alt="Preview"
-                />
-              </div>
-            )}
-
-            <br />
-            <label htmlFor="upload-video" style={{ marginRight: "20px" }}>
-              <Fab
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                className="TextField"
+                label="Text*"
+                onChange={(e) => handleInputChange("post", e.target.value)}
+                variant="outlined"
                 color="primary"
-                size="small"
-                component="span"
-                aria-label="add"
-                variant="extended"
-              >
-                <AddIcon /> {selectedVideo ? "Change Video" : "Upload Video"}
-              </Fab>
-              <input
-                style={{ display: "none" }}
-                id="upload-video"
-                name="video"
-                type="file"
-                accept="video/*"
-                onChange={(e) => handleVideoUpload(e)}
+                fullWidth
+                multiline
+                rows={4}
+                value={text}
+                sx={{ mb: 3 }}
+                error={!!validationErrors.post}
+                helperText={validationErrors.post}
+                placeholder="Enter text for your content"
               />
-            </label>
-
-            {selectedVideo && (
-              <div>
-                <video
-                  controls
-                  style={{
-                    maxWidth: "100%",
-                    height: "auto",
-                    maxHeight: "15vh",
-                  }}
-                >
-                  <source src={selectedVideo} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-            )}
-
-
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "20px",
-              }}
-            >
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={schedulePost}
-                    onChange={() => setSchedulePost(!schedulePost)}
-                    color="primary"
-                  />
-                }
-                label={schedulePost ? "Cancel schedule" : "Schedule "}
-              />
-            </div>
-
-            {schedulePost && (
+            </Grid>
+            <Grid item xs={12}>
               <div
                 style={{
                   display: "flex",
-                  justifyContent: "space-between",
-                  width: "100%",
+                  alignItems: "center",
+                  marginBottom: "20px",
                 }}
               >
-                <div style={{ flex: 1, marginRight: "1rem" }}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer
-                      components={["DateTimePicker", "DateTimePicker"]}
-                    >
-                      <DateTimePicker
-                        label="Start date"
-                        value={startDate}
-                        onChange={(date) => setStartDate(date)}
-                        slotProps={{ textField: { fullWidth: true } }}
-                      />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                </div>
-                <div style={{ flex: 1 }}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer
-                      components={["DateTimePicker", "DateTimePicker"]}
-                    >
-                      <DateTimePicker
-                        label="End date"
-                        value={endDate}
-                        onChange={(date) => setEndDate(date)}
-                        slotProps={{ textField: { fullWidth: true } }}
-                      />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                </div>
+                <label htmlFor="upload-photo" style={{ marginRight: "20px" }}>
+                  <Fab
+                    color="primary"
+                    size="small"
+                    component="span"
+                    aria-label="add"
+                    variant="extended"
+                  >
+                    <AddIcon /> {selectedImage ? "Change Photo" : "Upload Photo"}
+                  </Fab>
+                  <input
+                    style={{ display: "none" }}
+                    id="upload-photo"
+                    name="image"
+                    type="file"
+                    ref={imageInputRef}
+                    onChange={(e) => handleImageUpload(e)}
+                  />
+                </label>
+
+                {selectedImage && (
+                  <div>
+                    <img
+                      src={selectedImage}
+                      style={{
+                        maxWidth: "100%",
+                        height: "auto",
+                        maxHeight: "15vh",
+                      }}
+                      alt="Preview"
+                    />
+                  </div>
+                )}
               </div>
+            </Grid>
+            <Grid item xs={12}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <label htmlFor="upload-video" style={{ marginRight: "20px" }}>
+                  <Fab
+                    color="primary"
+                    size="small"
+                    component="span"
+                    aria-label="add"
+                    variant="extended"
+                  >
+                    <AddIcon /> {selectedVideo ? "Change Video" : "Upload Video"}
+                  </Fab>
+                  <input
+                    style={{ display: "none" }}
+                    id="upload-video"
+                    name="video"
+                    type="file"
+                    accept="video/*"
+                    ref={videoInputRef}
+                    onChange={(e) => handleVideoUpload(e)}
+                  />
+                </label>
+
+                {selectedVideo && (
+                  <div>
+                    <video
+                      controls
+                      style={{
+                        maxWidth: "100%",
+                        height: "auto",
+                        maxHeight: "15vh",
+                      }}
+                    >
+                      <source src={selectedVideo} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                )}
+              </div>
+            </Grid>
+            <Grid item xs={12}>
+              {(selectedImage || selectedVideo) && (
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  startIcon={<ClearIcon />}
+                  onClick={() => {
+                    setSelectedImage(null);
+                    setSelectedVideo(null);
+                    setVideoFile(null); // Also clear the video file
+                    if (imageInputRef.current) {
+                      imageInputRef.current.value = "";
+                    }
+                    if (videoInputRef.current) {
+                      videoInputRef.current.value = "";
+                    }
+                  }}
+                >
+                  Cancel Selection
+                </Button>
+              )}
+            </Grid>
+            {/* Switch for scheduling */}
+            <Grid item xs={12}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={schedulePost}
+                      onChange={() => setSchedulePost(!schedulePost)}
+                      color="primary"
+                    />
+                  }
+                  label={schedulePost ? "Cancel schedule" : "Schedule "}
+                />
+              </div>
+            </Grid>
+
+            {schedulePost && (
+              <>
+                <Grid item xs={12} sm={6}>
+                  <div style={{ flex: 1 }}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer
+                        components={["DateTimePicker", "DateTimePicker"]}
+                      >
+                        <DateTimePicker
+                          label="Start date"
+                          value={startDate}
+                          onChange={(date) => setStartDate(date)}
+                          slotProps={{ textField: { fullWidth: true } }}
+                        />
+                      </DemoContainer>
+                    </LocalizationProvider>
+                  </div>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <div style={{ flex: 1 }}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer
+                        components={["DateTimePicker", "DateTimePicker"]}
+                      >
+                        <DateTimePicker
+                          label="End date"
+                          value={endDate}
+                          onChange={(date) => setEndDate(date)}
+                          slotProps={{ textField: { fullWidth: true } }}
+                        />
+                      </DemoContainer>
+                    </LocalizationProvider>
+                  </div>
+                </Grid>
+              </>
             )}
 
-            <FormControl variant="outlined" fullWidth margin="normal">
-              <InputLabel id="select-screens-label">
-                Select other screens to add content to
-              </InputLabel>
-              <Select
-                labelId="select-screens-label"
-                multiple
-                value={selectedScreens}
-                onChange={(e) => setSelectedScreens(e.target.value)}
-                fullWidth
+            <Grid item xs={12}>
+              <FormControl variant="outlined" fullWidth margin="normal">
+                <InputLabel id="select-screens-label">
+                  Select other screens to add content to
+                </InputLabel>
+                <Select
+                  labelId="select-screens-label"
+                  multiple
+                  value={selectedScreens}
+                  onChange={(e) => setSelectedScreens(e.target.value)}
+                  fullWidth
+                >
+                  {screens.map((screen) => (
+                    <MenuItem key={screen._id} value={screen._id}>
+                      {screen.screenName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                sx={{ mt: 3 }}
               >
-                {screens.map((screen) => (
-                  <MenuItem key={screen._id} value={screen._id}>
-                    {screen.screenName}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              sx={{ mt: 3 }}
-            >
-              Upload Content
-            </Button>
+                Upload Content
+              </Button>
+            </Grid>
+          </Grid>
         </form>
-      </Paper>
+      </Paper >
     </>
   );
 }
+
+
+
+
+
+

@@ -17,18 +17,20 @@ import {
 
 import { ToastContainer, toast } from "react-toastify";
 import moment from "moment";
-import Header from "../Header";
+
 import Footer from "../Footer";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
+import ResponsiveAppBar from "../ResponsiveAppBar";
+import { useUser } from "../UserContext";
 const theme = createTheme();
 
 export default function SlideContent() {
   const { contentId } = useParams();
   const location = useLocation();
+  const { setUser, user } = useUser();
   const { screenId } = location.state || {};
   const [content, setContent] = useState([]);
   const [editMode, setEditMode] = useState(false);
@@ -37,6 +39,15 @@ export default function SlideContent() {
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const navigate = useNavigate();
+  user.user.show = true;
+
+  const newC = user;
+
+  setUser(newC)
+
+
+
+  console.log("this", newC)
 
   const fetchData = async () => {
     try {
@@ -143,8 +154,9 @@ export default function SlideContent() {
 
   return (
     <ThemeProvider theme={theme}>
+      <ResponsiveAppBar show={true} />
       <ToastContainer />
-      <Header />
+
       <Container maxWidth="md" style={{ marginTop: theme.spacing(2) }}>
         {content.map((c) => (
           <Paper

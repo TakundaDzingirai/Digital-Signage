@@ -16,9 +16,18 @@ import AutosliderBar from '../ScreenComponents/DesignComponents/AutosliderBar';
 import Footer from '../Footer';
 import Axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import ResponsiveAppBar from '../ResponsiveAppBar';
+import { useUser } from "../UserContext";
 export default function AutoSlider() {
-    // const [fade, setFade] = useState(false);
-    // const [slide, setSlide] = useState(true);
+    const { setUser, user } = useUser();
+    user.user.show = true;
+
+
+    const newC = user;
+
+    setUser(newC)
+
+
     const location = useLocation();
     const { SlideData } = location.state || {}; // Extract SlideData from location state
     const { id } = useParams()
@@ -88,6 +97,7 @@ export default function AutoSlider() {
 
     return (
         < >
+            <ResponsiveAppBar />
             <ToastContainer />
             <AutosliderBar setTextColor={setTextColor}
                 textColor={textColor}

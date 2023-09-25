@@ -11,10 +11,10 @@ import {
   Divider,
 } from "@mui/material";
 import Slides from "./Slides";
-import Header from "../Header";
 import Footer from "../Footer";
 import EmptyDataAlert from "../EmptyDataAlert";
 import ErrorAlert from "./ErrorAlert";
+import ResponsiveAppBar from "../ResponsiveAppBar";
 
 const ScreenDetail = () => {
   const { id } = useParams();
@@ -23,6 +23,7 @@ const ScreenDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [emptyData, setEmptyData] = useState(false);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,7 +54,7 @@ const ScreenDetail = () => {
 
   return (
     <div>
-      <Header />
+      <ResponsiveAppBar show={false} />
       <Container maxWidth="md" style={{ paddingTop: "20px" }}>
         <Paper
           elevation={3}
