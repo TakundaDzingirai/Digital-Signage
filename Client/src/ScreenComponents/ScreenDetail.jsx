@@ -9,6 +9,7 @@ import {
   Paper,
   CircularProgress,
   Divider,
+  Grid,
 } from "@mui/material";
 import Slides from "./Slides";
 import Header from "../Header";
@@ -26,9 +27,8 @@ const ScreenDetail = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      let response;
       try {
-        response = await Axios.get(`http://localhost:3000/screens/${id}`);
+        const response = await Axios.get(`http://localhost:3000/screens/${id}`);
         if (response.data.content.length === 0) {
           setEmptyData(true);
         } else {
@@ -40,7 +40,6 @@ const ScreenDetail = () => {
           "An error occurred while fetching data. Please try again later."
         );
       } finally {
-        setScreenData(response.data);
         setLoading(false);
       }
     };
@@ -54,7 +53,7 @@ const ScreenDetail = () => {
   return (
     <div>
       <Header />
-      <Container maxWidth="md" style={{ paddingTop: "20px" }}>
+      <Container maxWidth="lg" style={{ paddingTop: "20px" }}>
         <Paper
           elevation={3}
           style={{ padding: "20px", marginTop: "25px", marginBottom: "30px" }}
@@ -62,58 +61,45 @@ const ScreenDetail = () => {
           <Typography
             variant="h4"
             component="h1"
-            style={{
-              marginTop: "10px",
-              textAlign: "center",
-              color: "#1e366a",
-              fontWeight: "bold",
-            }}
+            align="center"
+            color="primary"
+            sx={{ fontWeight: "bold" }}
           >
             {screenData.screenName}
           </Typography>
 
-          <Divider sx={{ mt: 2 }} />
+          <Divider sx={{ my: 2 }} />
 
           <Typography
             variant="h5"
             component="h2"
-            style={{
-              marginTop: "20px",
-              textAlign: "center",
-              color: "#1e366a",
-              fontWeight: "bold",
-            }}
+            align="center"
+            color="primary"
+            sx={{ fontWeight: "bold" }}
           >
             Screen Contents
           </Typography>
 
-          {/* Conditional rendering based on loading, error, and emptyData */}
-          {loading && !error && !emptyData ? (
-            <CircularProgress />
-          ) : error ? (
-            <ErrorAlert error={error} />
-          ) : emptyData ? (
-            <EmptyDataAlert />
-          ) : (
-            <Slides key={id} />
-          )}
+          <Grid container spacing={2} justifyContent="center">
+            {loading && !error && !emptyData ? (
+              <CircularProgress />
+            ) : error ? (
+              <ErrorAlert error={error} />
+            ) : emptyData ? (
+              <EmptyDataAlert />
+            ) : (
+              <Slides key={id} />
+            )}
+          </Grid>
 
           <Button
             onClick={handleButtonClick}
             variant="outlined"
             color="primary"
-            style={{ marginTop: "20px" }}
+            sx={{ marginTop: "20px", alignSelf: "center" }}
           >
             Add Slide
           </Button>
-          <Typography
-            variant="subtitle2"
-            color="textSecondary"
-            style={{ marginTop: "20px", textAlign: "center" }}
-          >
-            Created:{" "}
-            {moment(screenData.createdAt).format("MMMM D, YYYY, HH:mm:ss ")}
-          </Typography>
         </Paper>
       </Container>
       <Footer />

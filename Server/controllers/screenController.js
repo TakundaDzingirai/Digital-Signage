@@ -7,10 +7,14 @@ class screenController {
     // Check if the authenticated user's role is "admin"
     if (req.user.role === "admin") {
       // If the user is an admin, retrieve all screens in the database and sort them alphabetically by department
-      screens = await Screen.find({}).sort({ department: 1 });
+      screens = await Screen.find({})
+        .sort({ department: 1 })
+        .populate("createdBy", "username"); // Populate the createdBy field with the user's name
     } else {
       // If the user is not an admin, retrieve screens belonging to the user's department
-      screens = await Screen.find({ department: req.user.department });
+      screens = await Screen.find({
+        department: req.user.department,
+      }).populate("createdBy", "name"); // Populate the createdBy field with the user's name
     }
     res.json(screens);
   }

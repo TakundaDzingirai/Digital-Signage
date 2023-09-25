@@ -32,12 +32,7 @@ export default function Slides() {
     <Container>
       <Box my={2}>
         {loading ? (
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            height="100vh"
-          >
+          <Box display="flex" justifyContent="center" alignItems="center">
             <CircularProgress />
           </Box>
         ) : (
