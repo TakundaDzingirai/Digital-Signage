@@ -174,6 +174,7 @@ export default function AutoSlider() {
                                 hSize={hSize}
                                 pSize={pSize}
                                 myfont={myfont}
+                                setSlideInterval={setSlideInterval}
                             />
                         ))}
                     </Carousel>

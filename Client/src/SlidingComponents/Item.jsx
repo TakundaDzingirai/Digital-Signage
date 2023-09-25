@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import "./Item.css";
 import Typewriter from 'typewriter-effect';
 
-export default function Item({ item, typewriter, background, size, textColor, backgroundColor, fontWeight, textAlign, hSize, pSize, myfont }) {
+export default function Item({ item, typewriter, background, size, textColor, backgroundColor, fontWeight, textAlign, hSize, pSize, myfont, setSlideInterval }) {
     const [ismage, setIsimage] = useState(false);
     const [lines, setLines] = useState([]);
     const videoRef = useRef(null);
@@ -47,6 +47,7 @@ export default function Item({ item, typewriter, background, size, textColor, ba
             } else {
                 videoElement.addEventListener("loadedmetadata", () => {
                     const videoDuration = videoElement.duration;
+                    setSlideInterval(videoDuration);
                     console.log(`Video duration: ${videoDuration} seconds`);
                 });
             }
