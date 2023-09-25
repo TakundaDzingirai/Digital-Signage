@@ -12,27 +12,21 @@ import {
   InputLabel,
   Fab,
   Switch,
+  Grid,
   FormControlLabel,
 } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+
 import AddIcon from "@mui/icons-material/Add";
-import ClearIcon from '@mui/icons-material/Clear';
 import { ToastContainer, toast } from "react-toastify";
-import ScreenPanel from "../ScreenComponents/ScreenPanel";
 import { useParams } from "react-router-dom";
 import Axios from "axios";
 import CircularIndeterminate from "../CircularIndeterminate";
 import * as Yup from "yup";
-// import dayjs from "dayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { useRef } from "react";
-import { useUser } from "../UserContext";
-import ResponsiveAppBar from "../ResponsiveAppBar";
-
-
+// import Header from "../Header";
 export default function ScreenContentForm() {
 
 
@@ -48,16 +42,14 @@ export default function ScreenContentForm() {
   const [validationErrors, setValidationErrors] = useState({});
   const [file, setFile] = useState(null);
   const [selectedScreens, setSelectedScreens] = useState([]);
-
   const [screens, setScreens] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [schedulePost, setSchedulePost] = useState(false); // Add a state for scheduling
+  const [schedulePost, setSchedulePost] = useState(false);
   const [videoFile, setVideoFile] = useState(null);
-  const { setUser, user } = useUser();
-  user.user.show = true;
-
-  const newC = user;
+  const [qrCodeContent, setQrCodeContent] = useState("");
+  const [isQrCodeEnabled, setIsQrCodeEnabled] = useState(false);
+  const [mediaType, setMediaType] = useState("");
 
   setUser(newC)
   useEffect(() => {
@@ -82,6 +74,15 @@ export default function ScreenContentForm() {
       setTitle(value);
     } else if (name === "post") {
       setText(value);
+    } else if (name === "qrCodeContent") {
+      setQrCodeContent(value);
+    }
+  };
+
+  const toggleQrCodeInput = () => {
+    setIsQrCodeEnabled(!isQrCodeEnabled);
+    if (!isQrCodeEnabled) {
+      setQrCodeContent("");
     }
   };
 
@@ -93,20 +94,30 @@ export default function ScreenContentForm() {
     });
   };
 
+  const handleMediaTypeChange = (mediaType) => {
+    setMediaType(mediaType);
+    // Clear previously selected media
+    setSelectedImage(null);
+    setSelectedVideo(null);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // REga tingochinja something
+
     const formData = new FormData();
     formData.append("slideTitle", title);
     formData.append("post", text);
     formData.append("startDate", startDate !== null ? startDate : "");
     formData.append("endDate", endDate !== null ? endDate : "");
 
-    if (selectedImage) {
+    if (mediaType === "image" && selectedImage) {
       formData.append("media", file);
-    }
-    if (selectedVideo) {
+    } else if (mediaType === "video" && selectedVideo) {
       formData.append("media", videoFile);
+    }
+
+    if (isQrCodeEnabled && qrCodeContent) {
+      formData.append("qrCodeContent", qrCodeContent);
     }
 
     setShow(true);
@@ -125,7 +136,9 @@ export default function ScreenContentForm() {
       setSelectedImage(null);
       setStartDate(null);
       setEndDate(null);
+      setVideoFile(null);
       setSelectedVideo(null);
+      setQrCodeContent("");
 
       if (selectedScreens.length > 0) {
         const uploadPromises = selectedScreens.map((selectedScreenId) => {
@@ -187,23 +200,16 @@ export default function ScreenContentForm() {
     };
   };
 
-  const styl = {
-    marginTop: show ? "2vh" : "2vh",
-    opacity: show ? "0.3" : "1",
-    pointerEvents: show ? "none" : "auto",
-  };
   const handleVideoUpload = (e) => {
     console.log("Handle video")
     const file = e.target.files[0];
-    setSelectedVideo(URL.createObjectURL(file)); // Store the video URL
-    setVideoFile(file); // Store the video file for later submission
+    setSelectedVideo(URL.createObjectURL(file));
+    setVideoFile(file);
   };
 
   return (
     <>
-      <ResponsiveAppBar />
-
-      <Paper elevation={3} style={{ marginTop: "10vh" }}>
+      <Paper elevation={3}>
         <ToastContainer />
         {show && <CircularIndeterminate />}
 
@@ -211,7 +217,6 @@ export default function ScreenContentForm() {
           className="form"
           autoComplete="off"
           onSubmit={handleSubmit}
-          style={styl}
           encType="multipart/form-data"
         >
           <Typography
@@ -225,12 +230,15 @@ export default function ScreenContentForm() {
             Add Content to Screen
           </Typography>
 
-          <Grid container spacing={3}>
+          <Grid container spacing={2}>
+            {/* Title */}
             <Grid item xs={12}>
               <TextField
                 className="TextField"
                 label="Title*"
-                onChange={(e) => handleInputChange("slideTitle", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("slideTitle", e.target.value)
+                }
                 variant="outlined"
                 color="primary"
                 fullWidth
@@ -242,6 +250,7 @@ export default function ScreenContentForm() {
                 placeholder="Enter title of your content"
               />
             </Grid>
+            {/* Text */}
             <Grid item xs={12}>
               <TextField
                 className="TextField"
@@ -259,187 +268,209 @@ export default function ScreenContentForm() {
                 placeholder="Enter text for your content"
               />
             </Grid>
-            <Grid item xs={12}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginBottom: "20px",
-                }}
-              >
-                <label htmlFor="upload-photo" style={{ marginRight: "20px" }}>
-                  <Fab
-                    color="primary"
-                    size="small"
-                    component="span"
-                    aria-label="add"
-                    variant="extended"
-                  >
-                    <AddIcon /> {selectedImage ? "Change Photo" : "Upload Photo"}
-                  </Fab>
-                  <input
-                    style={{ display: "none" }}
-                    id="upload-photo"
-                    name="image"
-                    type="file"
-                    ref={imageInputRef}
-                    onChange={(e) => handleImageUpload(e)}
-                  />
-                </label>
 
-                {selectedImage && (
-                  <div>
-                    <img
-                      src={selectedImage}
-                      style={{
-                        maxWidth: "100%",
-                        height: "auto",
-                        maxHeight: "15vh",
-                      }}
-                      alt="Preview"
-                    />
-                  </div>
-                )}
-              </div>
-            </Grid>
+            {/* Enable QR Code */}
             <Grid item xs={12}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginBottom: "20px",
-                }}
-              >
-                <label htmlFor="upload-video" style={{ marginRight: "20px" }}>
-                  <Fab
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={isQrCodeEnabled}
+                    onChange={toggleQrCodeInput}
                     color="primary"
-                    size="small"
-                    component="span"
-                    aria-label="add"
-                    variant="extended"
-                  >
-                    <AddIcon /> {selectedVideo ? "Change Video" : "Upload Video"}
-                  </Fab>
-                  <input
-                    style={{ display: "none" }}
-                    id="upload-video"
-                    name="video"
-                    type="file"
-                    accept="video/*"
-                    ref={videoInputRef}
-                    onChange={(e) => handleVideoUpload(e)}
                   />
-                </label>
-
-                {selectedVideo && (
-                  <div>
-                    <video
-                      controls
-                      style={{
-                        maxWidth: "100%",
-                        height: "auto",
-                        maxHeight: "15vh",
-                      }}
-                    >
-                      <source src={selectedVideo} type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
-                  </div>
-                )}
-              </div>
+                }
+                label={isQrCodeEnabled ? "Disable Qr Code" : "Enable Qr Code"}
+              />
             </Grid>
-            <Grid item xs={12}>
-              {(selectedImage || selectedVideo) && (
-                <Button
+
+            {/* QR Code Content Link */}
+            {isQrCodeEnabled && (
+              <Grid item xs={12}>
+                <TextField
+                  className="TextField"
+                  label="QR Code Content Link"
+                  onChange={(e) =>
+                    handleInputChange("qrCodeContent", e.target.value)
+                  }
                   variant="outlined"
                   color="primary"
-                  startIcon={<ClearIcon />}
-                  onClick={() => {
-                    setSelectedImage(null);
-                    setSelectedVideo(null);
-                    setVideoFile(null); // Also clear the video file
-                    if (imageInputRef.current) {
-                      imageInputRef.current.value = "";
-                    }
-                    if (videoInputRef.current) {
-                      videoInputRef.current.value = "";
-                    }
-                  }}
-                >
-                  Cancel Selection
-                </Button>
-              )}
-            </Grid>
-            {/* Switch for scheduling */}
-            <Grid item xs={12}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginBottom: "20px",
-                }}
-              >
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={schedulePost}
-                      onChange={() => setSchedulePost(!schedulePost)}
-                      color="primary"
-                    />
-                  }
-                  label={schedulePost ? "Cancel schedule" : "Schedule "}
+                  fullWidth
+                  type="text"
+                  sx={{ mb: 3 }}
+                  value={qrCodeContent}
+                  placeholder="Enter the QR code content link"
                 />
-              </div>
+              </Grid>
+            )}
+
+            {/* Schedule Post */}
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={schedulePost}
+                    onChange={() => setSchedulePost(!schedulePost)}
+                    color="primary"
+                  />
+                }
+                label={schedulePost ? "Cancel schedule" : "Schedule content "}
+              />
             </Grid>
 
+            {/* Date Pickers */}
             {schedulePost && (
               <>
                 <Grid item xs={12} sm={6}>
-                  <div style={{ flex: 1 }}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer
-                        components={["DateTimePicker", "DateTimePicker"]}
-                      >
-                        <DateTimePicker
-                          label="Start date"
-                          value={startDate}
-                          onChange={(date) => setStartDate(date)}
-                          slotProps={{ textField: { fullWidth: true } }}
-                        />
-                      </DemoContainer>
-                    </LocalizationProvider>
-                  </div>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer
+                      components={["DateTimePicker", "DateTimePicker"]}
+                    >
+                      <DateTimePicker
+                        label="Start date"
+                        value={startDate}
+                        onChange={(date) => setStartDate(date)}
+                        slotProps={{ textField: { fullWidth: true } }}
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <div style={{ flex: 1 }}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer
-                        components={["DateTimePicker", "DateTimePicker"]}
-                      >
-                        <DateTimePicker
-                          label="End date"
-                          value={endDate}
-                          onChange={(date) => setEndDate(date)}
-                          slotProps={{ textField: { fullWidth: true } }}
-                        />
-                      </DemoContainer>
-                    </LocalizationProvider>
-                  </div>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer
+                      components={["DateTimePicker", "DateTimePicker"]}
+                    >
+                      <DateTimePicker
+                        label="End date"
+                        value={endDate}
+                        onChange={(date) => setEndDate(date)}
+                        slotProps={{ textField: { fullWidth: true } }}
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
                 </Grid>
               </>
             )}
 
+            {/* Media Type */}
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel id="select-media-label">
+                  Select Media Type
+                </InputLabel>
+                <Select
+                  id="select-media-label"
+                  labelId="select-media-label"
+                  value={mediaType}
+                  onChange={(e) => handleMediaTypeChange(e.target.value)}
+                  fullWidth
+                  label="Select media type"
+                >
+                  <MenuItem value="none">None</MenuItem>
+                  <MenuItem value="image">Image</MenuItem>
+                  <MenuItem value="video">Video</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            {/* Image Upload */}
+            {mediaType === "image" && (
+              <Grid item xs={12}>
+                <>
+                  <label htmlFor="upload-photo" style={{ marginRight: "20px" }}>
+                    <Fab
+                      color="primary"
+                      size="small"
+                      component="span"
+                      aria-label="add"
+                      variant="extended"
+                    >
+                      <AddIcon />{" "}
+                      {selectedImage ? "Change Photo" : "Upload Photo"}
+                    </Fab>
+                    <input
+                      style={{ display: "none" }}
+                      id="upload-photo"
+                      name="image"
+                      type="file"
+                      onChange={(e) => handleImageUpload(e)}
+                    />
+                  </label>
+
+                  {selectedImage && (
+                    <div>
+                      <img
+                        src={selectedImage}
+                        style={{
+                          maxWidth: "100%",
+                          height: "auto",
+                          maxHeight: "15vh",
+                        }}
+                        alt="Preview"
+                      />
+                    </div>
+                  )}
+                </>
+              </Grid>
+            )}
+
+            {/* Video Upload */}
+            {mediaType === "video" && (
+              <Grid item xs={12}>
+                <>
+                  <label htmlFor="upload-video" style={{ marginRight: "20px" }}>
+                    <Fab
+                      color="primary"
+                      size="small"
+                      component="span"
+                      aria-label="add"
+                      variant="extended"
+                    >
+                      <AddIcon />{" "}
+                      {selectedVideo ? "Change Video" : "Upload Video"}
+                    </Fab>
+                    <input
+                      style={{ display: "none" }}
+                      id="upload-video"
+                      name="video"
+                      type="file"
+                      accept="video/*"
+                      onChange={(e) => handleVideoUpload(e)}
+                    />
+                  </label>
+
+                  {selectedVideo && (
+                    <div>
+                      <video
+                        controls
+                        style={{
+                          maxWidth: "100%",
+                          height: "auto",
+                          maxHeight: "15vh",
+                        }}
+                      >
+                        <source src={selectedVideo} type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                    </div>
+                  )}
+                </>
+              </Grid>
+            )}
+
+            {/* Select Screens */}
             <Grid item xs={12}>
               <FormControl variant="outlined" fullWidth margin="normal">
                 <InputLabel id="select-screens-label">
                   Select other screens to add content to
                 </InputLabel>
                 <Select
+                  id="other screens"
                   labelId="select-screens-label"
                   multiple
                   value={selectedScreens}
                   onChange={(e) => setSelectedScreens(e.target.value)}
                   fullWidth
+                  label="Other screens to add content"
                 >
                   {screens.map((screen) => (
                     <MenuItem key={screen._id} value={screen._id}>
@@ -449,12 +480,14 @@ export default function ScreenContentForm() {
                 </Select>
               </FormControl>
             </Grid>
+
+            {/* Submit Button */}
             <Grid item xs={12}>
               <Button
                 variant="contained"
                 color="primary"
                 type="submit"
-                sx={{ mt: 3 }}
+              // sx={{ mt: 3 }}
               >
                 Upload Content
               </Button>

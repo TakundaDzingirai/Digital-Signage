@@ -33,6 +33,14 @@ const contentSchema = new Schema(
       ref: "User",
     },
 
+    qrCodeContent: {
+      type: String,
+    },
+
+    qrCodeImage: {
+      type: String,
+    },
+
     image: {
       public_id: {
         type: String,

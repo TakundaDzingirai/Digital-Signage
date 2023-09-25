@@ -34,11 +34,9 @@ router.put(
 
 // screen settings
 
-// POST route to update screen settings
-// post(`http://localhost:3000/screens/carousel/${id}
-router.post(
-  "/carousel/:id",
-  catchAsync(screenController.updateScreenSettings)
-);
+// (`http://localhost:3000/screens/carousel/${id}
+router.put("/carousel/:id", catchAsync(screenController.updateScreenSettings));
+
+router.get("/carousel/settings/:id", catchAsync(screenController.getSettings));
 
 module.exports = router;

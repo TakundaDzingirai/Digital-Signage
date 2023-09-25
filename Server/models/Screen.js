@@ -43,7 +43,7 @@ const screenSchema = new Schema(
 
     background: {
       type: Boolean,
-      default: false,
+      default: true,
     },
 
     backgroundColor: {
@@ -68,7 +68,7 @@ const screenSchema = new Schema(
           left: false,
           center: false,
           right: false,
-        }
+        };
       },
     },
 
@@ -79,16 +79,16 @@ const screenSchema = new Schema(
           normal: false,
           bold: false,
           italic: false,
-        }
+        };
       },
     },
     pSize: {
       type: String,
-      default: '16px',
+      default: "16px",
     },
     hSize: {
       type: String,
-      default: '18px',
+      default: "18px",
     },
     myFont: {
       type: String,

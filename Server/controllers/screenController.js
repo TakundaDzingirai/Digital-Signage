@@ -98,6 +98,15 @@ class screenController {
     const updatedScreen = await screen.save();
     return res.json("Saved Successfully");
   }
+
+  static async getSettings(req, res) {
+    const screen = await Screen.findById(req.params.id);
+    if (!screen) {
+      return res.status(404).json({ Error: "Screen not found" });
+    } else {
+      res.json(screen);
+    }
+  }
 }
 
 module.exports = screenController;
