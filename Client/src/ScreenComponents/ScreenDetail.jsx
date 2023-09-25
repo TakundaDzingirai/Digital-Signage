@@ -60,7 +60,7 @@ const ScreenDetail = () => {
   return (
     <div>
       <ResponsiveAppBar show={false} />
-      <Container maxWidth="md" style={{ paddingTop: "20px" }}>
+      <Container maxWidth="lg" style={{ paddingTop: "20px" }}>
         <Paper
           elevation={3}
           style={{ padding: "20px", marginTop: "25px", marginBottom: "30px" }}
