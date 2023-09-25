@@ -287,7 +287,7 @@ export default function AutoSlider() {
                         >
                             Save
                         </Button>
-                        <Button variant="contained">Reset</Button>
+
                     </Box>
                 </Grid>
             </Grid>
