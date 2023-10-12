@@ -1,9 +1,23 @@
-The 'Digital Signage' project aims to replace traditional noticeboards with modern electronic displays in the academic community. We focus on user-friendliness and visual consistency, inspired by existing campus signs.
+The 'Digital Signage using MERN- Stack' project aims to replace traditional noticeboards with modern electronic displays in the academic community. 
+We focus on user-friendliness and visual consistency, inspired by existing campus signs.
 
-The main goal was to create a lightweight digital signage system with features like picture, video uploads and Qr Codes Generation. We followed an agile approach, when this project was build,we had Scrum meetings, Sprint backlogs and it took 1 month and half to complete the project, we were a Team of 3
+The main goal was to create a lightweight digital signage system with features like picture, video uploads and Qr Codes Generation. 
+We followed an agile approach, when this project was build,we had Scrum meetings, Sprint backlogs and it took 1 month and half to 
+complete the project, we were a Team of 3
 
 Requirements Captured
 Functional Requirements
-Functional requirements for this digital signage system encompass a set of critical features and capabilities that define its core functionalities. The system has the ability for users to upload different types of content, images, videos, and URLs for QR code, it also manages the content uploaded. Some of the content management tools include organization, scheduling, and deletion options, along with categorization for efficient content retrieval and display. The system can authorize and authenticate users, and it accommodates diverse levels of users.
-Additionally, the system offers multi-screen support to cater to different display set-ups, allowing users to display the same content to different types of screens and groups of people. The user can determine for how long the content they are uploading should be displayed on the screen. The system offers pre-designed templates for content layout and design, as well as the option for users to create custom layouts maintaining consistency and design flexibility. Before uploading content, users can test their content to see how it will be displayed after being uploaded, this allows for users to correct any mistakes, reducing their chances of making errors, thus improving the usability.
-Some of the additional functionalities added to the system is the ability to upload videos and URLs in the system. After uploading videos, users can still choose how long they want the video to be displayed on screen same as the other types of content. The URL allows users to link to other web pages, social media, or other online platforms. Users can input the URL of the web content they want to display. The system will then fetch and display the content from the specified web address. This can include real-time data, news updates, social media posts, or external web applications.
+Functional requirements for this digital signage system encompass a set of critical features and capabilities that define its core functionalities. 
+The system has the ability for users to upload different types of content, images, videos, and URLs for QR code, it also manages the content uploaded. 
+Some of the content management tools include organization, scheduling, and deletion options, along with categorization for efficient content retrieval 
+and display. The system can authorize and authenticate users, and it accommodates diverse levels of users.
+Additionally, the system offers multi-screen support to cater to different display set-ups, allowing users to display the same content to different 
+types of screens and groups of people. The user can determine for how long the content they are uploading should be displayed on the screen. The system
+offers pre-designed templates for content layout and design, as well as the option for users to create custom layouts maintaining consistency and design 
+flexibility. Before uploading content, users can test their content to see how it will be displayed after being uploaded, this allows for users to correct 
+any mistakes, reducing their chances of making errors, thus improving the usability.
+Some of the additional functionalities added to the system is the ability to upload videos and URLs in the system. 
+After uploading videos, users can still choose how long they want the video to be displayed on screen same as the other types of content. 
+The URL allows users to link to other web pages, social media, or other online platforms. Users can input the URL of the web content they want to display. 
+The system will then fetch and display the content from the specified web address. This can include real-time data, news updates, social media posts, or
+external web applications.
